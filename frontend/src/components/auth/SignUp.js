@@ -17,7 +17,7 @@ const orange = createMuiTheme({
   palette: {
     primary: { 500: "#FFA500" },
     secondary: {
-      main: "#D35348"
+      main: "#d1d0d0"
     }
   },
   typography: {
@@ -28,9 +28,9 @@ const orange = createMuiTheme({
 
 const blue = createMuiTheme({
   palette: {
-    primary: { 500: "#FF0000" },
+    primary: { 500: "#d1d0d0" },
     secondary: {
-      main: "#FF0000"
+      main: "#d1d0d0"
     }
   },
   typography: {
