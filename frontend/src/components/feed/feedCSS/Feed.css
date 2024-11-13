@@ -1,0 +1,36 @@
+#feed-container {
+  background-color: #f6eae0;
+  border: 2px solid black;
+  height: 100%;
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+.claimed,
+.unclaimed {
+  border-radius: 5px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.claimed {
+  background-color: red;
+}
+
+.unclaimed {
+  background-color: green;
+}
+
+.feedWrapper {
+  margin-top: 8em;
+}
+
+#feed {
+  color: #272e48;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+}

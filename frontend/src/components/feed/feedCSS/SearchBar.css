@@ -1,0 +1,37 @@
+#search-container {
+  display: flex;
+  justify-content: left;
+  margin: 0 auto;
+  background-color: white;
+  width: 25%;
+  /* border-radius: 10px; */
+  margin-top: 3%;
+}
+
+#search-icon {
+  margin-left: 1%;
+  margin-top: 1%;
+}
+
+#search-input {
+  position: relative;
+  width: 23vw;
+  height: 35px;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding-left: 5%;
+}
+
+#search-submit {
+  width: 15%;
+  height: 50px;
+  /* border-radius: 50px; */
+  /* margin-top: 0.5%; */
+  background-color: #e7e6ef;
+  border: 1px solid black;
+}
+
+#search-results-container {
+  background-color: whitesmoke;
+}

@@ -1,0 +1,19 @@
+* {
+  font-family: "Merriweather", serif;
+}
+
+body {
+  background-color: #f9f9fb;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.App {
+  text-align: center;
+}
+
+img {
+  object-fit: cover;
+}

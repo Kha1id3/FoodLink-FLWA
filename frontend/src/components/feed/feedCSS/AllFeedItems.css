@@ -1,0 +1,31 @@
+.display-vendor-name-feed-version {
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+  -webkit-align-items: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 80px;
+  background-color: #ebf4f4;
+  margin: 0;
+  float: right;
+  margin-right: 15%;
+}
+
+.display-vendor-name-feed {
+  background-color: #272e48;
+  color: white;
+  width: 75%;
+  font-family: "Montserrat", sans-serif;
+  height: 6em;
+  margin: 0 auto;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  border: 1px solid #272e48;
+}

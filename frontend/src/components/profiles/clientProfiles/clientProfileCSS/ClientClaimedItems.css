@@ -1,0 +1,103 @@
+.display-food-name {
+  width: 10%;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.display-vendor-name-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.display-vendor-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+}
+
+.display-vendor-items:hover {
+  background-color: lightgray;
+}
+
+#vendor-items-header-client {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #aebdc7;
+  border-left: 1px solid #aebdc7;
+  border-right: 1px solid #aebdc7;
+}
+
+.display-vendor-name {
+  background-color: #272e48;
+  color: white;
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  height: 150px;
+  margin: 0 auto;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #272e48;
+  height: 6em;
+}
+
+.display-item-name-client {
+  text-decoration: none;
+  color: lightblue;
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  padding-left: 50px;
+}
+
+.claimed-button,
+.unclaimed-button {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  height: 40px;
+}
+
+.claimed-button {
+  background-color: red;
+}
+
+.unclaimed-button {
+  background-color: green;
+}
+
+.client-claimed-items-profile-picture-main-div {
+  display: flex;
+  justify-content: center;
+}
+
+.client-claimed-items-profile-pic {
+  width: 100px;
+  height: 98px;
+}
+
+#item-button-wrapper {
+  width: 10%;
+}
+
+#item-name,
+#weight,
+#feeds,
+#pick-up {
+  margin: 0.5em;
+}
+
+.clientImageWrapperForClientDisplay {
+  margin-right: 2.25em;
+}

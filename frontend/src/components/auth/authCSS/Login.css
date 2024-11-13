@@ -1,0 +1,64 @@
+.loginWrapper {
+  display: grid;
+  place-items: center center;
+  margin-top: 30vh;
+  height: 100%;
+  overflow: hidden;
+}
+
+#login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 50%;
+  margin: 0 auto;
+  padding-bottom: 1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background: white;
+}
+
+#login-form:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+#email-input,
+#password-input {
+  width: 500px;
+}
+
+#login-email-icon,
+#login-password-icon {
+  margin-top: 30px;
+}
+
+#login-header {
+  font-family: "Montserrat", sans-serif;
+}
+
+.login-button {
+  width: 25%;
+}
+
+#signup-link {
+  margin-top: 2%;
+  text-decoration: underline;
+  text-underline-position: under;
+  color: blue;
+}
+
+#signup-link:hover {
+  border-top: 1px solid blue;
+}
+
+.notMemberDiv {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+  justify-content: space-between;
+  margin-top: 3.5%;
+}
+
+.notMemberDiv > p {
+  margin: 2%;
+}

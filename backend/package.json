@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "concurrently": "^9.0.1",
+    "cookie-parser": "^1.4.7",
+    "debug": "~4.3.7",
+    "express": "~4.21.1",
+    "express-session": "^1.18.1",
+    "faker": "^5.5.3",
+    "http-errors": "~2.0.0",
+    "jade": "^0.29.0",
+    "morgan": "~1.10.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg-promise": "^11.10.1"
+  },
+  "devDependencies": {
+    "supervisor": "^0.12.0"
+  }
+}

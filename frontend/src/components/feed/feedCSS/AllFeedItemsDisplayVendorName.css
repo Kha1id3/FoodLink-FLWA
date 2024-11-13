@@ -1,0 +1,52 @@
+.feed-profile-pic {
+  width: 100px;
+  height: 98px;
+}
+
+.vendor-account-container {
+  display: flex;
+  width: 100%;
+}
+/* .display-vendor-name-feed {
+  height: 6em;
+} */
+.vendor-span-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vendor-account-profile-pic {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 5.75em;
+}
+
+.display-item-name {
+  width: 25%;
+}
+
+.display-item-name:visited,
+.display-item-name:link,
+.display-item-name:active {
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  padding-left: 10px;
+}
+
+.display-item-name:hover {
+  text-decoration: underline;
+}
+
+.vendor-address-field {
+  display: flex;
+  width: 50%;
+}
+
+.address-text {
+  font-size: 18px;
+}
