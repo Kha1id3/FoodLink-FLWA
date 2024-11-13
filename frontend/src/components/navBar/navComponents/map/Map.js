@@ -1,7 +1,7 @@
 import React from "react";
-import "./donateCSS/Donate.css";
+import "./mapCSS/Map.css";
 
-export default function Donate() {
+export default function Map() {
   return (
     <div>
       <img

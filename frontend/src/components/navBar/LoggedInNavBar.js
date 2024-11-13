@@ -20,14 +20,13 @@ export const LoggedInNavBar = props => {
             <NavLink to="/welcome" className="nav-link">
               <img
                 src={require("../landing/images/FoodLink Logo.png")}
-                alt="logo for FoodLink plate"
+                alt="logo for save a plate"
                 id="logo"
               />
             </NavLink>
           </span>
 
           <div id="nav-links">
-            
             <NavLink
               to="/resources"
               className="nav-link"
@@ -35,14 +34,13 @@ export const LoggedInNavBar = props => {
             >
               Resources
             </NavLink>
-            {<NavLink
-              to="/donate"
+            <NavLink
+              to="/map"
               className="nav-link"
               activeClassName="nav-link--active"
             >
-              Donate
-            </NavLink>}
-
+              Map
+            </NavLink>
             <NavLink
               to="/feed"
               className="nav-link"
@@ -83,7 +81,7 @@ export const LoggedInNavBar = props => {
             >
               <img
                 src={require("../landing/images/FoodLink Logo.png")}
-                alt="logo for FoodLink plate"
+                alt="logo for save a plate"
                 id="logo"
               />
             </NavLink>
@@ -94,7 +92,7 @@ export const LoggedInNavBar = props => {
               className="nav-link"
               activeClassName="nav-link--active"
             >
-              Team
+              About Us
             </NavLink>
             <NavLink
               to="/resources"
@@ -103,13 +101,6 @@ export const LoggedInNavBar = props => {
             >
               Resources
             </NavLink>
-            {/*<NavLink
-              to="/donate"
-              className="nav-link"
-              activeClassName="nav-link--active"
-            >
-              Donate
-            </NavLink>*/}
             <NavLink
               to={profileLink}
               className="nav-link"
