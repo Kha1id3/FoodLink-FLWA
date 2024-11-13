@@ -32,7 +32,7 @@ export default function Landing() {
         </div>
         <div id="mission-statement-container">
           <p id="mission-statement-text">
-            At Save a Plate, our mission is to reduce food waste and hunger in
+            At FoodLink Plate, our mission is to reduce food waste and hunger in
             New York City. We do this is by creating a platform where vendors
             can sign up and donate food while clients can claim those food items
             and add their favorite vendors to their favorites. Check out our{" "}
@@ -73,7 +73,7 @@ export default function Landing() {
             <h3 id="user-type">Volunteers</h3>
             <div>
               <div id="get-involved-info">
-                When you volunteer your time with Save A Plate, you’re playing a
+                When you volunteer your time with FoodLink Plate, you’re playing a
                 key role in fighting hunger & poverty. Your dedication as a
                 volunteer will create life-changing experiences for your city.
               </div>

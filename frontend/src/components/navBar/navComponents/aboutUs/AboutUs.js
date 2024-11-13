@@ -5,7 +5,7 @@ export default function About() {
   const teamMembers = [
     {
       name: "Khalid Muzaffar",
-      github: "https://github.com/your-github",
+      github: "https://github.com/Kha1id3",
       img: "https://avatars.githubusercontent.com/u/149905898?v=4", // Update with actual image paths
     },
     {

@@ -20,7 +20,7 @@ export const LoggedInNavBar = props => {
             <NavLink to="/welcome" className="nav-link">
               <img
                 src={require("../landing/images/sap-logo-color-final.png")}
-                alt="logo for save a plate"
+                alt="logo for FoodLink plate"
                 id="logo"
               />
             </NavLink>
@@ -83,7 +83,7 @@ export const LoggedInNavBar = props => {
             >
               <img
                 src={require("../landing/images/sap-logo-color-final.png")}
-                alt="logo for save a plate"
+                alt="logo for FoodLink plate"
                 id="logo"
               />
             </NavLink>
@@ -94,7 +94,7 @@ export const LoggedInNavBar = props => {
               className="nav-link"
               activeClassName="nav-link--active"
             >
-              About Us
+              Team
             </NavLink>
             <NavLink
               to="/resources"

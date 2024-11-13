@@ -518,7 +518,7 @@ class SignUp extends Component {
     return (
       <div id="signup-page">
         {this.conditionalRouting()}
-        <h3 id="signup-header">Join Save A Plate!</h3>
+        <h3 id="signup-header">Join FoodLink Plate!</h3>
         <div className="choose-user-signup-form">
           <FormControl component="fieldset">
             <FormLabel component="legend" className="user-type">
