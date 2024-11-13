@@ -57,7 +57,7 @@ getAllClients = (req, res, next) => {
 createUser = (req, res, next) => {
   const hash = authHelpers.createHash(req.body.password_digest);
   db.one(
-    "INSERT INTO users(name, email, password_digest, type, address_field, body, telephone_number, ein, client_certificate, profile_picture) VALUES(${name}, ${email}, ${password_digest}, ${type}, ${address_field}, ${body}, ${telephone_number}, ${ein}, ${client_certificate}, ${profile_picture}) RETURNING name",
+    "INSERT INTO users(name,email,password_digest,type,address_field,body,telephone_number,ein,client_certificate,profile_picture) VALUES(${name},${email},${password_digest},${type},${address_field},${body},${telephone_number},${ein},${client_certificate},${profile_picture})RETURNING name",
     {
       name: req.body.name,
       email: req.body.email,
@@ -68,38 +68,70 @@ createUser = (req, res, next) => {
       telephone_number: req.body.telephone_number || null,
       ein: req.body.ein || null,
       client_certificate: req.body.client_certificate || null,
-      profile_picture: req.body.profile_pic || null, // Save file path
+      profile_picture: req.body.profile_pic || null
     }
   )
     .then(() => {
       res.status(200).json({
         status: "success",
-        message: "User successfully created",
+        message: "you have added a user"
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return next(err);
     });
 };
 
 updateUser = (req, res, next) => {
+  // const hash = authHelpers.createHash(req.body.password_digest);
   let queryStringArray = [];
   let bodyKeys = Object.keys(req.body);
-  bodyKeys.forEach((key) => {
+  bodyKeys.forEach(key => {
     queryStringArray.push(key + "=${" + key + "}");
   });
 
   let queryString = queryStringArray.join(", ");
 
-  db.none("UPDATE users SET " + queryString + " WHERE id=" + req.params.id, req.body)
+  if (req.body.name && req.body.name.toLowerCase() === "null") {
+    req.body.name = null;
+  }
+  if (req.body.email && req.body.email.toLowerCase() === "null") {
+    req.body.email = null;
+  }
+  if (
+    req.body.address_field &&
+    req.body.address_field.toLowerCase() === "null"
+  ) {
+    req.body.address_field = null;
+  }
+  if (req.body.body && req.body.body.toLowerCase() === "null") {
+    req.body.body = null;
+  }
+  if (
+    req.body.telephone_number &&
+    req.body.telephone_number.toLowerCase() === "null"
+  ) {
+    req.body.telephone_number = null;
+  }
+  if (
+    req.body.client_certificate &&
+    req.body.client_certificate.toLowerCase() === "null"
+  ) {
+    req.body.client_certificate = null;
+  }
+
+  db.none(
+    "UPDATE users SET " + queryString + " WHERE id=" + req.params.id,
+    req.body
+  )
     .then(() => {
       res.status(200).json({
         status: "success",
-        message: "User successfully updated",
+        message: "User successfully updated"
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return next(err);
     });

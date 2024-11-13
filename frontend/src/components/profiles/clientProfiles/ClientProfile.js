@@ -34,12 +34,24 @@ class ClientProfile extends Component {
   }
 
   getProfilePic = () => {
-    axios.get(`/api/users/${this.props.currentUser.id}`).then(pic => {
+    axios.get(`/api/users/${this.props.currentUser.id}`).then((res) => {
+      const profilePicPath = res.data.data[0].profile_picture;
       this.setState({
-        profilePic: pic.data.data[0].profile_picture
+        profilePic: `${process.env.REACT_APP_API_URL}${profilePicPath}`, // Add API base URL if needed
       });
     });
   };
+
+  render() {
+    return (
+      <img
+        className="profile-picture"
+        src={this.state.profilePic || "/default-profile.png"} // Fallback image
+        alt="Profile"
+      />
+    );
+  }
+
 
   reloadUser = () => {
     if (!this.props.currentUser) {

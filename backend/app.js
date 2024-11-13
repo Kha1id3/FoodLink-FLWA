@@ -13,11 +13,6 @@ let favoriteRouter = require("./routes/favorites.js");
 let userRouter = require("./routes/user.js");
 let sessionRouter = require("./routes/sessions.js");
 
-const path = require("path");
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
 var app = express();
 
 // view engine setup

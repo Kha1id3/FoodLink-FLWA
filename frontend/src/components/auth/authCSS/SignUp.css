@@ -1,129 +1,129 @@
-/* Container Styling */
 #signup-page {
   height: 85vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: #d1d0d0; /* Light background for contrast */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 10% 90%;
 }
 
 #signup-header {
   font-family: "Montserrat", sans-serif;
-  color: #000000;
+  color: #272e48;
   font-size: 2.65em;
-  margin-bottom: 1em;
-}
-
-/* Form Wrapper */
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 50%;
-  background-color: #5c4e4e; /* Background for the form box */
-  padding: 2em;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Form Title */
-.signup-form-header {
-  font-family: "Montserrat", sans-serif;
-  color: #ffffff;
-  font-size: 36px;
-  margin-bottom: 1em;
-}
-
-/* Input Fields */
-.icon-input-field {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1em;
   width: 100%;
+  grid-column-start: 1;
+  grid-column-end: span 1;
+  grid-row-start: 1;
+  grid-row-end: span 1;
+  padding-top: 2em;
 }
 
-.icon-input-field img {
-  width: 35px;
-  height: 35px;
-  margin-right: 0.5em;
-}
-
-.input-field {
-  background-color: #988686; /* Matching theme color */
-  color: #000000;
-  border-radius: 5px;
-  padding: 0.5em;
-  width: 100%;
-  font-family: "Montserrat", sans-serif;
-}
-
-.input-field .MuiOutlinedInput-root {
-  background-color: #e6f0f0;
-}
-
-/* Profile Picture Upload */
-.icon-input-field label {
-  color: #ffffff;
-  font-weight: bold;
-}
-
-/* Radio Group Styling */
 .choose-user-signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.5em;
+  width: 100%;
+  grid-column-start: 1;
+  grid-column-end: span 1;
+  grid-row-start: 2;
+  grid-row-end: span 1;
+  display: grid;
+  place-items: center center;
+  margin-top: -6em;
 }
 
 #signup-header-body {
-  color: #000000;
-  font-size: 1.2em;
-  margin-bottom: 0.5em;
+  color: black;
+  font-size: 1.35em;
 }
 
-/* Buttons */
-.signup-button {
-  background-color: #d35348;
-  color: #ffffff;
-  padding: 0.5em 1.5em;
-  font-family: "Montserrat", sans-serif;
-  font-weight: bold;
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  padding-bottom: 2%;
   border-radius: 5px;
-  margin-top: 1em;
-  transition: transform 0.3s;
 }
 
-.signup-button:hover {
-  background-color: #a73a30;
-  transform: scale(1.05);
-}
-
-/* Adjust alignment for the entire form */
 .signup-form-wrapper {
   width: 100%;
-  display: flex;
-  justify-content: center;
+  grid-column-start: 2;
+  grid-column-end: span 1;
+  grid-row-start: 2;
+  grid-row-end: span 1;
+}
+
+.signup-form-header {
+  font-family: "Montserrat", sans-serif;
+  color: #272e48;
+  font-size: 36px;
+  margin: 10px 0 0 0;
+}
+
+#vendor-signup-form,
+#client-signup-form {
+  background-color: white;
+  width: 95%;
+  /* margin-top: -70px; */
+  min-height: 41em;
+  margin-bottom: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+#vendor-signup-form:hover,
+#client-signup-form:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.input-field {
+  background-color: #e6f0f0;
+  width: 500px;
+  border-radius: 5px;
+}
+
+.signup-button {
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .signup-demo-buttons {
   display: flex;
   justify-content: space-evenly;
-  width: 100%;
+  width: 50%;
+  margin-top: 1.5em;
 }
 
-.signup-demo-buttons .signup-button {
-  width: 45%; /* Adjusted width for side-by-side alignment */
+.icons {
+  width: 35px;
+  height: 35px;
+  padding-right: 10px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .signup-form {
-    width: 90%;
-    padding: 1.5em;
-  }
+.icon-input-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .input-field {
-    width: 100%;
-  }
+.MuiFormGroup-root-12 {
+  display: flex;
+}
+
+/*
+.radioGroupContainer {
+  display: flex;
+} */
+
+.foodVendorRadioContainer {
+  /* width: 100%; */
+  grid-column-start: 1;
+  grid-column-end: span 1;
+}
+
+.npoRadioContainer {
+  /* width: 100%; */
+  grid-column-start: 2;
+
+  /* grid-column-end: span 1; */
 }
