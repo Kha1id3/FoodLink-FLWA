@@ -10,7 +10,7 @@ export default function NavBar() {
         <span id="nav-title">
           <NavLink to="/welcome" className="nav-link">
             <img
-              src={require("../landing/images/sap-logo-color-final.png")}
+              src={require("../landing/images/FoodLink Logo.png")}
               alt="logo for FoodLink plate"
               id="logo"
             />
