@@ -3,10 +3,10 @@ DROP TABLE IF EXISTS favorites;
 DROP TABLE IF EXISTS business_hours;
 DROP TABLE IF EXISTS users;
 
--- DROP DATABASE IF EXISTS save_a_plate;
--- CREATE DATABASE save_a_plate;
+-- DROP DATABASE IF EXISTS food_link;
+-- CREATE DATABASE food_link;
 --
--- \c save_a_plate;
+-- \c food_link;
 
 
 CREATE TABLE users
