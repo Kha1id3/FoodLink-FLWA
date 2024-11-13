@@ -2,69 +2,50 @@ import React from "react";
 import "./Resources.css";
 
 export default function Resources() {
+  const resources = [
+    {
+      name: "World Food Programme",
+      link: "https://www.wfp.org/",
+      logo: "https://miro.medium.com/v2/resize:fit:2400/1*1ZF1lEpi9odcxZz2jgmI6g.png",
+      description: "Learn about global efforts to fight hunger.",
+    },
+    {
+      name: "Food and Agriculture Organization",
+      link: "https://www.fao.org/",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/FAO_logo.svg/1200px-FAO_logo.svg.png",
+      description: "Support sustainable agriculture and food security.",
+    },
+    {
+      name: "Polish Red Cross",
+      link: "https://pck.pl/",
+      logo: "https://pck.pl/wp-content/uploads/2020/08/pck-logo.svg",
+      description: "Helping fight hunger and support humanitarian aid in Poland.",
+    },
+    {
+      name: "Food Bank Poland",
+      link: "https://bankizywnosci.pl/",
+      logo: "https://bankizywnosci.pl/wp-content/themes/clv_bankiz/img/center_logo.png",
+      description: "Supporting food donation and fighting food waste in Poland.",
+    },
+  ];
+
   return (
     <div className="resources-wrapper">
       <div id="resources-container">
         <h1 id="hungry-header">Resources</h1>
         <div className="resources-all-text">
-          <a
-            className="hungry-one"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="http://foodhelp.nyc/snapfood-benefits-en/"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Supplemental_Nutrition_Assistance_Program_logo.svg/1200px-Supplemental_Nutrition_Assistance_Program_logo.svg.png"
-              alt=""
-              height="175px"
-            />
-            <p> To learn/apply for SNAP: {""}</p>
-          </a>
-
-          <a
-            className="hungry-two"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www1.nyc.gov/apps/311utils/providerInformation.htm?serviceId=1083"
-          >
-            <img
-              src="https://i.ya-webdesign.com/images/food-pantry-png-4.png"
-              alt=""
-              height="175px"
-            />
-            <p>For food pantries or soup kitchens near you: {""}</p>
-          </a>
-
-          <a
-            className="hungry-three"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.amny.com/news/nyc-food-donation-1.14906516"
-          >
-            <img
-              src="http://www.hawaiifoodbank.org/websites/foodbank/photogallery/5809684/donate%20food.jpg"
-              alt=""
-              height="175px"
-            />
-            <p> Not a vendor but want to donate food? {""} </p>
-          </a>
-
-          <a
-            className="hungry-four"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.foodwastefair.nyc/"
-          >
-            <img
-              src="https://foodtank.com/wp-content/uploads/2017/07/1498853730083.png"
-              alt=""
-              height="175px"
-            />
-            <p>
-              Calling all New York City food, beverage and hospitality
-              professionals! {""}{" "}
-            </p>
-          </a>
+          {resources.map((resource, index) => (
+            <a
+              key={index}
+              className={`resource-item resource-${index + 1}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={resource.link}
+            >
+              <img src={resource.logo} alt={resource.name} height="175px" />
+              <p>{resource.description}</p>
+            </a>
+          ))}
         </div>
       </div>
     </div>

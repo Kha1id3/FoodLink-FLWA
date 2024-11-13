@@ -10,13 +10,13 @@ export default function About() {
     },
     {
       name: "Ziad Oun",
-      github: "https://github.com/your-github",
+      github: "https://github.com/OUN123",
       img: "https://media.licdn.com/dms/image/v2/D4D03AQE4mRvR-1iZYQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1720092128049?e=1736985600&v=beta&t=yrJzCHIMcAmflijyztiboScOtuTp1Q-lGeZx0kKB3UU",
     },
     {
       name: "Mert Kodzhaaslan",
-      github: "https://github.com/your-github",
-      img: "./Morat logo.jpg",
+      github: "https://github.com/mertkodzhaaslan",
+      img: "https://avatars.githubusercontent.com/u/149077654?v=4",
     },
   ];
 
