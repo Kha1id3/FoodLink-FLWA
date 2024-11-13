@@ -1,109 +1,65 @@
+/* General Layout */
+#about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: #d1d0d0;
+}
+
 #meet-our-team {
-  padding-top: 2.5%;
+  color: #000000;
   font-family: "Montserrat", sans-serif;
   font-size: 46px;
   font-weight: bold;
-}
-
-#meet-our-team,
-#our-mission {
-  color: #272e48;
-  text-underline-position: under;
-}
-
-#our-mission-text {
-  color: #272e48;
-  padding-top: 2.5%;
-}
-
-.about-text {
-  width: 56%;
-  margin: 0 auto;
+  margin-bottom: 2rem;
 }
 
 #about-us-container {
-  width: 100%;
   display: flex;
   justify-content: space-around;
-  margin: 0 auto;
-  margin-top: 5%;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+.team-member {
+  width: 30%;
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem;
+  background-color: #5c4e4e;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.team-member:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .team-member-photo {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  border: 4px solid #988686;
+  margin-bottom: 1rem;
 }
 
 .team-member-name {
-  color: #272e48;
-  font-family: "Montserrat", sans-serif;
-  font-size: 26px;
+  color: #ffffff;
+  font-size: 24px;
+  margin: 0.5rem 0;
 }
 
 .github-icon {
-  width: 35px;
-  height: 35px;
-  padding-right: 10px;
+  width: 30px;
+  height: 30px;
+  margin-top: 1rem;
+  filter: invert(1); /* For white icons */
+  transition: transform 0.3s;
 }
 
-.linkedin-icon {
-  width: 35px;
-  height: 35px;
-}
-
-.github-icon:hover,
-.linkedin-icon:hover {
-  -webkit-transform: scale(1.5) 3s;
-  -ms-transform: scale(1.5) 3s;
-  transform: scale(1.5);
-}
-
-#save-a-plate,
-#pursuit-link {
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 18px;
-  text-decoration: underline;
-  text-underline-position: under;
-}
-
-#save-a-plate {
-  color: #d35348;
-}
-
-#pursuit-link {
-  color: #4142ea;
-}
-
-#save-a-plate:hover {
-  border-top: 1px solid #d35348;
-}
-
-#pursuit-link:hover {
-  border-top: 1px solid #4142ea;
-}
-
-#wynter,
-#jon,
-#deyvi,
-#andrew {
-  margin: 0 auto;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  transition: -webkit-transform 0.5s;
-  transition: transform 0.5s;
-  transition: transform 0.5s, -webkit-transform 0.5s;
-  width: 20%;
-}
-
-#wynter:hover,
-#jon:hover,
-#deyvi:hover,
-#andrew:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  -webkit-transform: scale(1.5);
-  transform: scale(1.05);
-  background-color: white;
+.github-icon:hover {
+  transform: scale(1.2);
 }
