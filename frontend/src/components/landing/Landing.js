@@ -32,7 +32,7 @@ export default function Landing() {
         </div>
         <div id="mission-statement-container">
           <p id="mission-statement-text">
-            At FoodLink Plate, our mission is to reduce food waste and hunger in
+            At FoodLink, our mission is to reduce food waste and hunger in
             New York City. We do this is by creating a platform where vendors
             can sign up and donate food while clients can claim those food items
             and add their favorite vendors to their favorites. Check out our{" "}
