@@ -32,16 +32,11 @@ export default function Landing() {
         </div>
         <div id="mission-statement-container">
           <p id="mission-statement-text">
-            At FoodLink, our mission is to reduce food waste and hunger in
-            New York City. We do this is by creating a platform where vendors
-            can sign up and donate food while clients can claim those food items
-            and add their favorite vendors to their favorites. Check out our{" "}
+          At FoodLink, our mission is to reduce food waste and alleviate hunger by connecting food vendors with those in need. Our platform allows vendors to sign up and donate surplus food, while clients can browse and claim available items and keep track of their favorite vendors. Explore our resources for information on global food support initiatives and discover ways you can contribute to a world with less waste and more support for those in need. Check out our{" "}
             {""}
             <NavLink to="/resources" id="resources-link">
               resources
-            </NavLink>{" "}
-            to find information about SNAP, nearby food pantries & soup kitchens
-            and how you can help.
+            </NavLink>{" "}.
           </p>
         </div>
       </div>
@@ -58,9 +53,7 @@ export default function Landing() {
             <h3 id="user-type">Food Vendors</h3>
             <div>
               <div id="get-involved-info">
-                Vendors include restaurants, catering halls, nursing homes, etc.
-                Sign up or log in using the links below and you will be eligible
-                for tax deductions if you donate food.
+              Our vendors include restaurants, catering services, nursing homes, and other food providers who are committed to reducing waste and supporting communities in need. Sign up or log in using the links below to start donating surplus food and make a positive impact. Food donations through FoodLink are also eligible for tax benefits.
               </div>
             </div>
           </div>
@@ -73,9 +66,7 @@ export default function Landing() {
             <h3 id="user-type">Volunteers</h3>
             <div>
               <div id="get-involved-info">
-                When you volunteer your time with FoodLink Plate, you’re playing a
-                key role in fighting hunger & poverty. Your dedication as a
-                volunteer will create life-changing experiences for your city.
+              When you volunteer with FoodLink, you’re helping to fight hunger and reduce food waste. Your role as a volunteer directly supports communities and creates life-changing experiences for those around you. Join us to make a meaningful impact in your city and beyond
               </div>
             </div>
           </div>
@@ -88,9 +79,7 @@ export default function Landing() {
             <h3 id="user-type">Non-profit Organizations</h3>
             <div>
               <div id="get-involved-info">
-                Non-profit organizations such as YMCA, PBS, World Wildlife Fund
-                (WWF), and Pursuit can register to claim donated food items.
-                Sign up or log in using the links below.
+              Non-profit organizations, such as community centers, shelters, and support groups, can register with FoodLink to receive food donations. This network allows organizations to provide essential resources to those in need, strengthening our shared mission to fight hunger together. Sign up or log in below to get started.
               </div>
             </div>
           </div>
