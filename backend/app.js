@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.use(
   session({
-    secret: "save_a_plate",
+    secret: "foodlink",
     resave: false,
     saveUninitialized: true
   })

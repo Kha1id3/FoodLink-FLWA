@@ -20,7 +20,7 @@ export const LoggedInNavBar = props => {
             <NavLink to="/welcome" className="nav-link">
               <img
                 src={require("../landing/images/FoodLink Logo.png")}
-                alt="logo for save a plate"
+                alt="logo for foodlink"
                 id="logo"
               />
             </NavLink>
@@ -81,7 +81,7 @@ export const LoggedInNavBar = props => {
             >
               <img
                 src={require("../landing/images/FoodLink Logo.png")}
-                alt="logo for save a plate"
+                alt="logo for foodlink"
                 id="logo"
               />
             </NavLink>

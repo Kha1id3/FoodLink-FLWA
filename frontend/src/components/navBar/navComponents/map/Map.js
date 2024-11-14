@@ -5,9 +5,9 @@ export default function Map() {
   return (
     <div>
       <img
-        src={require("./keep-calm.png")}
-        alt="keep-calm"
-        className="keep-calm"
+        src={require("./lodos.jpeg")}
+        alt="lodos"
+        className="lodos"
       />
     </div>
   );

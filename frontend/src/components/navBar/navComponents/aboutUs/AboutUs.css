@@ -5,6 +5,7 @@
   align-items: center;
   padding: 2rem;
   background-color: #d1d0d0;
+  margin-top: 50px; /* Creates space below the navbar */
 }
 
 #meet-our-team {
@@ -30,7 +31,8 @@
   margin: 1rem;
   background-color: #988686;
   border-radius: 8px;
-  transition: transform 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
+  color: #ffffff;
 }
 
 .team-member:hover {
@@ -42,7 +44,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  border: 4px solid #988686;
+  border: 4px solid #5C4E4E; /* Darker border color */
   margin-bottom: 1rem;
 }
 
@@ -57,9 +59,10 @@
   height: 30px;
   margin-top: 1rem;
   filter: invert(1); /* For white icons */
-  transition: transform 0.3s;
+  transition: transform 0.3s, filter 0.3s;
 }
 
 .github-icon:hover {
   transform: scale(1.2);
+  filter: invert(0.7); /* Slightly lighter on hover */
 }
