@@ -11,7 +11,7 @@ export default function NavBar() {
           <NavLink to="/welcome" className="nav-link">
             <img
               src={require("../landing/images/FoodLink Logo.png")}
-              alt="logo for FoodLink plate"
+              alt="logo for FoodLink"
               id="logo"
             />
           </NavLink>
