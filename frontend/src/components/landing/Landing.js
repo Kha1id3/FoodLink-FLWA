@@ -10,7 +10,7 @@ const buttonColor = createMuiTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {
-      main: "#272E48"
+      main: "#5C4E4E"
     }
   },
   typography: {

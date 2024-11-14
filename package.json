@@ -11,17 +11,6 @@
     "client": "cd frontend && npm start",
     "heroku-postbuild": "cd backend && npm install && cd ../frontend && npm install --only=prod && npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jerquinigo/FoodLink.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jerquinigo/FoodLink/issues"
-  },
-  "homepage": "https://github.com/jerquinigo/FoodLink#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "concurrently": "^4.1.0",

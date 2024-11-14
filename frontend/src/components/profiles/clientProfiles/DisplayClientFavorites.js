@@ -7,7 +7,7 @@ import "./clientProfileCSS/DisplayClientFavorites.css";
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: "#272E48" },
+    primary: { 500: "#5C4E4E" },
     secondary: {
       main: "#5C4E4E"
     }
