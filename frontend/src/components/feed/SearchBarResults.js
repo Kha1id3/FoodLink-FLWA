@@ -6,7 +6,7 @@ import "./feedCSS/SearchBarResults.css";
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: "#D35348" },
+    primary: { 500: "#5C4E4E" },
     secondary: {
       main: "#988686"
     }

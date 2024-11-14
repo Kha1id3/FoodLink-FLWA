@@ -6,9 +6,9 @@ import "./feedCSS/AllFeedItemsDisplayed.css";
 
 const theme = createMuiTheme({
   palette: {
-    primary: { 500: "#D35348" },
+    primary: { 500: "#5C4E4E" },
     secondary: {
-      main: "#988686"
+      main: "#5C4E4E"
     }
   },
   typography: {
