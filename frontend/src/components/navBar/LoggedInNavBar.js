@@ -55,6 +55,13 @@ export const LoggedInNavBar = props => {
             >
               My Profile
             </NavLink>
+            <NavLink
+              to="/claimed-items"
+              className="nav-link"
+              activeClassName="nav-link--active"
+            >
+              Claimed Food
+            </NavLink>
             <button
               className="nav-link"
               id="logout-button"

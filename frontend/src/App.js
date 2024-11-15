@@ -14,6 +14,7 @@ import FeedContainer from "./containers/FeedContainer.js";
 import VendorProfileThruClientContainer from "./containers/VendorProfileThruClientContainer";
 import LoggedInNavBarContainer from "./containers/LoggedInNavBarContainer.js";
 import PrivateRoute from "./utils/AuthRouting.js";
+import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
 // import Footer from "./components/footer/Footer.js";
 // import "./components/footer/footerCSS/Footer.css";
 
@@ -39,6 +40,7 @@ class App extends Component {
             <Route exact path="/map" component={Map} />
             <Route path="/user/signup" component={SignUpContainer} />
             <Route path="/user/login" component={LoginContainer} />
+            <Route path="/claimed-items" component={ClaimedItemsPage} />
             <PrivateRoute
               exact
               path="/client/:client"
@@ -54,6 +56,11 @@ class App extends Component {
               exact
               path="/clientview/:vendor"
               component={VendorProfileThruClientContainer}
+            />
+            <PrivateRoute
+              exact
+              path="/claimed-items"
+              component={ClaimedItemsPage}
             />
           </Switch>
           {/* <Footer /> */}

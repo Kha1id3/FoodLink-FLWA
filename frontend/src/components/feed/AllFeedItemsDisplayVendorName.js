@@ -3,23 +3,17 @@ import { Link } from "react-router-dom";
 import "./feedCSS/AllFeedItemsDisplayVendorName.css";
 
 class AllFeedItemsDisplayVendorName extends Component {
-  displayVendorPhoto = newArr => {
-    if (this.props.profilePicture) {
-      let addressArr = Object.keys(this.props.profilePicture);
-      return addressArr.map((data, i) => {
-        if (data === newArr[0]) {
-          return (
-            <img
-              className="feed-profile-pic"
-              src={this.props.profilePicture[data]}
-              alt=""
-              key={i}
-            />
-          );
-        }
-        return null;
-      });
+  displayVendorPhoto = (newArr) => {
+    if (this.props.profilePicture && this.props.profilePicture[newArr[0]]) {
+      return (
+        <img
+          className="feed-profile-pic"
+          src={this.props.profilePicture[newArr[0]]}
+          alt="Vendor Profile"
+        />
+      );
     }
+    return null;
   };
   getAllAddress = (foodDataObj, vendorName) => {
     let newArr = [];
