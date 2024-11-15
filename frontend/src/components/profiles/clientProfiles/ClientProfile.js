@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ClientProfileEditForm from "./ClientProfileEditForm.js";
 import DisplayClientFavorites from "./DisplayClientFavorites.js";
 import MainSnackbarContainer from "../../../containers/MainSnackbarContainer.js";
-import ClientClaimedItemsContainer from "../../../containers/ClientClaimedItemsContainer.js";
 import axios from "axios";
 import "./clientProfileCSS/ClientProfile.css";
 // import { geoFindMe } from "../../googleMapLoc/Geolocation.js";
@@ -91,11 +90,7 @@ class ClientProfile extends Component {
         </div>
 
         <div id="client-info-container">
-          <h1 id="claimed-items-list-client">Claimed Items</h1>
 
-          <ClientClaimedItemsContainer
-            receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-          />
           <div id="favorites-wrapper">
             <h1 id="favorite-vendors-list-client"> Favorite Vendors </h1>
 

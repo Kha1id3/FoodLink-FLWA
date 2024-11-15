@@ -186,7 +186,9 @@ tr:hover {
 .claimedListContainer {
   margin-top: 2.5%;
   box-shadow: rgb(209, 209, 213) 0 0 4px;
-  width: 95%;
+  width: 80%;
+  margin: 0 auto;
+  align-items: center;
 }
 
 .donationsContainer {

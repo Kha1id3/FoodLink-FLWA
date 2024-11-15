@@ -16,11 +16,12 @@
 
 .display-vendor-items {
   display: flex;
-  flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  width: 100%;
   background-color: white;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
 }
 
 .display-vendor-items:hover {

@@ -45,25 +45,37 @@ class ClaimedItemsPage extends Component {
     }, {});
   };
 
+  displayVendorAddressAndPhoto = (vendorName) => {
+    const vendor = this.state.allVendors.find((v) => v.vendor_name === vendorName);
+    if (vendor) {
+      return (
+        <>
+          <div className="vendor-address-field">
+            <p className="address-text">{vendor.address_field}</p>
+          </div>
+          <div className="clientImageWrapperForClientDisplay">
+            <img
+              className="client-claimed-items-profile-pic"
+              src={vendor.profile_picture}
+              alt={`${vendorName} profile`}
+            />
+          </div>
+        </>
+      );
+    }
+    return null;
+  };
+
   renderVendorSections = () => {
     const itemsByVendor = this.organizeFoodItemsByVendor();
     return Object.keys(itemsByVendor).map((vendorName, index) => {
       const vendorItems = itemsByVendor[vendorName];
-      const vendor = this.state.allVendors.find((v) => v.vendor_name === vendorName);
 
       return (
         <div key={index} className="claimedListContainer">
           <div className="display-vendor-name">
             <span className="display-item-name-client">{vendorName}</span>
-            {vendor && (
-              <div className="clientImageWrapperForClientDisplay">
-                <img
-                  className="client-claimed-items-profile-pic"
-                  src={vendor.profile_picture}
-                  alt={`${vendorName} profile`}
-                />
-              </div>
-            )}
+            {this.displayVendorAddressAndPhoto(vendorName)}
           </div>
           <div id="vendor-items-header-client">
             <h4 id="item-name">Food Item</h4>
