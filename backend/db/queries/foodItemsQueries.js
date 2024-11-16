@@ -179,37 +179,38 @@ deleteFoodItem = (req, res, next) => {
     .catch(err => next(err));
 };
 
-const confirmPickup = (req, res) => {
+const confirmPickup = (req, res, next) => {
   const { id } = req.params;
-  
-  db.query(
+
+  db.one(
     "UPDATE food_items SET is_confirmed = TRUE WHERE id = $1 RETURNING *",
-    [id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ food_item: result.rows[0] });
-    }
-  );
+    [id]
+  )
+    .then((foodItem) => {
+      res.status(200).json({ food_item: foodItem });
+    })
+    .catch((err) => {
+      console.error("Error confirming pickup:", err);
+      next(err);
+    });
 };
 
 // Function to get confirmed items for a specific vendor
-const getConfirmedFoodItemsByVendor = (req, res) => {
+const getConfirmedFoodItemsByVendor = (req, res, next) => {
   const { vendorId } = req.params;
 
-  db.query(
+  db.any(
     "SELECT * FROM food_items WHERE vendor_id = $1 AND is_confirmed = TRUE",
-    [vendorId],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ confirmed_food_items: result.rows });
-    }
-  );
+    [vendorId]
+  )
+    .then((confirmedFoodItems) => {
+      res.status(200).json({ confirmed_food_items: confirmedFoodItems });
+    })
+    .catch((err) => {
+      console.error("Error fetching confirmed food items:", err);
+      next(err);
+    });
 };
-
 
 
 module.exports = {
