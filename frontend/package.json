@@ -13,6 +13,7 @@
     "react-countup": "^4.4.0",
     "react-dom": "^16.14.0",
     "react-geocode": "^0.1.2",
+    "react-notify-toast": "^0.5.1",
     "react-redux": "^7.2.9",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^5.0.0",

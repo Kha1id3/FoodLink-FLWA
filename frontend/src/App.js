@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+import Notifications from "react-notify-toast"; // Import Notifications
 import LoginContainer from "./containers/LoginContainer.js";
 import SignUpContainer from "./containers/SignUpContainer.js";
 import "./App.css";
@@ -15,8 +16,6 @@ import VendorProfileThruClientContainer from "./containers/VendorProfileThruClie
 import LoggedInNavBarContainer from "./containers/LoggedInNavBarContainer.js";
 import PrivateRoute from "./utils/AuthRouting.js";
 import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
-// import Footer from "./components/footer/Footer.js";
-// import "./components/footer/footerCSS/Footer.css";
 
 class App extends Component {
   componentDidMount() {
@@ -26,6 +25,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        {/* Global Notifications Component */}
+        <Notifications options={{ zIndex: 200, bottom: '20px', wrapperClassName: 'custom-notify-container' }} />
         {this.props.currentUser.email === null ? (
           <NavBar />
         ) : (
@@ -63,7 +64,6 @@ class App extends Component {
               component={ClaimedItemsPage}
             />
           </Switch>
-          {/* <Footer /> */}
         </div>
       </div>
     );

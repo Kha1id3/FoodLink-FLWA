@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "../profiles/clientProfiles/clientProfileCSS/ClientClaimedItems.css";
-
+import { notify } from "react-notify-toast";
 class ClaimedItemsPage extends Component {
   constructor() {
     super();
@@ -34,6 +34,37 @@ class ClaimedItemsPage extends Component {
       .catch((err) => console.error(err));
   };
 
+  handleConfirmPickup = (itemId) => {
+    axios
+      .patch(`/api/fooditems/confirmpickup/${itemId}`)
+      .then(() => {
+        notify.show("Pickup confirmed successfully!", "success", 3000); // Show success notification
+        this.getAllClaimedFoodItems();
+      })
+      .catch((err) => {
+        notify.show("Failed to confirm pickup. Please try again.", "error", 3000); // Show error notification
+        console.error(err);
+      });
+  };
+
+  handleUnclaim = (itemId) => {
+    axios
+      .patch(`/api/fooditems/claimstatus/${itemId}`, {
+        client_id: null,
+        is_claimed: false,
+      })
+      .then(() => {
+        // Show success notification
+        notify.show("Item unclaimed successfully!", "success", 3000);
+        this.getAllClaimedFoodItems(); // Refresh the list
+      })
+      .catch((err) => {
+        console.error(err);
+        // Show error notification
+        notify.show("Failed to unclaim item. Please try again.", "error", 3000);
+      });
+  };
+
   organizeFoodItemsByVendor = () => {
     const { claimedFoodItems } = this.state;
     return claimedFoodItems.reduce((acc, item) => {
@@ -64,29 +95,6 @@ class ClaimedItemsPage extends Component {
       );
     }
     return null;
-  };
-
-  handleConfirmPickup = (itemId) => {
-    axios
-      .patch(`/api/fooditems/confirmpickup/${itemId}`)
-      .then(() => {
-        // Refresh the claimed items list after confirming pickup
-        this.getAllClaimedFoodItems();
-      })
-      .catch((err) => console.error(err));
-  };
-
-  handleUnclaim = (itemId) => {
-    axios
-      .patch(`/api/fooditems/claimstatus/${itemId}`, {
-        client_id: null,
-        is_claimed: false,
-      })
-      .then(() => {
-        // Refresh the claimed items list after unclaiming
-        this.getAllClaimedFoodItems();
-      })
-      .catch((err) => console.error(err));
   };
 
   renderVendorSections = () => {
