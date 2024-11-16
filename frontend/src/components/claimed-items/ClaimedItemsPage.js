@@ -66,6 +66,29 @@ class ClaimedItemsPage extends Component {
     return null;
   };
 
+  handleConfirmPickup = (itemId) => {
+    axios
+      .patch(`/api/fooditems/confirmpickup/${itemId}`)
+      .then(() => {
+        // Refresh the claimed items list after confirming pickup
+        this.getAllClaimedFoodItems();
+      })
+      .catch((err) => console.error(err));
+  };
+
+  handleUnclaim = (itemId) => {
+    axios
+      .patch(`/api/fooditems/claimstatus/${itemId}`, {
+        client_id: null,
+        is_claimed: false,
+      })
+      .then(() => {
+        // Refresh the claimed items list after unclaiming
+        this.getAllClaimedFoodItems();
+      })
+      .catch((err) => console.error(err));
+  };
+
   renderVendorSections = () => {
     const itemsByVendor = this.organizeFoodItemsByVendor();
     return Object.keys(itemsByVendor).map((vendorName, index) => {
@@ -82,6 +105,7 @@ class ClaimedItemsPage extends Component {
             <h4 id="weight">Weight</h4>
             <h4 id="feeds">Feeds</h4>
             <h4 id="pick-up">Pick-Up Time</h4>
+            <h4 id="actions">Actions</h4>
           </div>
           {vendorItems.map((item, idx) => (
             <div key={idx} className="display-vendor-items">
@@ -96,6 +120,20 @@ class ClaimedItemsPage extends Component {
               </div>
               <div id="item-pickup-container">
                 <p>{item.set_time}</p>
+              </div>
+              <div id="item-actions-container">
+                <button
+                  className="unclaim-button"
+                  onClick={() => this.handleUnclaim(item.id)}
+                >
+                  Unclaim
+                </button>
+                <button
+                  className="confirm-button"
+                  onClick={() => this.handleConfirmPickup(item.id)}
+                >
+                  Confirm Pickup
+                </button>
               </div>
             </div>
           ))}

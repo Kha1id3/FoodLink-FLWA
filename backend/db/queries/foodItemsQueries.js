@@ -179,6 +179,39 @@ deleteFoodItem = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const confirmPickup = (req, res) => {
+  const { id } = req.params;
+  
+  db.query(
+    "UPDATE food_items SET is_confirmed = TRUE WHERE id = $1 RETURNING *",
+    [id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ food_item: result.rows[0] });
+    }
+  );
+};
+
+// Function to get confirmed items for a specific vendor
+const getConfirmedFoodItemsByVendor = (req, res) => {
+  const { vendorId } = req.params;
+
+  db.query(
+    "SELECT * FROM food_items WHERE vendor_id = $1 AND is_confirmed = TRUE",
+    [vendorId],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ confirmed_food_items: result.rows });
+    }
+  );
+};
+
+
+
 module.exports = {
   getFedCount,
   getAllFoodItems,
@@ -188,5 +221,7 @@ module.exports = {
   createNewFoodItem,
   foodItemClaimStatus,
   updateFoodItem,
-  deleteFoodItem
+  deleteFoodItem,
+  confirmPickup,                
+  getConfirmedFoodItemsByVendor 
 };

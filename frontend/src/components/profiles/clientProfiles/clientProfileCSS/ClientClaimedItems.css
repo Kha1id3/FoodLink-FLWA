@@ -102,3 +102,33 @@
 .clientImageWrapperForClientDisplay {
   margin-right: 2.25em;
 }
+
+
+#item-actions-container {
+  display: flex;
+  gap: 10px;
+}
+
+.unclaim-button,
+.confirm-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.unclaim-button {
+  background-color: #d9534f;
+  color: white;
+}
+
+.confirm-button {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.unclaim-button:hover,
+.confirm-button:hover {
+  opacity: 0.9;
+}
