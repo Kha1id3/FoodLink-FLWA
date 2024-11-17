@@ -116,7 +116,7 @@ export const LoggedInNavBar = (props) => {
               My Profile
             </NavLink>
             <NavLink
-              to="/vendor_claimed_profile"
+              to="/vendor_claimed_page"
               className="nav-link"
               activeClassName="nav-link--active"
             >

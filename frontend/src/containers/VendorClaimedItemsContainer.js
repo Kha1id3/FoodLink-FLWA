@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import VendorClaimedItemsPage from "../components/vendor_claimed_profile/VendorClaimedItemsPage";
+import VendorClaimedItemsPage from "../components/vendor_claimed_page/VendorClaimedItemsPage";
 
 const mapStateToProps = (state) => {
   return {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { notify } from "react-notify-toast";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import "../vendor_claimed_profile/VendorClaimedItemsPage.css";
+import "./VendorClaimedItemsPage.css";
 
 
 
