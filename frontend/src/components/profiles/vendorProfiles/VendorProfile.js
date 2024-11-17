@@ -334,13 +334,6 @@ class VendorProfile extends Component {
             {this.foodItemsHeader()}
             {this.displayUnclaimedItems()}
           </div>
-          <div className="claimedListContainer">
-            <div className="display-donations-list-name">
-              <h3 className="donation-list-text"> Claimed Items </h3>
-            </div>
-            {this.foodItemsHeader()}
-            {this.displayClaimedItems()}
-          </div>
         </div>
       </div>
     );

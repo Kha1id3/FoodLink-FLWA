@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./navBarCSS/NavBar.css";
 
-export const LoggedInNavBar = props => {
+export const LoggedInNavBar = (props) => {
   let type;
   if (props.currentUser.type === 1) {
     type = "vendor";
@@ -66,8 +66,8 @@ export const LoggedInNavBar = props => {
               className="nav-link"
               id="logout-button"
               onClick={async () => {
-                 props.logoutUser();
-                 props.history.push("/welcome");
+                props.logoutUser();
+                props.history.push("/welcome");
               }}
             >
               Logout
@@ -114,6 +114,13 @@ export const LoggedInNavBar = props => {
               activeClassName="nav-link--active"
             >
               My Profile
+            </NavLink>
+            <NavLink
+              to="/vendor_claimed_profile"
+              className="nav-link"
+              activeClassName="nav-link--active"
+            >
+              Claimed Food
             </NavLink>
             <button
               className="nav-link"

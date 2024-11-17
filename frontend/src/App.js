@@ -16,6 +16,8 @@ import VendorProfileThruClientContainer from "./containers/VendorProfileThruClie
 import LoggedInNavBarContainer from "./containers/LoggedInNavBarContainer.js";
 import PrivateRoute from "./utils/AuthRouting.js";
 import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
+import VendorClaimedItemsPage from "./components/vendor_claimed_profile/VendorClaimedItemsPage.js";
+import VendorClaimedItemsContainer from "./containers/VendorClaimedItemsContainer";
 
 class App extends Component {
   componentDidMount() {
@@ -62,6 +64,12 @@ class App extends Component {
               exact
               path="/claimed-items"
               component={ClaimedItemsPage}
+            />
+
+            <PrivateRoute
+              exact
+              path="/vendor_claimed_profile"
+              component={VendorClaimedItemsContainer}
             />
           </Switch>
         </div>
