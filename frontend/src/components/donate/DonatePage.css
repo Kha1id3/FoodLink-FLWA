@@ -1,0 +1,100 @@
+.donate-page-container {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .foodItemsContainer {
+    margin: 0 auto;
+    width: 80%;
+    text-align: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .food-items-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #5C4E4E;
+  }
+  
+  .vendor-profile-container-vendor-version {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: white;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  .vendor-profile-container-vendor-version:hover {
+    background-color: #f4f4f4;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .claimed-vendor-items-two {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    font-size: 1rem;
+  }
+  
+  .vendor-page-item-name,
+  .vendor-page-item-Kilograms,
+  .vendor-page-item-quantity,
+  .vendor-page-pickup-time,
+  .vendor-page-item-status {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .vendor-page-item-status {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .status-claim-pending {
+    color: #a2dd55;
+  }
+  
+  .status-pickup-pending {
+    color: #e9862a;
+  }
+  
+  .status-pickup-confirmed {
+    color: #4caf50;
+  }
+  
+
+  .delete-item-container {
+    width: 15%; /* Ensure it aligns with other columns */
+    text-align: center; /* Center the button in its column */
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+  }
+  
+  .delete-item-button {
+    background-color: #5C4E4E; /* Match Add Item button's color */
+    color: #D1D0D0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    transition: background-color 0.3s ease;
+  }
+  
+  .delete-item-button:hover {
+    background-color: #4b3e3e; /* Slightly darker shade on hover */
+  }

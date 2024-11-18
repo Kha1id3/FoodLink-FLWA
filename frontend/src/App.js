@@ -18,6 +18,7 @@ import PrivateRoute from "./utils/AuthRouting.js";
 import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
 import VendorClaimedItemsPage from "./components/vendor_claimed_page/VendorClaimedItemsPage.js";
 import VendorClaimedItemsContainer from "./containers/VendorClaimedItemsContainer";
+import DonatePageContainer from "./containers/DonatePageContainer.js"; 
 
 class App extends Component {
   componentDidMount() {
@@ -71,6 +72,8 @@ class App extends Component {
               path="/vendor_claimed_page"
               component={VendorClaimedItemsContainer}
             />
+
+<PrivateRoute exact path="/donate" component={DonatePageContainer} />;
           </Switch>
         </div>
       </div>

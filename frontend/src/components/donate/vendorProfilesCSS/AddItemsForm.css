@@ -1,0 +1,58 @@
+#donation-form-header {
+  background-color: #988686;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+#add-items-form {
+  background-color: white;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15% 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.dropdownButtonContainer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 45%;
+}
+
+#input-name,
+#input-quantity {
+  width: 50%;
+  height: 37.5px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  padding-left: 15px;
+}
+
+#select-pickup-time {
+  width: 14vw;
+  height: 7vh;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1.05em;
+}
+
+#add-food-item-button {
+  width: 120px;
+  height: 50px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+}

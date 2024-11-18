@@ -253,17 +253,16 @@
 .claimed-vendor-items-two {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
-  padding: 10px 0;
+  align-items: center;
+  font-size: 1rem;
 }
 
 .vendor-page-item-name,
 .vendor-page-item-Kilograms,
 .vendor-page-item-quantity,
 .vendor-page-pickup-time,
-.vendor-page-item-status,
-.delete-item-container  {
+.vendor-page-item-status {
   flex: 1;
   text-align: center;
   font-weight: bold;
@@ -294,36 +293,4 @@
 
 .status-pickup-confirmed {
   color: #4caf50; /* Green for pickup confirmed */
-}
-
-.delete-item-container {
-  width: 15%; /* Ensure it aligns with other columns */
-  text-align: center; /* Center the button in its column */
-  display: flex;
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center */
-}
-.vendor-page-item-name {
-  display: flex;
-  align-items: center; /* Align the button and text vertically */
-  justify-content: flex-start; /* Ensure items are left-aligned */
-  flex: 2; /* Take more space */
-  gap: 10px; /* Space between the delete button and name */
-}
-
-.delete-item-small-button {
-  background-color: #ca3f3f; /* Match Add Item button's color */
-  color: #D1D0D0;
-  border: none;
-  padding: 4px 8px; /* Smaller padding */
-  border-radius: 3px; /* Rounded edges */
-  font-size: 12px; /* Smaller font */
-  font-weight: bold;
-  cursor: pointer;
-  font-family: "Montserrat", sans-serif;
-  transition: background-color 0.3s ease;
-}
-
-.delete-item-small-button:hover {
-  background-color: #4b3e3e; /* Slightly darker shade on hover */
 }

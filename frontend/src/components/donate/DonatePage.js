@@ -3,7 +3,7 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CountUp from "react-countup";
-import MainSnackbarContainer from "../../../containers/MainSnackbarContainer.js";
+import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
 import "./vendorProfilesCSS/VendorProfile.css";
 
@@ -40,7 +40,7 @@ class VendorProfile extends Component {
   componentDidMount() {
     this.fetchFoodItems(); // Fetch all items
     this.getFeedingCount(); // Get feeding count
-    this.getProfileInfo(); // Get profile information
+
   }
 
   getProfileInfo = () => {
@@ -173,7 +173,18 @@ class VendorProfile extends Component {
           className="vendor-profile-container-vendor-version"
         >
           <div className="claimed-vendor-items-two">
-            <p className="vendor-page-item-name">{item.name}</p>
+            <div className="vendor-page-item-name">
+              {!item.is_claimed && !item.is_confirmed && (
+                <button
+                  className="delete-item-small-button"
+                  id={item.food_id}
+                  onClick={this.deleteItem}
+                >
+                  X
+                </button>
+              )}
+              {item.name}
+            </div>
             <p className="vendor-page-item-Kilograms">{item.quantity * 3} Kilograms</p>
             <p className="vendor-page-item-quantity">{item.quantity} people</p>
             <p className="vendor-page-pickup-time">
@@ -210,40 +221,34 @@ class VendorProfile extends Component {
       <div id="vendor-container">
         <MainSnackbarContainer />
         <div className="main-div-displaying-detail-vendor-view-through-profile">
-          <div className="profile-picture-container-div">
-            <img
-              className="profile-picture-through-client-page"
-              alt="profile pic"
-              src={this.state.profilePic}
-            />
+
+
+          <h3 id="vendor-people-fed">
+            <div id="vendor-people-fed-count">
+              <CountUp duration={5} delay={3} end={this.state.fedCount} />
+            </div>
+            Kilograms of food donated
+          </h3>
+          <div className="modalContainer">
+            {this.state.toAddItem ? (
+              <SimpleModal
+                handleClose={this.handleClose}
+                handleOpen={this.handleOpen}
+                open={this.state.open}
+                handleChange={this.handleChange}
+                submitItem={this.submitItem}
+                receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+              />
+            ) : (
+              this.addItemButton()
+            )}
           </div>
-          <div className="vendorNameDiv">
-            <h2 className="vendor-name">
-              {!vendorUser ? this.props.currentUser.name : vendorUser}{" "}
-            </h2>
-          </div>
-          
-          
-          <div className="contactUsDiv">
-            <h3> Contact Us </h3>
-            <p className="vendorDeets">
-              <span className="addressSpan">
-                {!vendorUser
-                  ? this.props.currentUser.address_field
-                  : vendorUser}
-              </span>{" "}
-              <br />
-              <span className="emailSpan">
-                {!vendorUser ? this.props.currentUser.email : vendorUser}{" "}
-              </span>{" "}
-              <br />
-              <span className="phoneSpan">{this.state.phoneNumber}</span> <br />
-            </p>
-          </div>
-          <div className="vendorBioContainer">
-            <h3> Description </h3>
-            <p className="vendorBio"> {this.state.body}</p>
-          </div>
+
+
+        </div>
+        <div className="foodItemsContainer">
+          <h3 className="food-items-header">Added Donations</h3>
+          {this.displayFoodItems()}
         </div>
       </div>
     );

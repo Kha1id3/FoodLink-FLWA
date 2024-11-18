@@ -109,6 +109,13 @@ export const LoggedInNavBar = (props) => {
               Resources
             </NavLink>
             <NavLink
+          to="/donate"
+          className="nav-link"
+          activeClassName="nav-link--active"
+        >
+          Donate
+        </NavLink>
+            <NavLink
               to={profileLink}
               className="nav-link"
               activeClassName="nav-link--active"
