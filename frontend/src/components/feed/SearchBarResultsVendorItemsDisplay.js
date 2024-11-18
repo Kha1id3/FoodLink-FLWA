@@ -12,7 +12,7 @@ const SearchBarResultsVendorItemsDisplay = props => {
           <p>{props.food.name}</p>
         </div>
         <div id="search-item-weight-container">
-          <p>{props.food.quantity * 3} pounds</p>
+          <p>{props.food.quantity * 3} Kilograms</p>
         </div>
         <div id="search-item-feeds-container">
           <p>{props.food.quantity} people</p>

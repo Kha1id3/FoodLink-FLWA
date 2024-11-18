@@ -150,8 +150,8 @@ class VendorProfileThruClient extends Component {
         >
           <div className="claimed-vendor-items-two">
             <p className="vendor-page-item-name">{item.name}</p>
-            <p className="vendor-page-item-pounds">
-              {item.quantity * 3} pounds
+            <p className="vendor-page-item-Kilograms">
+              {item.quantity * 3} Kilograms
             </p>
             <p className="vendor-page-item-quantity">{item.quantity} people </p>
 
@@ -215,8 +215,8 @@ class VendorProfileThruClient extends Component {
         >
           <div className="claimed-vendor-items-two">
             <p className="vendor-page-item-name">{item.name}</p>
-            <p className="vendor-page-item-pounds">
-              {item.quantity * 3} pounds
+            <p className="vendor-page-item-Kilograms">
+              {item.quantity * 3} Kilograms
             </p>
             <p className="vendor-page-item-quantity">{item.quantity} people </p>
 

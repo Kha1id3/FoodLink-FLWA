@@ -150,7 +150,7 @@ class ClaimedItemsPage extends Component {
                 <p>{item.name}</p>
               </div>
               <div id="item-weight-container">
-                <p>{item.quantity * 3} pounds</p>
+                <p>{item.quantity * 3} Kilograms</p>
               </div>
               <div id="item-feeds-container">
                 <p>{item.quantity} people</p>

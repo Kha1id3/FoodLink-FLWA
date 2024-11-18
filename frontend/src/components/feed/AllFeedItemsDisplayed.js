@@ -44,7 +44,7 @@ class AllFeedItemsDisplayed extends Component {
                   <p>{food.name}</p>
                 </div>
                 <div id="item-weight-container">
-                  <p>{food.quantity * 3} pounds</p>
+                  <p>{food.quantity * 3} Kilograms</p>
                 </div>
                 <div id="item-feeds-container">
                   <p>{food.quantity} people</p>

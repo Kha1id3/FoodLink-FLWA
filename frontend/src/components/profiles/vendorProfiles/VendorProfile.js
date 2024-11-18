@@ -174,7 +174,7 @@ class VendorProfile extends Component {
         >
           <div className="claimed-vendor-items-two">
             <p className="vendor-page-item-name">{item.name}</p>
-            <p className="vendor-page-item-pounds">{item.quantity * 3} pounds</p>
+            <p className="vendor-page-item-Kilograms">{item.quantity * 3} Kilograms</p>
             <p className="vendor-page-item-quantity">{item.quantity} people</p>
             <p className="vendor-page-pickup-time">
               {converted_time < 13 && converted_time !== 0
@@ -226,7 +226,7 @@ class VendorProfile extends Component {
             <div id="vendor-people-fed-count">
               <CountUp duration={5} delay={3} end={this.state.fedCount} />
             </div>
-            pounds of food donated
+            Kilograms of food donated
           </h3>
           <div className="modalContainer">
             {this.state.toAddItem ? (

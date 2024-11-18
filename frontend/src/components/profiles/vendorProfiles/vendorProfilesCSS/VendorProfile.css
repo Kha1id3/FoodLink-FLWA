@@ -197,7 +197,7 @@
 }
 
 .claimed-item-name,
-.claimed-item-pounds,
+.claimed-item-Kilograms,
 .claimed-item-quantity,
 .claimed-item-pickup-time {
   width: 20%;
@@ -259,7 +259,7 @@
 }
 
 .vendor-page-item-name,
-.vendor-page-item-pounds,
+.vendor-page-item-Kilograms,
 .vendor-page-item-quantity,
 .vendor-page-pickup-time,
 .vendor-page-item-status {
