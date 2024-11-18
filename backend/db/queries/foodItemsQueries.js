@@ -207,16 +207,37 @@ deleteFoodItem = (req, res, next) => {
 const confirmPickup = (req, res, next) => {
   const { id } = req.params;
 
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).json({
+      status: "error",
+      message: "Invalid food item ID",
+    });
+  }
+
   db.one(
-    "UPDATE food_items SET is_confirmed = TRUE, is_claimed = FALSE WHERE id = $1 RETURNING *",
+    `UPDATE food_items 
+     SET is_confirmed = TRUE, is_claimed = FALSE 
+     WHERE id = $1 
+     RETURNING *`,
     [id]
   )
     .then((foodItem) => {
-      res.status(200).json({ food_item: foodItem });
+      if (!foodItem) {
+        throw new Error("Food item not found or update failed");
+      }
+      res.status(200).json({
+        status: "success",
+        food_item: foodItem,
+        message: "Pickup confirmed and item unclaimed",
+      });
     })
     .catch((err) => {
-      console.error("Error confirming pickup:", err);
-      next(err);
+      console.error("Error in confirmPickup function:", err);
+      res.status(500).json({
+        status: "error",
+        message: "Failed to confirm pickup",
+        error: err.message,
+      });
     });
 };
 

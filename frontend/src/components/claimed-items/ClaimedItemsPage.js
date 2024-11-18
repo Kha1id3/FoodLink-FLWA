@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import axios from "axios";
 import "../profiles/clientProfiles/clientProfileCSS/ClientClaimedItems.css";
 import { notify } from "react-notify-toast";
+
 class ClaimedItemsPage extends Component {
   constructor() {
     super();
     this.state = {
       claimedFoodItems: [],
       allVendors: [],
+      slidingItem: null,
+      isMouseDown: false,
+      slideProgress: {},
     };
   }
 
@@ -35,38 +39,57 @@ class ClaimedItemsPage extends Component {
   };
 
   handleConfirmPickup = (itemId) => {
+    if (!itemId) {
+      console.error("Invalid Item ID:", itemId);
+      return;
+    }
+  
     axios
       .patch(`/api/fooditems/confirmpickup/${itemId}`)
       .then(() => {
         notify.show("Pickup confirmed successfully!", "success", 3000);
         this.setState((prevState) => ({
           claimedFoodItems: prevState.claimedFoodItems.filter(
-            (item) => item.food_id !== itemId
+            (item) => item.id !== itemId
           ),
         }));
       })
       .catch((err) => {
         notify.show("Failed to confirm pickup. Please try again.", "error", 3000);
-        console.error(err);
+        console.error("Error confirming pickup:", err);
       });
   };
+  handleMouseDown = (itemId) => {
+    this.setState({ slidingItem: itemId, isMouseDown: true });
+  };
 
-  handleUnclaim = (itemId) => {
-    axios
-      .patch(`/api/fooditems/claimstatus/${itemId}`, {
-        client_id: null,
-        is_claimed: false,
-      })
-      .then(() => {
-        // Show success notification
-        notify.show("Item unclaimed successfully!", "success", 3000);
-        this.getAllClaimedFoodItems(); // Refresh the list
-      })
-      .catch((err) => {
-        console.error(err);
-        // Show error notification
-        notify.show("Failed to unclaim item. Please try again.", "error", 3000);
-      });
+  handleMouseMove = (e, itemId) => {
+    if (!this.state.isMouseDown || this.state.slidingItem !== itemId) return;
+
+    const slideContainer = e.target.closest(".slider-container");
+    const containerRect = slideContainer.getBoundingClientRect();
+    const progress = Math.min(
+      Math.max((e.clientX - containerRect.left) / containerRect.width, 0),
+      1
+    );
+
+    this.setState((prevState) => ({
+      slideProgress: { ...prevState.slideProgress, [itemId]: progress },
+    }));
+  };
+
+  handleMouseUp = (itemId) => {
+    const progress = this.state.slideProgress[itemId] || 0;
+
+    if (progress >= 0.95) {
+      this.handleConfirmPickup(itemId);
+    } else {
+      this.setState((prevState) => ({
+        slideProgress: { ...prevState.slideProgress, [itemId]: 0 },
+      }));
+    }
+
+    this.setState({ slidingItem: null, isMouseDown: false });
   };
 
   organizeFoodItemsByVendor = () => {
@@ -103,6 +126,8 @@ class ClaimedItemsPage extends Component {
 
   renderVendorSections = () => {
     const itemsByVendor = this.organizeFoodItemsByVendor();
+    const { slideProgress } = this.state;
+
     return Object.keys(itemsByVendor).map((vendorName, index) => {
       const vendorItems = itemsByVendor[vendorName];
 
@@ -134,18 +159,25 @@ class ClaimedItemsPage extends Component {
                 <p>{item.set_time}</p>
               </div>
               <div id="item-actions-container">
-                <button
-                  className="unclaim-button"
-                  onClick={() => this.handleUnclaim(item.id)}
-                >
-                  Unclaim
-                </button>
-                <button
-                  className="confirm-button"
-                  onClick={() => this.handleConfirmPickup(item.id)}
-                >
-                  Confirm Pickup
-                </button>
+              <div
+  className="slider-container"
+  onMouseMove={(e) => this.handleMouseMove(e, item.id)}
+  onMouseUp={() => {
+    console.log("Confirming Pickup for Item ID:", item.id); // Debug Log
+    this.handleMouseUp(item.id);
+  }}
+  onMouseLeave={() => this.handleMouseUp(item.id)}
+>
+                  <div
+                    className="slider"
+                    onMouseDown={() => this.handleMouseDown(item.id)}
+                    style={{
+                      left: `${(slideProgress[item.id] || 0) * 100}%`,
+                      backgroundColor:
+                        slideProgress[item.id] >= 0.95 ? "#4caf50" : "#ccc",
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ))}
