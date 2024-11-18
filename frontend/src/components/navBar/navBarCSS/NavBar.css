@@ -7,16 +7,13 @@
   background-color: #D1D0D0;
   height: 95px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* Spaces the logo, links, and profile icon */
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #nav-title {
-  position: absolute;
-  left: 20px; /* Positions the logo on the left */
-  top: 50%;
-  transform: translateY(-50%); /* Centers the logo vertically */
+  margin-left: 20px; /* Positions the logo on the far left */
 }
 
 #logo {
@@ -27,6 +24,9 @@
   display: flex;
   gap: 30px; /* Space between each link */
   align-items: center;
+  margin: 0 auto; /* Centers the links */
+  flex: 1; /* Allows the links to stretch and occupy space in the middle */
+  justify-content: center; /* Aligns the links in the center */
 }
 
 .nav-link {
@@ -35,12 +35,13 @@
   font-family: "Montserrat", sans-serif;
   font-weight: 900;
   text-decoration: none;
+  position: relative;
   transition: color 0.3s ease;
   padding: 0 15px;
 }
 
 .nav-link:hover {
-  color: #988686; /* Highlight color on hover */
+  color: #988686;
 }
 
 #logout-button {
@@ -58,13 +59,13 @@
 }
 
 .nav-link--active {
-  color: #988686; /* Initial color for active link */
+  color: #988686;
   position: relative;
   transition: color 0.3s ease-in-out; /* Smooth color transition */
 }
 
 .nav-link--active:hover {
-  color: #272e48; /* Color change on hover for active link */
+  color: #272e48;
 }
 
 .nav-link--active::after {
@@ -74,7 +75,7 @@
   bottom: -5px;
   width: 100%;
   height: 2px;
-  background-color: #988686; /* Color for the underline */
+  background-color: #988686;
   transform: scaleX(0); /* Starts with underline hidden */
   transform-origin: left;
   transition: transform 0.3s ease; /* Smooth underline animation */
@@ -84,6 +85,21 @@
   transform: scaleX(1); /* Expands the underline on hover */
 }
 
+#profile-link {
+  position: absolute; /* Positions the profile link independently */
+  right: 20px; /* Pushes it to the far right of the navbar */
+}
 
+#profile-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Makes the profile picture circular */
+  object-fit: cover;
+  border: 2px solid #272e48;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
 
-
+#profile-icon:hover {
+  border-color: #988686;
+}
