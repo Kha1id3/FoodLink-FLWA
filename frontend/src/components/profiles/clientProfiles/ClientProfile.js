@@ -4,53 +4,34 @@ import DisplayClientFavorites from "./DisplayClientFavorites.js";
 import MainSnackbarContainer from "../../../containers/MainSnackbarContainer.js";
 import axios from "axios";
 import "./clientProfileCSS/ClientProfile.css";
-// import { geoFindMe } from "../../googleMapLoc/Geolocation.js";
-// import { DisplayMap } from "../../googleMapLoc/DisplayMap.js";
 
 class ClientProfile extends Component {
   constructor() {
     super();
     this.state = {
-      latitude: "",
-      longitude: "",
-      gotdata: false,
-      zoom: 18,
-      profilePic: ""
+      profilePic: "",
     };
   }
+
   componentDidMount() {
-    // this.displayClientProfile();
     this.reloadUser();
     this.getProfilePic();
-    // geoFindMe().then(position => {
-    //   // ;
-    //   this.setState({
-    //     latitude: position.coords.latitude,
-    //     longitude: position.coords.longitude,
-    //     gotdata: true
-    //   });
-    // });
   }
 
   getProfilePic = () => {
-    axios.get(`/api/users/${this.props.currentUser.id}`).then((res) => {
-      const profilePicPath = res.data.data[0].profile_picture;
-      this.setState({
-        profilePic: `${process.env.REACT_APP_API_URL}${profilePicPath}`, // Add API base URL if needed
+    axios
+      .get(`/api/users/${this.props.currentUser.id}`)
+      .then((res) => {
+        const profilePicPath = res.data.data[0]?.profile_picture || "default-profile.png";
+        this.setState({
+          profilePic: `${process.env.REACT_APP_API_URL || ""}${profilePicPath}`,
+        });
+      })
+      .catch((err) => {
+        console.error("Error fetching profile picture:", err);
+        this.setState({ profilePic: "/default-profile.png" });
       });
-    });
   };
-
-  render() {
-    return (
-      <img
-        className="profile-picture"
-        src={this.state.profilePic || "/default-profile.png"} // Fallback image
-        alt="Profile"
-      />
-    );
-  }
-
 
   reloadUser = () => {
     if (!this.props.currentUser) {
@@ -60,52 +41,44 @@ class ClientProfile extends Component {
 
   render() {
     return (
-      <div id="client-container">
+      <div className="client-profile-container">
         <MainSnackbarContainer />
-        <div className="main-div-displaying-detail-vendor-view-through-profile">
-          <div className="profile-picture-container-div">
+        <div className="client-profile-card">
+          <div className="profile-picture-wrapper">
             <img
-              className="profile-picture-through-client-page"
-              alt="profile pic"
+              className="client-profile-picture"
               src={this.state.profilePic}
+              alt="Profile"
             />
           </div>
-          <div className="vendorNameDiv">
-            <h2 className="vendor-name">{this.props.currentUser.name}</h2>
-          </div>
-          <div className="contactUsDiv">
-            <h3> Contact Us </h3>
-            <p className="vendorDeets">
-              <span className="addressSpan">
-                {this.props.currentUser.address_field}
-              </span>
+          <h2 className="client-profile-name">{this.props.currentUser.name}</h2>
+
+          <div className="client-contact-container">
+            <h3>Contact Us</h3>
+            <p>
+              <span>{this.props.currentUser.address_field}</span>
               <br />
-              <span className="emailSpan">{this.props.currentUser.email}</span>
-              <br />
+              <span>{this.props.currentUser.email}</span>
             </p>
           </div>
-          <br />
-          <ClientProfileEditForm id={this.props.currentUser.id} />
-          <br />
+
+          <div className="client-edit-form">
+            <ClientProfileEditForm id={this.props.currentUser.id} />
+          </div>
         </div>
 
-        <div id="client-info-container">
-
-          <div id="favorites-wrapper">
-            <h1 id="favorite-vendors-list-client"> Favorite Vendors </h1>
-
-            <div id="favorites-container">
-              <div id="favorite-vendors-client">
-                <h4 id="favorite-vendor-name">Name </h4>
-                <h4 id="favorite-vendor-address">Address </h4>
-                <h4 id="favorite-vendor-phone">Phone Number </h4>
-                <div id="favorite-spacing" />
-              </div>
-              <DisplayClientFavorites
-                currentUserName={this.props.currentUser.name}
-                receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-              />
+        <div className="client-favorites-wrapper">
+          <h2 className="client-favorites-header">Favorite Vendors</h2>
+          <div className="client-favorites-container">
+            <div className="client-favorites-header-row">
+              <h4>Name</h4>
+              <h4>Address</h4>
+              <h4>Phone Number</h4>
             </div>
+            <DisplayClientFavorites
+              currentUserName={this.props.currentUser.name}
+              receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+            />
           </div>
         </div>
       </div>

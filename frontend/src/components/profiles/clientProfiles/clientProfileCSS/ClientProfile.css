@@ -1,84 +1,97 @@
-#client-container {
-  width: 100%;
+.client-profile-container {
   display: flex;
-  justify-content: left;
-  margin-bottom: 4em;
-}
-
-#client-profile-container {
-  width: 20vw;
-  margin-left: 1%;
-  height: 100%;
-}
-
-#client-info-container {
-  width: 80vw;
-}
-
-#profile-picture {
-  width: 200px;
-  height: 200px;
-  margin-top: 10%;
-}
-
-#client-name {
-  font-size: 32px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
   font-family: "Montserrat", sans-serif;
-  display: inline-block;
-  width: 50%;
 }
 
-.client-name {
-  display: inline-block;
-  border: 2px solid black;
-  border-radius: 5px;
-  margin: 0 auto;
-  margin-top: 50px;
-  padding: 20px 20px 20px 20px;
-  background-color: whitesmoke;
+.client-profile-card {
+  background-color: #d1d0d0;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 60%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-#vendor-info {
-  border-bottom: 2px solid black;
-  margin: 0 auto;
-}
-
-#favorite-vendors-list-client,
-#claimed-items-list-client {
-  font-family: "Montserrat", sans-serif;
-  width: 90%;
-  height: 75px;
+.profile-picture-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
-#favorite-vendors-client {
+.client-profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.client-profile-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #272e48;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.client-contact-container {
+  margin-bottom: 25px;
+}
+
+.client-contact-container h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #5c4e4e;
+  margin-bottom: 10px;
+}
+
+.client-contact-container p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #272e48;
+  line-height: 1.6;
+}
+
+.client-contact-container span {
+  display: block;
+}
+
+.client-favorites-wrapper {
+  width: 90%;
+  margin-top: 20px;
+}
+
+.client-favorites-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #272e48;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.client-favorites-container {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+.client-favorites-header-row {
   display: flex;
   justify-content: space-around;
-  width: 100%;
-  margin: 0 auto;
-  background-color: #5C4E4E;
-
-  /* border-left: 1px solid #aebdc7;
-  border-right: 1px solid #aebdc7; */
+  font-weight: bold;
+  color: #5c4e4e;
+  margin-bottom: 15px;
+  text-transform: uppercase;
 }
 
-#favorite-vendor-name,
-#favorite-vendor-address,
-#favorite-vendor-phone,
-#favorite-spacing {
-  width: 25%;
-
-  /* text-decoration: underline; */
-}
-
-#favorites-wrapper {
-  width: 100%;
-}
-
-#favorites-container {
-  margin-top: 2.5%;
-  box-shadow: rgb(209, 209, 213) 0 0 4px;
-  width: 95%;
+.client-favorites-header-row h4 {
+  flex: 1;
+  text-align: center;
 }
