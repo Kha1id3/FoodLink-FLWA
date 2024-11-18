@@ -142,7 +142,7 @@ class ClaimedItemsPage extends Component {
             <h4 id="weight">Weight</h4>
             <h4 id="feeds">Feeds</h4>
             <h4 id="pick-up">Pick-Up Time</h4>
-            <h4 id="actions">Actions</h4>
+            <h4 id="Confirm Pickup ➡️"></h4>
           </div>
           {vendorItems.map((item, idx) => (
             <div key={idx} className="display-vendor-items">

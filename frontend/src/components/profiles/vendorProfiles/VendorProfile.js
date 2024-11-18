@@ -65,7 +65,17 @@ class VendorProfile extends Component {
     axios
       .get(`/api/fooditems/vendor/${this.props.currentUser.name}`) // Fetch all food items for vendor
       .then((res) => {
-        this.setState({ foodItems: res.data.food_items }); // Update state with fetched food items
+        const sortedItems = res.data.food_items.sort((a, b) => {
+          // Sort by status: Claim Pending > Pickup Pending > Pickup Confirmed
+          if (!a.is_claimed && !a.is_confirmed) return -1;
+          if (!b.is_claimed && !b.is_confirmed) return 1;
+          if (a.is_claimed && !a.is_confirmed) return -1;
+          if (b.is_claimed && !b.is_confirmed) return 1;
+          if (a.is_confirmed) return 1;
+          if (b.is_confirmed) return -1;
+          return 0;
+        });
+        this.setState({ foodItems: sortedItems });
       })
       .catch((err) => console.error("Error fetching food items:", err));
   };
@@ -144,8 +154,6 @@ class VendorProfile extends Component {
   };
 
   displayFoodItems = () => {
-    console.log("Food items:", this.state.foodItems); // Debugging: Ensure data is correct
-  
     return this.state.foodItems.map((item) => {
       const converted_time = Number(item.set_time.slice(0, 2));
       let status;
