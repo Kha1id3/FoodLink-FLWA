@@ -174,7 +174,7 @@ class ClaimedItemsPage extends Component {
                     style={{
                       left: `${(slideProgress[item.id] || 0) * 100}%`,
                       backgroundColor:
-                        slideProgress[item.id] >= 0.95 ? "#4caf50" : "#ccc",
+                        slideProgress[item.id] >= 0.50 ? "#4caf50" : "#ccc",
                     }}
                   />
                 </div>

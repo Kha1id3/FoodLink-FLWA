@@ -27,13 +27,7 @@ export const LoggedInNavBar = (props) => {
           </span>
 
           <div id="nav-links">
-            <NavLink
-              to="/resources"
-              className="nav-link"
-              activeClassName="nav-link--active"
-            >
-              Resources
-            </NavLink>
+
             <NavLink
               to="/map"
               className="nav-link"
@@ -94,20 +88,7 @@ export const LoggedInNavBar = (props) => {
             </NavLink>
           </span>
           <div id="nav-links">
-            <NavLink
-              to="/aboutus"
-              className="nav-link"
-              activeClassName="nav-link--active"
-            >
-              About Us
-            </NavLink>
-            <NavLink
-              to="/resources"
-              className="nav-link"
-              activeClassName="nav-link--active"
-            >
-              Resources
-            </NavLink>
+
             <NavLink
           to="/donate"
           className="nav-link"
