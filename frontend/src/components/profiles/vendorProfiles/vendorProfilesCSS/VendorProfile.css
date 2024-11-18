@@ -5,15 +5,23 @@
   margin-top: 80px; /* Space to avoid overlap with the navbar */
 }
 
-#vendor-profile-container {
+.vendor-profile-container {
   display: flex;
-  flex-direction: column;
-  width: 20vw;
-  margin-left: 1%;
-  padding: 1em;
-  box-shadow: rgba(209, 209, 213, 0.5) 0 0 4px;
-  margin: 1em;
-  background: #D1D0D0; /* Updated to match Gothic Noir */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 80vh; /* Ensure it takes the full viewport height minus navbar */
+  margin-top: 80px; /* Avoid overlap with the navbar */
+}
+.vendor-profile-card {
+  background-color: #d1d0d0; /* Match theme */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 40px;
+  width: 50%;
+  max-width: 600px; /* Restrict max width for better alignment */
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
 }
 
 #vendor-info-container {
@@ -326,4 +334,74 @@
 
 .delete-item-small-button:hover {
   background-color: #4b3e3e; /* Slightly darker shade on hover */
+}
+
+.vendor-profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 80vh; /* Ensure it takes the full viewport height minus navbar */
+  margin-top: 80px; /* Avoid overlap with the navbar */
+}
+
+.vendor-profile-card {
+  background-color: #d1d0d0; /* Match theme */
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+  padding: 50px 30px; /* More padding for better spacing */
+  width: 60%;
+  max-width: 700px; /* Slightly wider */
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+}
+
+.vendor-profile-picture {
+  width: 180px; /* Larger size */
+  height: 180px;
+  border-radius: 50%; /* Make it a circle */
+  margin-bottom: 30px; /* More spacing below the picture */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly deeper shadow */
+}
+
+.vendor-profile-name {
+  font-size: 28px; /* Larger font */
+  font-weight: bold;
+  color: #272e48; /* Professional dark color */
+  margin-bottom: 20px;
+  text-transform: uppercase; /* Add uppercase for more emphasis */
+  letter-spacing: 1px; /* Spacing for readability */
+}
+
+.vendor-contact-container,
+.vendor-description-container {
+  margin-bottom: 25px;
+  text-align: center; /* Keep text aligned centrally */
+}
+
+.vendor-contact-container h3,
+.vendor-description-container h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #5c4e4e;
+  text-transform: uppercase; /* Make section headers uppercase */
+  letter-spacing: 0.8px; /* Add spacing for style */
+}
+
+.vendor-contact-container p,
+.vendor-description-container p {
+  font-size: 16px;
+  font-weight: bold; /* Make contact and description text bold */
+  color: #272e48;
+  line-height: 1.8; /* Add line height for better readability */
+}
+
+.vendor-contact-container span,
+.vendor-description-container span {
+  display: block; /* Each contact detail on a new line */
+}
+
+.vendor-description-container p {
+  font-style: italic; /* Italicize description for a subtle creative touch */
 }
