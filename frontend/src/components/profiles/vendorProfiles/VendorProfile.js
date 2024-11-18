@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { getFoodItemsByVendor } from "../../../utils/UtilFoodItems.js";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
 import CountUp from "react-countup";
 import MainSnackbarContainer from "../../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
@@ -13,12 +11,12 @@ const theme = createMuiTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {
-      main: "#5C4E4E"
-    }
+      main: "#5C4E4E",
+    },
   },
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
 class VendorProfile extends Component {
@@ -30,38 +28,46 @@ class VendorProfile extends Component {
       set_time: "",
       toAddItem: false,
       hasAdded: false,
-      claimedItems: [],
-      unclaimedItems: [],
+      foodItems: [], // Unified list of items with statuses
       fedCount: 0,
       profilePic: "",
       phoneNumber: "",
       body: "",
-      open: false //for modal
+      open: false, // for modal
     };
   }
 
   componentDidMount() {
-    this.vendorDonations();
-    this.getFeedingCount();
-    this.getProfileInfo();
+    this.fetchFoodItems(); // Fetch all items
+    this.getFeedingCount(); // Get feeding count
+    this.getProfileInfo(); // Get profile information
   }
 
   getProfileInfo = () => {
-    axios.get(`/api/users/${this.props.currentUser.id}`).then(info => {
+    axios.get(`/api/users/${this.props.currentUser.id}`).then((info) => {
       this.setState({
         profilePic: info.data.data[0].profile_picture,
         phoneNumber: info.data.data[0].telephone_number,
-        body: info.data.data[0].body
+        body: info.data.data[0].body,
       });
     });
   };
 
   getFeedingCount = () => {
-    axios.get("/api/fooditems/feedingcount").then(count => {
+    axios.get("/api/fooditems/feedingcount").then((count) => {
       this.setState({
-        fedCount: +count.data.fedCount[0].sum * 3
+        fedCount: +count.data.fedCount[0].sum * 3,
       });
     });
+  };
+
+  fetchFoodItems = () => {
+    axios
+      .get(`/api/fooditems/vendor/${this.props.currentUser.name}`) // Fetch all food items for vendor
+      .then((res) => {
+        this.setState({ foodItems: res.data.food_items }); // Update state with fetched food items
+      })
+      .catch((err) => console.error("Error fetching food items:", err));
   };
 
   addItemButton = () => {
@@ -84,20 +90,20 @@ class VendorProfile extends Component {
 
   toAddItem = () => {
     this.setState({
-      toAddItem: !this.state.toAddItem
+      toAddItem: !this.state.toAddItem,
     });
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  submitItem = e => {
+  submitItem = (e) => {
     e.preventDefault();
     this.setState({
-      hasAdded: true
+      hasAdded: true,
     });
     const { quantity, name, set_time } = this.state;
     axios
@@ -105,135 +111,24 @@ class VendorProfile extends Component {
         quantity: quantity,
         name: name,
         set_time: set_time,
-        vendor_id: this.props.currentUser.id
+        vendor_id: this.props.currentUser.id,
       })
       .then(() => {
         this.setState({
-          toAddItem: false
+          toAddItem: false,
         });
-        this.vendorDonations();
+        this.fetchFoodItems();
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
 
-  vendorDonations = () => {
-    let tempVar;
-    if (this.props.currentUser.type === 2) {
-      tempVar = this.props.match.params.vendor;
-    }
-    getFoodItemsByVendor(!tempVar ? this.props.currentUser.name : tempVar).then(
-      data => {
-        let unclaimed = data.data.food_items.filter(item => {
-          return item.is_claimed === false;
-        });
-
-        this.setState({
-          unclaimedItems: unclaimed
-        });
-        let claimed = data.data.food_items.filter(item => {
-          return item.is_claimed === true;
-        });
-        this.setState({
-          claimedItems: claimed
-        });
-      }
-    );
-  };
-
-  displayUnclaimedItems = () => {
-    return this.state.unclaimedItems.map(item => {
-      let converted_time = Number(item.set_time.slice(0, 2));
-      return (
-        <div
-          key={item.food_id}
-          className="vendor-profile-container-vendor-version"
-        >
-          <div className="claimed-vendor-items-two">
-            <p className="vendor-page-item-name">{item.name}</p>
-            <p className="vendor-page-item-pounds">
-              {item.quantity * 3} pounds
-            </p>
-            <p className="vendor-page-item-quantity">{item.quantity} people</p>
-            <p className="vendor-page-pickup-time">
-              {converted_time < 13 && converted_time !== 0
-                ? converted_time + "am"
-                : converted_time === 0
-                ? 12 + "am"
-                : converted_time - 12 + "pm"}
-            </p>
-            <div className="vendor-page-delete-icon">
-              <MuiThemeProvider theme={theme}>
-                <Button
-                  onClick={e => {
-                    this.deleteItem(e);
-                    this.props.receivedOpenSnackbar();
-                  }}
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  id={item.food_id}
-                >
-                  <DeleteIcon id={item.food_id} />
-                </Button>
-              </MuiThemeProvider>
-            </div>
-          </div>
-        </div>
-      );
-    });
-  };
-
-  displayClaimedItems = () => {
-    return this.state.claimedItems.map(item => {
-      let converted_time = Number(item.set_time.slice(0, 2));
-      return (
-        <div
-          key={item.food_id}
-          className="vendor-profile-container-vendor-version"
-        >
-          <div className="claimed-vendor-items-two">
-            <p className="vendor-page-item-name">{item.name}</p>
-
-            <p className="vendor-page-item-pounds">
-              {item.quantity * 3} pounds
-            </p>
-
-            <p className="vendor-page-item-quantity">{item.quantity} people</p>
-
-            <p className="vendor-page-pickup-time">
-              {converted_time === 0 || converted_time < 13
-                ? converted_time + "am"
-                : converted_time - 12 + "pm"}
-            </p>
-            <div className="vendor-page-delete-icon">
-              <MuiThemeProvider theme={theme}>
-                <Button
-                  onClick={e => {
-                    this.deleteItem(e);
-                    this.props.receivedOpenSnackbar();
-                  }}
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  id={item.food_id}
-                >
-                  <DeleteIcon id={item.food_id} />
-                </Button>
-              </MuiThemeProvider>
-            </div>
-          </div>
-        </div>
-      );
-    });
-  };
-
-  deleteItem = e => {
+  deleteItem = (e) => {
     axios
       .delete(`/api/fooditems/${e.currentTarget.id}`)
       .then(() => {
-        this.vendorDonations();
+        this.fetchFoodItems();
       })
       .then(() => {
         this.getFeedingCount();
@@ -248,21 +143,55 @@ class VendorProfile extends Component {
     this.setState({ open: false, toAddItem: !this.state.toAddItem });
   };
 
-  foodItemsHeader = () => {
-    return (
-      <div class="vendor-items-list-header-vendor-view-through-client">
-        <p className="vendor-profile-thru-client-item-name-for-client">
-          Food Item{" "}
-        </p>
-        <p className="vendor-profile-thru-client-weight-for-client">Weight </p>
-        <p className="vendor-profile-thru-client-feeds-for-client">Feeds </p>
-        <p className="vendor-profile-thru-client-pick-up-for-client">
-          Pick Up Time{" "}
-        </p>
-        <div className="vendor-profile-thru-spacing" />
-      </div>
-    );
+  displayFoodItems = () => {
+    console.log("Food items:", this.state.foodItems); // Debugging: Ensure data is correct
+  
+    return this.state.foodItems.map((item) => {
+      const converted_time = Number(item.set_time.slice(0, 2));
+      let status;
+  
+      // Determine the status of the item
+      if (!item.is_claimed && !item.is_confirmed) {
+        status = "Claim Pending"; // Neither claimed nor confirmed
+      } else if (item.is_claimed && !item.is_confirmed) {
+        status = "Pickup Pending"; // Claimed but not confirmed
+      } else if (!item.is_claimed && item.is_confirmed) {
+        status = "Pickup Confirmed"; // Confirmed but not claimed
+      }
+  
+      return (
+        <div
+          key={item.food_id}
+          className="vendor-profile-container-vendor-version"
+        >
+          <div className="claimed-vendor-items-two">
+            <p className="vendor-page-item-name">{item.name}</p>
+            <p className="vendor-page-item-pounds">{item.quantity * 3} pounds</p>
+            <p className="vendor-page-item-quantity">{item.quantity} people</p>
+            <p className="vendor-page-pickup-time">
+              {converted_time < 13 && converted_time !== 0
+                ? converted_time + "am"
+                : converted_time === 0
+                ? 12 + "am"
+                : converted_time - 12 + "pm"}
+            </p>
+            <p
+              className={`vendor-page-item-status ${
+                status === "Claim Pending"
+                  ? "status-claim-pending"
+                  : status === "Pickup Pending"
+                  ? "status-pickup-pending"
+                  : "status-pickup-confirmed"
+              }`}
+            >
+              {status}
+            </p>
+          </div>
+        </div>
+      );
+    });
   };
+  
 
   render() {
     let vendorUser;
@@ -326,14 +255,9 @@ class VendorProfile extends Component {
             <p className="vendorBio"> {this.state.body}</p>
           </div>
         </div>
-        <div id="vendor-info-container">
-          <div className="donationsContainer">
-            <div className="display-donations-list-name">
-              <h3 class="donation-list-text"> Donation List </h3>
-            </div>
-            {this.foodItemsHeader()}
-            {this.displayUnclaimedItems()}
-          </div>
+        <div className="foodItemsContainer">
+          <h3 className="food-items-header">Food Items</h3>
+          {this.displayFoodItems()}
         </div>
       </div>
     );

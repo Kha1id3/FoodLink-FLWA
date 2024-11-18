@@ -175,3 +175,122 @@
   box-shadow: rgba(209, 209, 213, 0.5) 0 0 4px;
   width: 95%;
 }
+
+
+.confirmedPickupsContainer {
+  margin-top: 2.5%;
+  width: 95%;
+  box-shadow: rgba(209, 209, 213, 0.5) 0 0 4px;
+}
+
+.claimed-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #5c4e4e;
+  background-color: #d1d0d0;
+}
+
+.claimed-item-row:hover {
+  background-color: #988686;
+}
+
+.claimed-item-name,
+.claimed-item-pounds,
+.claimed-item-quantity,
+.claimed-item-pickup-time {
+  width: 20%;
+  text-align: center;
+}
+
+#claimed-items-list-vendor {
+  color: #d1d0d0;
+  background-color: #272e48;
+  font-family: "Montserrat", sans-serif;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  border: 1px solid #272e48;
+}
+
+.foodItemsContainer {
+  margin: 0 auto;
+  width: 80%;
+  text-align: center;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.food-items-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #5C4E4E;
+}
+
+.vendor-profile-container-vendor-version {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.vendor-profile-container-vendor-version:hover {
+  background-color: #f4f4f4;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.claimed-vendor-items-two {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.vendor-page-item-name,
+.vendor-page-item-pounds,
+.vendor-page-item-quantity,
+.vendor-page-pickup-time,
+.vendor-page-item-status {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+.vendor-page-item-status {
+  color: #4caf50; /* Green for confirmed */
+}
+
+.vendor-page-item-status.not-confirmed {
+  color: #e9862a; /* Red for not confirmed */
+}
+
+
+.vendor-page-item-status {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.status-claim-pending {
+  color: #a2dd55; /* Orange for claim pending */
+}
+
+.status-pickup-pending {
+  color: #e9862a; /* Orange for pickup pending */
+}
+
+.status-pickup-confirmed {
+  color: #4caf50; /* Green for pickup confirmed */
+}

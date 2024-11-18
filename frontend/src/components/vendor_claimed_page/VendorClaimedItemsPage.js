@@ -8,9 +8,9 @@ class VendorClaimedItemsPage extends Component {
     super();
     this.state = {
       claimedFoodItems: [],
-      slidingItem: null, // Track the current sliding item
-      isMouseDown: false, // Track whether the mouse is pressed
-      slideProgress: {}, // Track the progress of each slider
+      slidingItem: null,
+      isMouseDown: false,
+      slideProgress: {},
     };
   }
 
@@ -20,33 +20,33 @@ class VendorClaimedItemsPage extends Component {
 
   getClaimedFoodItemsByVendor = () => {
     const { currentUser } = this.props;
-
+  
     axios
       .get(`/api/fooditems/vendor/${currentUser.name}`)
       .then((res) => {
-        const claimedItems = res.data.food_items.filter((item) => item.is_claimed);
+        const claimedItems = res.data.food_items.filter(
+          (item) => item.is_claimed && !item.is_confirmed // Only fetch unconfirmed claimed items
+        );
         this.setState({ claimedFoodItems: claimedItems });
       })
       .catch((err) => console.error("Error fetching claimed food items:", err));
   };
-
-  handleConfirmPickup = (itemId) => {
-    axios
-      .patch(`/api/fooditems/confirmpickup/${itemId}`)
-      .then(() => {
-        notify.show("Pickup confirmed successfully!", "success", 3000);
-        this.setState((prevState) => ({
-          claimedFoodItems: prevState.claimedFoodItems.map((item) =>
-            item.food_id === itemId ? { ...item, is_confirmed: true } : item
-          ),
-          slideProgress: { ...prevState.slideProgress, [itemId]: 0 },
-        }));
-      })
-      .catch((err) => {
-        notify.show("Failed to confirm pickup. Please try again.", "error", 3000);
-        console.error(err);
-      });
-  };
+handleConfirmPickup = (itemId) => {
+  axios
+    .patch(`/api/fooditems/confirmpickup/${itemId}`)
+    .then(() => {
+      notify.show("Pickup confirmed successfully!", "success", 3000);
+      this.setState((prevState) => ({
+        claimedFoodItems: prevState.claimedFoodItems.filter(
+          (item) => item.food_id !== itemId
+        ),
+      }));
+    })
+    .catch((err) => {
+      notify.show("Failed to confirm pickup. Please try again.", "error", 3000);
+      console.error(err);
+    });
+};
 
   handleMouseDown = (itemId) => {
     this.setState({ slidingItem: itemId, isMouseDown: true });
@@ -71,10 +71,8 @@ class VendorClaimedItemsPage extends Component {
     const progress = this.state.slideProgress[itemId] || 0;
 
     if (progress >= 0.95) {
-      // Confirm pickup if slider is fully slid to the right
       this.handleConfirmPickup(itemId);
     } else {
-      // Reset slider if not fully slid
       this.setState((prevState) => ({
         slideProgress: { ...prevState.slideProgress, [itemId]: 0 },
       }));
@@ -87,35 +85,28 @@ class VendorClaimedItemsPage extends Component {
     const { claimedFoodItems, slideProgress } = this.state;
 
     return claimedFoodItems.map((item) => (
-      <div
-        key={item.food_id}
-        className={`claimed-item-row ${item.is_confirmed ? "confirmed" : ""}`}
-      >
+      <div key={item.food_id} className="claimed-item-row">
         <div className="claimed-item-name">{item.name}</div>
         <div className="claimed-item-pounds">{item.quantity * 3} pounds</div>
         <div className="claimed-item-feeds">{item.quantity} people</div>
         <div className="claimed-item-time">{item.set_time}</div>
         <div className="claimed-item-actions">
-          {item.is_confirmed ? (
-            <span className="confirmation-message">Confirmed Pickup</span>
-          ) : (
+          <div
+            className="slider-container"
+            onMouseMove={(e) => this.handleMouseMove(e, item.food_id)}
+            onMouseUp={() => this.handleMouseUp(item.food_id)}
+            onMouseLeave={() => this.handleMouseUp(item.food_id)}
+          >
             <div
-              className="slider-container"
-              onMouseMove={(e) => this.handleMouseMove(e, item.food_id)}
-              onMouseUp={() => this.handleMouseUp(item.food_id)}
-              onMouseLeave={() => this.handleMouseUp(item.food_id)}
-            >
-              <div
-                className="slider"
-                onMouseDown={() => this.handleMouseDown(item.food_id)}
-                style={{
-                  left: `${(slideProgress[item.food_id] || 0) * 100}%`,
-                  backgroundColor:
-                    slideProgress[item.food_id] >= 0.95 ? "#4caf50" : "#ccc",
-                }}
-              />
-            </div>
-          )}
+              className="slider"
+              onMouseDown={() => this.handleMouseDown(item.food_id)}
+              style={{
+                left: `${(slideProgress[item.food_id] || 0) * 100}%`,
+                backgroundColor:
+                  slideProgress[item.food_id] >= 0.95 ? "#4caf50" : "#ccc",
+              }}
+            />
+          </div>
         </div>
       </div>
     ));

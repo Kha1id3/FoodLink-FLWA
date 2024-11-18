@@ -32,13 +32,14 @@ class AllFeedItems extends Component {
     if (this.props.allFoodItems) {
       let foodDataObj = {};
       let converted_time;
-      // eslint-disable-next-line
-      this.props.allFoodItems.map((food, i) => {
-        converted_time = Number(food.set_time.slice(0, 2));
-        if (!foodDataObj[food.vendor_name] && food.is_claimed === false) {
-          foodDataObj[food.vendor_name] = [food];
-        } else if (foodDataObj[food.vendor_name] && food.is_claimed === false) {
-          foodDataObj[food.vendor_name].push(food);
+      // Map over the food items and only include those that are not claimed and not confirmed
+      this.props.allFoodItems.forEach((food) => {
+        if (!food.is_claimed && !food.is_confirmed) {
+          if (!foodDataObj[food.vendor_name]) {
+            foodDataObj[food.vendor_name] = [food];
+          } else {
+            foodDataObj[food.vendor_name].push(food);
+          }
         }
       });
 
@@ -65,6 +66,7 @@ class AllFeedItems extends Component {
       return vendorName;
     }
   };
+
   render() {
     return <>{this.allFoodItemsMapped()}</>;
   }

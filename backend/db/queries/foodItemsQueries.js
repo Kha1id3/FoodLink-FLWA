@@ -35,7 +35,13 @@ getAllFoodItems = (req, res, next) => {
 
 getAllClaimedFoodItems = (req, res, next) => {
   db.any(
-    "SELECT food_clients.*, users.name AS vendor_name FROM (SELECT food_items.*, users.name AS client_name, users.address_field, users.telephone_number FROM food_items JOIN users ON food_items.client_id=users.id) AS food_clients JOIN users ON food_clients.vendor_id=users.id WHERE client_id=$1",
+    `SELECT food_clients.*, users.name AS vendor_name 
+     FROM (SELECT food_items.*, users.name AS client_name, users.address_field, users.telephone_number 
+           FROM food_items 
+           JOIN users ON food_items.client_id = users.id 
+           WHERE is_claimed = TRUE AND is_confirmed = FALSE) AS food_clients 
+     JOIN users ON food_clients.vendor_id = users.id 
+     WHERE client_id = $1`,
     [+req.session.currentUser.id]
   )
     .then(food_items => {
@@ -73,19 +79,38 @@ getFoodItemsByClient = (req, res, next) => {
 getFoodItemsByVendorName = (req, res, next) => {
   let vendorName = req.params.name;
   db.any(
-    "SELECT food_items.id AS food_id, food_items.quantity, food_items.name, food_items.client_id, food_items.vendor_id, food_items.is_claimed, food_items.set_time, users.id AS user_id, users.name AS vendor_name, users.email AS vendor_email, users.type, users.address_field AS vendor_address, users.body, users.telephone_number, users.ein FROM food_items JOIN users ON food_items.vendor_id = users.id WHERE users.name =$1",
+    `SELECT 
+      food_items.id AS food_id, 
+      food_items.quantity, 
+      food_items.name, 
+      food_items.client_id, 
+      food_items.vendor_id, 
+      food_items.is_claimed, 
+      food_items.is_confirmed, 
+      food_items.set_time, 
+      users.id AS user_id, 
+      users.name AS vendor_name, 
+      users.email AS vendor_email, 
+      users.type, 
+      users.address_field AS vendor_address, 
+      users.body, 
+      users.telephone_number, 
+      users.ein 
+    FROM food_items 
+    JOIN users ON food_items.vendor_id = users.id 
+    WHERE users.name =$1`,
     [vendorName]
   )
     .then(food_items => {
       res.status(200).json({
-        status: "sucess",
+        status: "success",
         food_items: food_items,
         message: "received food items from vendor"
       });
     })
     .catch(err => {
-      console.log(err);
-      return next(err);
+      console.error(err);
+      next(err);
     });
 };
 
@@ -183,7 +208,7 @@ const confirmPickup = (req, res, next) => {
   const { id } = req.params;
 
   db.one(
-    "UPDATE food_items SET is_confirmed = TRUE WHERE id = $1 RETURNING *",
+    "UPDATE food_items SET is_confirmed = TRUE, is_claimed = FALSE WHERE id = $1 RETURNING *",
     [id]
   )
     .then((foodItem) => {
@@ -200,7 +225,8 @@ const getConfirmedFoodItemsByVendor = (req, res, next) => {
   const { vendorId } = req.params;
 
   db.any(
-    "SELECT * FROM food_items WHERE vendor_id = $1 AND is_confirmed = TRUE",
+    `SELECT * FROM food_items 
+     WHERE vendor_id = $1 AND is_confirmed = TRUE`,
     [vendorId]
   )
     .then((confirmedFoodItems) => {
@@ -211,7 +237,6 @@ const getConfirmedFoodItemsByVendor = (req, res, next) => {
       next(err);
     });
 };
-
 
 module.exports = {
   getFedCount,
