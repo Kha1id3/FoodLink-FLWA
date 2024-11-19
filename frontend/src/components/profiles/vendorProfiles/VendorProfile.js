@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import VendorProfileEditForm from "./VendorProfileEditForm";
 import "./vendorProfilesCSS/VendorProfile.css";
 
 class VendorProfile extends Component {
@@ -13,7 +14,7 @@ class VendorProfile extends Component {
   }
 
   componentDidMount() {
-    this.getProfileInfo(); // Get profile information
+    this.getProfileInfo();
   }
 
   getProfileInfo = () => {
@@ -40,7 +41,7 @@ class VendorProfile extends Component {
           />
           <h1 className="vendor-profile-name">{name}</h1>
           <div className="vendor-contact-container">
-            <h2>Contact Us</h2>
+            <h3>Contact Us</h3>
             <p>
               <span>{address_field}</span> <br />
               <span>{email}</span> <br />
@@ -48,8 +49,11 @@ class VendorProfile extends Component {
             </p>
           </div>
           <div className="vendor-description-container">
-            <h2>Description</h2>
+            <h3>Description</h3>
             <p>{body}</p>
+          </div>
+          <div className="vendor-edit-form-container">
+            <VendorProfileEditForm id={this.props.currentUser.id} />
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import "./vendorProfilesCSS/VendorProfileEditForm.css";
 
 class VendorProfileEditForm extends Component {
   constructor() {
@@ -13,143 +14,151 @@ class VendorProfileEditForm extends Component {
       address_field: "",
       body: "",
       telephone_number: "",
-      ein: ""
+      ein: "",
     };
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   toggleEditFormLogic = () => {
     this.setState({
-      editProfileButton: !this.state.editProfileButton
+      editProfileButton: !this.state.editProfileButton,
     });
   };
 
-  editProfile = () => {
-    return <button onClick={this.toggleEditFormLogic}>Edit Profile</button>;
-  };
-
-  editForm = () => {
+  displayEditForm = () => {
     return (
-      <div className="displayEditFormPage">
-        <form onSubmit={this.handleSubmit}>
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="name"
-            placeholder="Update Business Name"
-            value={this.state.name}
-          />
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="email"
-            placeholder="Update Email"
-            value={this.state.email}
-          />
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="address"
-            placeholder="Update Address"
-            value={this.state.address}
-          />
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="body"
-            placeholder="Update Business Information"
-            value={this.state.body}
-          />
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="telephone_number"
-            placeholder="Update Telephone Number"
-            value={this.state.telephone_number}
-          />
-          <input
-            onChange={this.handleChange}
-            type="text"
-            name="ein"
-            placeholder="Update Employee Identificaton Number"
-            value={this.state.ein}
-          />
-          <button type="submit">Edit</button>
+      <div id="vendor-edit-form-container">
+        <form id="vendor-edit-form" autoComplete="off" onSubmit={this.handleSubmit}>
+          <div className="icon-input-field">
+            <TextField
+              label="Name"
+              margin="normal"
+              onChange={this.handleChange}
+              name="name"
+              value={this.state.name}
+              type="text"
+              placeholder="Enter Name"
+              fullWidth
+            />
+          </div>
+          <div className="icon-input-field">
+            <TextField
+              label="Email"
+              margin="normal"
+              onChange={this.handleChange}
+              name="email"
+              value={this.state.email}
+              type="text"
+              placeholder="Enter Email"
+              fullWidth
+            />
+          </div>
+          <div className="icon-input-field">
+            <TextField
+              label="Address"
+              margin="normal"
+              onChange={this.handleChange}
+              name="address_field"
+              value={this.state.address_field}
+              type="text"
+              placeholder="Enter Address"
+              fullWidth
+            />
+          </div>
+          <div className="icon-input-field">
+            <TextField
+              label="Description"
+              margin="normal"
+              onChange={this.handleChange}
+              name="body"
+              value={this.state.body}
+              type="text"
+              placeholder="Enter Description"
+              fullWidth
+            />
+          </div>
+          <div className="icon-input-field">
+            <TextField
+              label="Telephone Number"
+              margin="normal"
+              onChange={this.handleChange}
+              name="telephone_number"
+              value={this.state.telephone_number}
+              type="text"
+              placeholder="Enter Telephone Number"
+              fullWidth
+            />
+          </div>
+          <div className="icon-input-field">
+            <TextField
+              label="EIN"
+              margin="normal"
+              onChange={this.handleChange}
+              name="ein"
+              value={this.state.ein}
+              type="text"
+              placeholder="Enter EIN"
+              fullWidth
+            />
+          </div>
+          <div id="vendor-edit-form-button-container">
+            <Button variant="contained" color="primary" type="submit">
+              Submit
+            </Button>
+          </div>
         </form>
       </div>
     );
   };
 
-  updateInfo = id => {
-    const {
-      name,
-      email,
-      address_field,
-      body,
-      telephone_number,
-      ein
-    } = this.state;
-    let changeValue = [];
-    if (name !== "") {
-      changeValue.push(name);
-    }
-    if (email !== "") {
-      changeValue.push(email);
-    }
-    if (address_field !== "") {
-      changeValue.push(address_field);
-    }
-    if (body !== "") {
-      changeValue.push(name);
-    }
-    if (telephone_number !== "") {
-      changeValue.push(name);
-    }
-    if (ein !== "") {
-      changeValue.push(name);
-    }
+  updateInfo = () => {
     axios
       .patch(`/api/users/${this.props.id}`, {
         name: this.state.name,
         email: this.state.email,
-        address_field: this.state.address,
+        address_field: this.state.address_field,
         body: this.state.body,
         telephone_number: this.state.telephone_number,
-        ein: this.state.ein
+        ein: this.state.ein,
       })
       .then(() => {
         this.setState({
           name: "",
           email: "",
-          address: "",
+          address_field: "",
           body: "",
           telephone_number: "",
-          ein: ""
+          ein: "",
+          editProfileButton: false,
         });
       })
-      .catch(err => {
-        console.log(err);
+      .catch((err) => {
+        console.error("Error updating vendor info:", err);
       });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.updateInfo();
   };
 
   render() {
     return (
-      <>
-        <div className="ClientFormMainPage">
-          {this.editProfile()}
-          {this.state.editProfileButton ? this.editForm() : null}
-        </div>
-      </>
+      <div className="VendorFormMainPage">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.toggleEditFormLogic}
+        >
+          {this.state.editProfileButton ? "Close Edit Form" : "Edit Profile"}
+        </Button>
+        {this.state.editProfileButton ? this.displayEditForm() : null}
+      </div>
     );
   }
 }

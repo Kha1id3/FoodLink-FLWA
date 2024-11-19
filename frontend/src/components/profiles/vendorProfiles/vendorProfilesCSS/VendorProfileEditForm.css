@@ -1,0 +1,40 @@
+#vendor-edit-form-container {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+#vendor-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.icon-input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#vendor-edit-form-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  background-color: #5c4e4e;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #988686;
+}
