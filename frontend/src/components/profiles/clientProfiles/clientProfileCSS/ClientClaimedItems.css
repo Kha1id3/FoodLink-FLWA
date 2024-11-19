@@ -36,6 +36,7 @@
   background-color: #D1D0D0;
   border-left: 1px solid #aebdc7;
   border-right: 1px solid #aebdc7;
+  margin-top: 70px;
 }
 
 .display-vendor-name {
@@ -95,7 +96,8 @@
 #item-name,
 #weight,
 #feeds,
-#pick-up {
+#pick-up,
+#actions {
   margin: 0.5em;
 }
 
