@@ -11,6 +11,7 @@ class VendorClaimedItemsPage extends Component {
       slidingItem: null,
       isMouseDown: false,
       slideProgress: {},
+      openDropdowns: {}, // Track open dropdowns for each item
     };
   }
 
@@ -25,11 +26,20 @@ class VendorClaimedItemsPage extends Component {
       .get(`/api/fooditems/vendor/${currentUser.name}`)
       .then((res) => {
         const claimedItems = res.data.food_items.filter(
-          (item) => item.is_claimed && !item.is_confirmed // Fetch only unconfirmed claimed items
+          (item) => item.is_claimed && !item.is_confirmed
         );
         this.setState({ claimedFoodItems: claimedItems });
       })
       .catch((err) => console.error("Error fetching claimed food items:", err));
+  };
+
+  toggleDropdown = (itemId) => {
+    this.setState((prevState) => ({
+      openDropdowns: {
+        ...prevState.openDropdowns,
+        [itemId]: !prevState.openDropdowns[itemId],
+      },
+    }));
   };
 
   handleConfirmPickup = (itemId) => {
@@ -88,43 +98,75 @@ class VendorClaimedItemsPage extends Component {
   };
 
   renderClaimedItems = () => {
-    const { claimedFoodItems, slideProgress } = this.state;
-
-    return claimedFoodItems.map((item, index) => (
-      <div key={index} className="display-vendor-items">
-        <div id="item-name-container">
-          <p>{item.name}</p>
-        </div>
-        <div id="item-weight-container">
-          <p>{item.quantity * 3} Kilograms</p>
-        </div>
-        <div id="item-feeds-container">
-          <p>{item.quantity} people</p>
-        </div>
-        <div id="item-pickup-container">
-          <p>{item.set_time}</p>
-        </div>
-        <div id="item-actions-container">
-          <div
-            className="slider-container"
-            onMouseMove={(e) => this.handleMouseMove(e, item.food_id)}
-            onMouseUp={() => this.handleMouseUp(item.food_id)}
-            onMouseLeave={() => this.handleMouseUp(item.food_id)}
-          >
-            <div
-              className="slider"
-              onMouseDown={() => this.handleMouseDown(item.food_id)}
-              style={{
-                left: `${(slideProgress[item.food_id] || 0) * 100}%`,
-                backgroundColor:
-                  slideProgress[item.food_id] >= 0.95 ? "#4caf50" : "#ccc",
-              }}
-            />
+    const { claimedFoodItems, slideProgress, openDropdowns } = this.state;
+  
+    return claimedFoodItems.map((item, index) => {
+      const isDropdownOpen = openDropdowns[item.food_id];
+  
+      return (
+        <div key={index} className="display-vendor-items">
+          {/* Food Item */}
+          <div id="item-name-container">
+            <p>{item.name}</p>
           </div>
+  
+          {/* Weight */}
+          <div id="item-weight-container">
+            <p>{item.quantity * 3} Kilograms</p>
+          </div>
+  
+          {/* Feeds */}
+          <div id="item-feeds-container">
+            <p>{item.quantity} people</p>
+          </div>
+  
+          {/* Pick-Up Time */}
+          <div id="item-pickup-container">
+            <p>{item.set_time}</p>
+          </div>
+  
+          {/* Actions (Slider + View Details) */}
+          <div id="item-actions-container">
+            <div
+              className="slider-container"
+              onMouseMove={(e) => this.handleMouseMove(e, item.food_id)}
+              onMouseUp={() => this.handleMouseUp(item.food_id)}
+              onMouseLeave={() => this.handleMouseUp(item.food_id)}
+            >
+              <div
+                className="slider"
+                onMouseDown={() => this.handleMouseDown(item.food_id)}
+                style={{
+                  left: `${(slideProgress[item.food_id] || 0) * 100}%`,
+                  backgroundColor:
+                    slideProgress[item.food_id] >= 0.95 ? "#4caf50" : "#ccc",
+                }}
+              />
+            </div>
+            <button
+              className="details-button"
+              onClick={() => this.toggleDropdown(item.food_id)}
+            >
+              {isDropdownOpen ? "Hide Details" : "View Details"}
+            </button>
+          </div>
+  
+          {/* Dropdown Content */}
+          {isDropdownOpen && (
+            <div className="vendor-pickup-code">
+              <p>
+                <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
+              </p>
+              <p>
+                <strong>Comment:</strong> {item.comment || "No comments provided"}
+              </p>
+            </div>
+          )}
         </div>
-      </div>
-    ));
+      );
+    });
   };
+  
 
   render() {
     return (
@@ -136,7 +178,7 @@ class VendorClaimedItemsPage extends Component {
             <h4 id="weight">Weight</h4>
             <h4 id="feeds">Feeds</h4>
             <h4 id="pick-up">Pick-Up Time</h4>
-            <h4 id="actions">Confirm Pickup ➡️</h4>
+            <h4 id="actions">Actions</h4>
           </div>
           {this.renderClaimedItems()}
         </div>

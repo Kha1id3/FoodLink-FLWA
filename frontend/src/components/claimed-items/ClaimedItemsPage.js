@@ -133,10 +133,7 @@ class ClaimedItemsPage extends Component {
 
       return (
         <div key={index} className="claimedListContainer">
-          <div className="display-vendor-name">
-            <span className="display-item-name-client">{vendorName}</span>
-            {this.displayVendorAddressAndPhoto(vendorName)}
-          </div>
+
           <div id="vendor-items-header-client">
             <h4 id="item-name">Food Item</h4>
             <h4 id="weight">Weight</h4>

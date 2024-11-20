@@ -80,8 +80,15 @@
   height: 80px;
   background-color: #ebf4f4;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  
 }
-
+.claimedListContainer {
+  margin-top: 2.5%;
+  box-shadow: rgb(209, 209, 213) 0 0 4px;
+  width: 90%;
+  margin: 0 auto;
+  align-items: center;
+}
 .claimed-vendor-items-two {
   display: flex;
   flex-direction: row;
