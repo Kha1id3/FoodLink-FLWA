@@ -19,7 +19,7 @@ getFedCount = (req, res, next) => {
 
 getAllFoodItems = (req, res, next) => {
   db.any(
-    "SELECT food_items.* , users.name AS vendor_name , users.address_field , users.telephone_number FROM food_items JOIN users ON food_items.vendor_id = users.id ORDER BY food_items.set_time ASC"
+    "SELECT food_items.*, users.name AS vendor_name, users.address_field, users.telephone_number FROM food_items JOIN users ON food_items.vendor_id = users.id ORDER BY food_items.set_time ASC"
   )
     .then(food_items => {
       res.status(200).json({
@@ -88,6 +88,8 @@ getFoodItemsByVendorName = (req, res, next) => {
       food_items.is_claimed, 
       food_items.is_confirmed, 
       food_items.set_time, 
+      food_items.comment,
+      food_items.pickup_code,
       users.id AS user_id, 
       users.name AS vendor_name, 
       users.email AS vendor_email, 
@@ -114,24 +116,65 @@ getFoodItemsByVendorName = (req, res, next) => {
     });
 };
 
-createNewFoodItem = (req, res, next) => {
+getFoodItemsByVendorId = (req, res, next) => {
+  const vendorId = req.params.id; // Use vendor ID instead of vendor name
+  db.any(
+    `SELECT 
+      food_items.id AS food_id, 
+      food_items.quantity, 
+      food_items.name, 
+      food_items.client_id, 
+      food_items.vendor_id, 
+      food_items.is_claimed, 
+      food_items.is_confirmed, 
+      food_items.set_time, 
+      food_items.comment, 
+      food_items.pickup_code,
+      users.name AS vendor_name 
+    FROM food_items 
+    JOIN users ON food_items.vendor_id = users.id 
+    WHERE food_items.vendor_id = $1`,
+    [vendorId]
+  )
+    .then((food_items) => {
+      res.status(200).json({
+        status: "success",
+        food_items: food_items,
+        message: "received food items from vendor",
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
+};
+
+const createNewFoodItem = (req, res, next) => {
+  const generatePickupCode = () => {
+    return Math.floor(10000 + Math.random() * 90000).toString(); // Generate a 5-digit random code
+  };
+
   db.one(
-    "INSERT INTO food_items (quantity, name, vendor_id, set_time) VALUES (${quantity}, ${name}, ${vendor_id}, ${set_time}) RETURNING name",
+    "INSERT INTO food_items (quantity, name, vendor_id, set_time, comment, pickup_code) VALUES (${quantity}, ${name}, ${vendor_id}, ${set_time}, ${comment}, ${pickup_code}) RETURNING *",
     {
       quantity: req.body.quantity,
       name: req.body.name,
       vendor_id: req.body.vendor_id,
-      set_time: req.body.set_time
+      set_time: req.body.set_time,
+      comment: req.body.comment,
+      pickup_code: generatePickupCode(),
     }
   )
-    .then(() => {
+    .then((foodItem) => {
       res.status(200).json({
-        message: "food item has been added"
+        status: "success",
+        foodItem,
+        message: "Food item created with pickup code",
       });
     })
-    .catch(err => {
-      console.log(err);
-      return next(err);
+    .catch((err) => {
+      console.error("Error creating food item:", err);
+      next(err);
     });
 };
 
@@ -171,6 +214,9 @@ updateFoodItem = (req, res, next) => {
   }
   if (req.body.set_time && req.body.set_time.toLowerCase() === "null") {
     req.body.set_time = null;
+  }
+  if (req.body.comment && req.body.comment.toLowerCase() === "null") {
+    req.body.comment = null;
   }
 
   db.none(

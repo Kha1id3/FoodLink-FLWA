@@ -1,58 +1,118 @@
 #donation-form-header {
-  background-color: #988686;
+  background-color: #5C4E4E; /* Matching the overall theme */
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   color: white;
   font-family: "Montserrat", sans-serif;
+  font-size: 24px; /* Larger font for prominence */
+  font-weight: bold;
   height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add slight shadow */
 }
 
 #add-items-form {
-  background-color: white;
+  background-color: #f9f9f9;
   margin: 0 auto;
-  width: 100%;
+  width: 60%; /* Adjusted width for a centered form */
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15% 0;
+  padding: 50px 158px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border: 1px solid #ccc;
 }
 
 .dropdownButtonContainer {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  width: 45%;
+  width: 100%; /* Full width for better alignment */
+  margin-top: 20px; /* Spacing between fields */
 }
 
 #input-name,
-#input-quantity {
-  width: 50%;
-  height: 37.5px;
-  border-radius: 5px;
-  font-size: 14px;
-  margin-bottom: 10px;
-  padding-left: 15px;
+#input-quantity,
+#input-comment {
+  width: 100%;
+  max-width: 500px; /* Uniform field size */
+  height: 45px; /* Slightly larger height for ease */
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  padding: 10px 15px; /* Padding for better spacing */
+  border: 1px solid #ccc;
+  font-family: "Montserrat", sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+}
+
+#input-name:focus,
+#input-quantity:focus,
+#input-comment:focus {
+  border-color: #5C4E4E;
+  outline: none;
+  box-shadow: 0 0 8px rgba(92, 78, 78, 0.5); /* Subtle glow */
 }
 
 #select-pickup-time {
-  width: 14vw;
-  height: 7vh;
+  width: 100%; /* Full width for dropdown */
+  max-width: 500px;
+  height: 45px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1.05em;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: "Montserrat", sans-serif;
+  padding-left: 10px; /* Padding for content spacing */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#select-pickup-time:focus {
+  border-color: #5C4E4E;
+  outline: none;
+  box-shadow: 0 0 8px rgba(92, 78, 78, 0.5); /* Subtle glow */
 }
 
 #add-food-item-button {
-  width: 120px;
+  width: 150px; /* Larger button for emphasis */
   height: 50px;
-  border-radius: 5px;
+  border-radius: 8px;
   font-weight: bold;
   color: white;
+  background-color: #5C4E4E; /* Theme color */
   font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+
+#add-food-item-button:hover {
+  background-color: #3E3737; /* Darker shade on hover */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+#add-food-item-button:active {
+  background-color: #2E2828; /* Even darker for active state */
+  transform: scale(0.95); /* Slight shrink effect */
+}
+
+textarea#input-comment {
+  resize: none; /* Prevent resizing */
+  line-height: 1.5; /* Improved readability */
+}
+
+textarea#input-comment::placeholder {
+  font-style: italic; /* Placeholder differentiation */
+}
+
+textarea#input-comment:focus {
+  border-color: #5C4E4E;
+  outline: none;
+  box-shadow: 0 0 8px rgba(92, 78, 78, 0.5);
 }

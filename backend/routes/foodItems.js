@@ -24,6 +24,7 @@ router.patch("/claimstatus/:id", foodItemClaimStatus);
 router.post("/", createNewFoodItem);
 router.patch("/:id", updateFoodItem);
 router.delete("/:id", deleteFoodItem);
+router.get("/vendor/:id", getFoodItemsByVendorId);
 
 // New Routes for Confirm Pickup Feature
 router.patch("/confirmpickup/:id", confirmPickup);
