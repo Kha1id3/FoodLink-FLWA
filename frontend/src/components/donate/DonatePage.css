@@ -25,7 +25,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
     border-bottom: 1px solid #ddd;
     background-color: white;
     border-radius: 5px;
@@ -97,4 +96,71 @@
   
   .delete-item-button:hover {
     background-color: #4b3e3e; /* Slightly darker shade on hover */
+  }
+
+
+  .vendor-pickup-code {
+    font-size: 14px;
+    font-weight: bold;
+    color: #5C4E4E;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  
+
+  
+
+  
+  .details-button:hover {
+    background-color: #988686;
+  }
+  
+  .item-details-modal {
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    padding: 20px;
+  }
+  
+  .item-details-modal h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #5c4e4e;
+  }
+  
+  .item-details-modal p {
+    font-size: 1rem;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  .vendor-pickup-code {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #5C4E4E;
+    text-align: left;
+  }
+  
+  .vendor-pickup-code p {
+    margin: 5px 0;
+  }
+  
+  .details-button {
+    background-color: #5c4e4e;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .details-button:hover {
+    background-color: #988686;
   }

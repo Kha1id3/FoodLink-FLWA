@@ -59,25 +59,32 @@ class AllFeedItemsDisplayed extends Component {
                   </p>
                 </div>
                 <span
-                  id={food.id}
-                  className="span-claim-button"
-                  onClick={e => {
-                    this.props.claimItem(e, food.is_claimed, food.id);
-                    this.props.receivedOpenSnackbar();
-                  }}
-                >
-                  <MuiThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      className={
-                        food.is_claimed ? "claimed-button" : "unclaimed-button"
-                      }
-                    >
-                      {food.is_claimed ? "Unclaim" : "Claim"}
-                    </Button>
-                  </MuiThemeProvider>
-                </span>
+  id={food.id}
+  className="span-claim-button"
+  onClick={(e) => {
+    if (new Date(food.set_time) < new Date()) {
+      alert("Pickup time has passed. This item cannot be claimed.");
+      return;
+    }
+    this.props.claimItem(e, food.is_claimed, food.id);
+    this.props.receivedOpenSnackbar();
+  }}
+>
+  <MuiThemeProvider theme={theme}>
+    <Button
+      variant="contained"
+      color="secondary"
+      className={
+        food.is_claimed || new Date(food.set_time) < new Date()
+          ? "claimed-button"
+          : "unclaimed-button"
+      }
+      disabled={new Date(food.set_time) < new Date()}
+    >
+      {food.is_claimed ? "Unclaim" : "Claim"}
+    </Button>
+  </MuiThemeProvider>
+</span>
               </div>
             </div>
           );

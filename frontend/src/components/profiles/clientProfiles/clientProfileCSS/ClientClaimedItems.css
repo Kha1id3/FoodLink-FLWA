@@ -1,142 +1,71 @@
-.display-food-name {
-  width: 10%;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.display-vendor-name-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  margin: 0 auto;
-  margin-top: 20px;
-}
-
-.display-vendor-items {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: white;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-}
-
-.display-vendor-items:hover {
-  background-color: lightgray;
-}
-
 #vendor-items-header-client {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 2fr; /* Adjust header columns to match item layout */
+  text-align: center;
+  width: 98.6%;
   margin: 0 auto;
   background-color: #D1D0D0;
   border-left: 1px solid #aebdc7;
   border-right: 1px solid #aebdc7;
   margin-top: 70px;
+  padding: 10px;
 }
 
-.display-vendor-name {
-  background-color: #988686;
-  color: white;
-  width: 100%;
-  font-family: "Montserrat", sans-serif;
-  height: 150px;
-  margin: 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  justify-content: space-between;
+.display-vendor-items {
+  display: grid;
+  grid-template-columns: 4.9fr 2fr 2fr 2fr 2fr; /* Match header column layout */
   align-items: center;
-  border: 1px solid #272e48;
-  height: 6em;
+  background-color: white;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
-.display-item-name-client {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
-  font-family: "Montserrat", sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  padding-left: 50px;
+.display-vendor-items:hover {
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
 }
 
-.claimed-button,
-.unclaimed-button {
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  height: 40px;
-}
-
-.claimed-button {
-  background-color: red;
-}
-
-.unclaimed-button {
-  background-color: green;
-}
-
-.client-claimed-items-profile-picture-main-div {
+#item-name-container {
   display: flex;
-  justify-content: center;
+ 
+  align-items: center;
+  padding-left: 170px; /* Add some padding for a cleaner look */
+  font-weight: bold; /* Emphasize the name */
 }
 
-.client-claimed-items-profile-pic {
-  width: 100px;
-  height: 98px;
+#item-weight-container,
+#item-feeds-container,
+#item-pickup-container {
+  text-align: center; /* Keep these centered */
 }
-
-#item-button-wrapper {
-  width: 10%;
-}
-
-#item-name,
-#weight,
-#feeds,
-#pick-up,
-#actions {
-  margin: 0.5em;
-}
-
-.clientImageWrapperForClientDisplay {
-  margin-right: 2.25em;
-}
-
 
 #item-actions-container {
   display: flex;
-  gap: 10px;
+  justify-content: space-between; /* Space out slider and button */
+  align-items: center;
+  gap: 10px; /* Add spacing between slider and button */
 }
 
-.unclaim-button,
-.confirm-button {
-  padding: 5px 10px;
-  font-size: 14px;
-  border: none;
+.details-button {
+  background-color: #5c4e4e;
+  color: white;
+  padding: 8px 12px;
   border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
   cursor: pointer;
+  border: none;
+  white-space: nowrap; /* Prevent wrapping */
 }
 
-.unclaim-button {
-  background-color: #d9534f;
-  color: white;
-}
-
-.confirm-button {
-  background-color: #5cb85c;
-  color: white;
-}
-
-.unclaim-button:hover,
-.confirm-button:hover {
-  opacity: 0.9;
+.details-button:hover {
+  background-color: #988686;
 }
 
 .slider-container {
-  width: 200px;
+  width: 230px; /* Increased length of slider */
   height: 40px;
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -145,6 +74,19 @@
   overflow: hidden;
   user-select: none;
   cursor: pointer;
+  display: flex;
+  align-items: center; /* Center-align the "Slide to confirm" text */
+}
+
+.slider-container::before {
+  content: "Slide to confirm pickup"; /* Add text inside the slider */
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #499e33;
+  font-size: 0.9rem;
+  pointer-events: none;
+  padding-left : 0.5rem; /* Ensure the text doesn't interfere with slider functionality */
 }
 
 .slider {
@@ -154,6 +96,7 @@
   border-radius: 50%;
   position: absolute;
   top: 1px;
+  left: 0;
   transition: left 0.2s ease, background-color 0.3s ease;
   cursor: grab;
 }
@@ -164,4 +107,25 @@
 
 .slider-container .slider:active {
   cursor: grabbing;
+}
+
+.vendor-pickup-code {
+  grid-column: 1 / -1; /* Span across all columns */
+  background-color: #f0f0f0;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border-top: 1px solid #ddd;
+  text-align: center; /* Center-align the pickup code and comment */
+}
+
+.vendor-pickup-code p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #32b339;
+  text-align: center; /* Center-align individual lines */
+}
+
+.vendor-pickup-code strong {
+  color: #5c4e4e;
 }

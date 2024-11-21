@@ -48,18 +48,31 @@ export default class Feed extends Component {
       targetId = e.currentTarget.id;
     }
     if (isClaimed === false) {
-      //we grab the id we claim saving it to an array in state => if array includes the id we append the class fade-out...
+      const currentTime = new Date().toISOString(); // Get user's current time
+  
       this.setState({
         fadeTrigger: [...this.state.fadeTrigger, food_id]
       });
-      //we then want it to be claimed but not have it immediately disappear showing the fadeout effect first and so we add a set timeout that after 1s does an axios call and gets all elements again
-      setTimeout(
-        targetId => {
-          this.fireClaimingItem(targetId);
-        },
-        1100,
-        targetId
-      );
+  
+      setTimeout(async () => {
+        try {
+          await axios.patch(`/api/fooditems/claimstatus/${targetId}`, {
+            client_id: this.props.currentUser.id,
+            is_claimed: true,
+            current_time: currentTime // Send user's current time
+          });
+          this.getAllFoodItems();
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            alert(error.response.data.message); // Show error message
+          } else {
+            console.error("Error claiming item:", error);
+          }
+          this.setState({
+            fadeTrigger: this.state.fadeTrigger.filter((id) => id !== food_id)
+          });
+        }
+      }, 1100);
     } else {
       axios
         .patch(`/api/fooditems/claimstatus/${targetId}`, {
@@ -71,6 +84,7 @@ export default class Feed extends Component {
         });
     }
   };
+  
 
   fireClaimingItem = targetId => {
     axios

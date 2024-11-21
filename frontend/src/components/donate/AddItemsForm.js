@@ -7,21 +7,21 @@ const theme = createMuiTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {
-      main: "#D35348"
-    }
+      main: "#D35348",
+    },
   },
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
-const AddItemForm = props => {
+const AddItemForm = (props) => {
   return (
     <div className="donationFormWrapper">
       <h1 id="donation-form-header">Donation Form</h1>
       <div className="donationFormContainer">
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             props.submitItem(e);
             props.receivedOpenSnackbar();
           }}
@@ -43,6 +43,14 @@ const AddItemForm = props => {
             id="input-quantity"
           />
           <br />
+          <textarea
+            onChange={props.handleChange}
+            name="comment"
+            placeholder="Enter pickup instructions or additional comments"
+            id="input-comment"
+            rows="4"
+          ></textarea>
+          <br />
           <div className="dropdownButtonContainer">
             <select
               onChange={props.handleChange}
@@ -50,6 +58,7 @@ const AddItemForm = props => {
               id="select-pickup-time"
             >
               <option value="null"> Select Pick-Up Time </option>
+              {/* Other options */}
               <option value="12:00"> 12:00 pm </option>
               <option value="13:00"> 1:00 pm </option>
               <option value="14:00"> 2:00 pm </option>

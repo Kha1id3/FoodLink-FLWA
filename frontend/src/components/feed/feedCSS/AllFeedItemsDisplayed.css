@@ -1,78 +1,72 @@
-#vendor-items-header {
+#vendor-items-header-client {
   display: flex;
-  justify-content: space-around;
-  width: 75%;
+  justify-content: space-between; /* Adjusted for more precise spacing */
+  align-items: center;
+  width: 75%; /* Match the width of the content rows */
   margin: 0 auto;
-  background-color: #aebdc7;
-  border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: #D1D0D0;
+  border: 1px solid lightgray;
+  margin-top: 20px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: left; /* Align text left for header */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .display-claimed-items-for-client {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between; /* Align columns closer to header */
   align-items: center;
-  border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
-  margin: 0 auto;
-  width: 75%;
-  height: 3.2em;
+  width: 78%; /* Match the width of the header */
+
+
+  border: 1px solid lightgray;
+  border-top: none;
   background-color: #fff;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
 }
 
 .display-claimed-items-for-client:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  background-color: #f9f9f9;
 }
 
+/* Individual Columns */
 .vendor-item-name,
 .vendor-weight,
 .vendor-feeds,
 .vendor-pick-up,
 .vendor-spacing {
-  width: 20%;
-  margin: 0.5em;
+  flex: 1; /* Ensure equal space distribution */
+  text-align: left; /* Shift text alignment slightly to the left */
+  padding: 5px;
+}
+
+.vendor-item-name {
+  flex: 2; /* Food Item column is slightly wider */
+  padding-left: 130px; /* Add padding for a cleaner look */
+}
+
+.vendor-weight,
+.vendor-feeds,
+.vendor-pick-up {
+  text-align: left; /* Align columns slightly to the left */
+  padding-left: 10px;
 }
 
 .span-claim-button {
-  width: 20%;
+  flex: 1; /* Equal space for the Claim button */
+  text-align: center;
 }
 
 .search-items-results-header {
-  display: flex;
-  justify-content: space-around;
-  width: 75%;
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr;/* Adjust spacing for headers */
+  align-items: center;
+  width: 75%; /* Match the width of the rows */
   margin: 0 auto;
   background-color: #D1D0D0;
-  border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.fade-out {
-  -webkit-animation: fade-out 1s ease-out both;
-  animation: fade-out 1s ease-out both;
-}
-
-@-webkit-keyframes fade-out {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes fade-out {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
+  border: 1px solid lightgray;
+  padding: 10px 20px; /* Match row padding */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left; /* Align header text slightly to the left */
 }

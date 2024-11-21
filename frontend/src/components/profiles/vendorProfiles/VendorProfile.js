@@ -3,6 +3,7 @@ import axios from "axios";
 import VendorProfileEditForm from "./VendorProfileEditForm";
 import "./vendorProfilesCSS/VendorProfile.css";
 
+
 class VendorProfile extends Component {
   constructor() {
     super();
@@ -27,12 +28,19 @@ class VendorProfile extends Component {
     });
   };
 
+  handleLogout = async () => {
+    await this.props.logoutUser();
+    await this.props.history.push("/welcome");
+  };
+
   render() {
     const { profilePic, phoneNumber, body } = this.state;
     const { name, address_field, email } = this.props.currentUser;
 
     return (
       <div className="vendor-profile-container">
+        {/* Logout Icon */}
+        
         <div className="vendor-profile-card">
           <img
             className="vendor-profile-picture"
