@@ -2,7 +2,12 @@
 const bcrypt = require("bcryptjs");
 
 function comparePass(userPass, databasePass) {
-  return bcrypt.compareSync(userPass, databasePass);
+  try {
+    return bcrypt.compareSync(userPass, databasePass);
+  } catch (err) {
+    console.error("Error comparing passwords:", err);
+    return false;
+  }
 }
 
 function createHash(password) {

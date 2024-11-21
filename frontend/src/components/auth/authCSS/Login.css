@@ -98,3 +98,19 @@
   text-decoration: underline;
   color: #988686;
 }
+
+
+/* Error Message Styling */
+.error-message {
+  color: #362429; /* Bootstrap danger red for warnings */
+  font-size: 1.1rem;
+  font-weight: bold; /* Bold the text */
+  margin-bottom: 1rem;
+  text-align: center;
+  background-color: #c5c5c5; /* Softer background color */
+  border: 1px solid #000000; /* Border matching the background */
+  padding: 0.75rem 1.25rem; /* Add padding for spacing */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  line-height: 1.5; /* Increase spacing for better readability */
+}

@@ -4,40 +4,46 @@ import { Redirect, Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Auth from "../../utils/Auth.js";
+import { notify } from "react-notify-toast"; // Import the notify package
 import "./authCSS/Login.css";
 
 class Login extends Component {
   state = {
     email: "",
     password_digest: "",
-    isSubmitted: false
+    isSubmitted: false,
+    errorMessage: "" // Add an error message state
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
 
-  loginUser = e => {
+  loginUser = async (e) => {
     e.preventDefault();
     const { email, password_digest } = this.state;
-
-    axios
-      .post("/api/sessions/login/", { email, password_digest })
-      .then(() => {
-        Auth.authenticateUser(email);
-      })
-      .then(() => {
-        this.props.checkAuthenticateStatus();
-      })
-      .then(() => {
-        this.setState({
-          email: "",
-          password_digest: "",
-          isSubmitted: true
-        });
+  
+    try {
+      const response = await axios.post("/api/sessions/login/", { email, password_digest });
+      Auth.authenticateUser(email);
+      this.props.checkAuthenticateStatus();
+      this.setState({
+        email: "",
+        password_digest: "",
+        isSubmitted: true,
       });
+    } catch (error) {
+      // Handle different error responses
+      if (error.response && error.response.status === 401) {
+        // Invalid email or password
+        this.setState({ errorMessage: "Invalid email or password." });
+      } else {
+        // Internal server error or other issues
+        this.setState({ errorMessage: "An internal server error occurred." });
+      }
+    }
   };
 
   conditionalRouting = () => {
@@ -54,6 +60,12 @@ class Login extends Component {
         {this.conditionalRouting()}
         <form onSubmit={this.loginUser} id="login-form">
           <h1 id="login-header">Login</h1>
+          {this.state.errorMessage && (
+            <div className="error-message">
+              🍗 Oops!🥪<br />
+              <strong>{this.state.errorMessage}</strong>. 
+            </div>
+          )}
           <div id="login-email">
             <img
               src={require("./icons/email.png")}
@@ -66,8 +78,6 @@ class Login extends Component {
               type="text"
               id="email-input"
               label="Email"
-              defaultValue="Hello World"
-              margin="normal"
               value={this.state.email}
               name="email"
               onChange={this.handleChange}
@@ -86,8 +96,6 @@ class Login extends Component {
               type="password"
               id="password-input"
               label="Password"
-              defaultValue="Hello World"
-              margin="normal"
               value={this.state.password_digest}
               name="password_digest"
               onChange={this.handleChange}
@@ -99,7 +107,8 @@ class Login extends Component {
             type="submit"
             variant="contained"
             color="primary"
-            className="login-button">
+            className="login-button"
+          >
             Login
           </Button>
           <div className="notMemberDiv">
