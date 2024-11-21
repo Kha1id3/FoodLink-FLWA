@@ -42,7 +42,7 @@ class SignUp extends Component {
   state = {
     email: "",
     password_digest: "",
-    type: 1,
+    type: "",
     name: "",
     address_field: "",
     body: "",
@@ -75,55 +75,59 @@ class SignUp extends Component {
       profile_pic
     } = this.state;
 
-    Number(this.state.type) === 1
-      ? await axios.post("/api/users/new", {
-          email,
-          password_digest,
-          type,
-          name,
-          address_field,
-          body,
-          telephone_number,
-          ein,
-          profile_pic
-        })
-      : await axios.post("/api/users/new", {
-          email,
-          password_digest,
-          type,
-          name,
-          address_field,
-          body,
-          telephone_number,
-          client_certificate,
-          profile_pic
-        });
+    if (Number(this.state.type) === 1) {
+      await axios.post("/api/users/new", {
+        email,
+        password_digest,
+        type,
+        name,
+        address_field,
+        body,
+        telephone_number,
+        ein,
+        profile_pic
+      });
+    } else {
+      await axios.post("/api/users/new", {
+        email,
+        password_digest,
+        type,
+        name,
+        address_field,
+        body,
+        telephone_number,
+        client_certificate,
+        profile_pic
+      });
+    }
 
     Auth.authenticateUser(email);
 
-    Number(this.state.type) === 1
-      ? await axios.post("/api/sessions/login", {
-          email,
-          password_digest,
-          type,
-          name,
-          address_field,
-          body,
-          telephone_number,
-          ein,
-          profile_pic
-        })
-      : await axios.post("/api/sessions/login", {
-          email,
-          password_digest,
-          type,
-          name,
-          address_field,
-          body,
-          telephone_number,
-          client_certificate,
-          profile_pic
-        });
+    if (Number(this.state.type) === 1) {
+      await axios.post("/api/sessions/login", {
+        email,
+        password_digest,
+        type,
+        name,
+        address_field,
+        body,
+        telephone_number,
+        ein,
+        profile_pic
+      });
+    } else {
+      await axios.post("/api/sessions/login", {
+        email,
+        password_digest,
+        type,
+        name,
+        address_field,
+        body,
+        telephone_number,
+        client_certificate,
+        profile_pic
+      });
+    }
 
     await this.props.checkAuthenticateStatus();
 
@@ -143,7 +147,7 @@ class SignUp extends Component {
   };
 
   signUpForm = () => {
-    if (Number(this.state.type) === 1) {
+    if (this.state.type === "1") {
       return (
         <form
           onSubmit={this.registerUser}
@@ -320,7 +324,7 @@ class SignUp extends Component {
           </div>
         </form>
       );
-    } else if (Number(this.state.type) === 2) {
+    } else if (this.state.type === "2") {
       return (
         <form
           onSubmit={this.registerUser}
@@ -529,8 +533,8 @@ class SignUp extends Component {
             <RadioGroup
               aria-label="User Type"
               name="type"
-              value={this.state.value}
-              onClick={this.handleChange}
+              value={this.state.type}
+              onChange={this.handleChange}
               className="radioGroupContainer">
               <FormControlLabel
                 value="1"
