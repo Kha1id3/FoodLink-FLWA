@@ -29,9 +29,9 @@
 
 #item-name-container {
   display: flex;
-  justify-content: left; /* Align food item name to the left */
+ 
   align-items: center;
-  padding-left: 15px; /* Add some padding for a cleaner look */
+  padding-left: 170px; /* Add some padding for a cleaner look */
   font-weight: bold; /* Emphasize the name */
 }
 

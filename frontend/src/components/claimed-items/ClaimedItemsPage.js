@@ -12,6 +12,7 @@ class ClaimedItemsPage extends Component {
       slidingItem: null,
       isMouseDown: false,
       slideProgress: {},
+      openDropdowns: {}, // Track open dropdowns for each item
     };
   }
 
@@ -38,12 +39,21 @@ class ClaimedItemsPage extends Component {
       .catch((err) => console.error(err));
   };
 
+  toggleDropdown = (itemId) => {
+    this.setState((prevState) => ({
+      openDropdowns: {
+        ...prevState.openDropdowns,
+        [itemId]: !prevState.openDropdowns[itemId],
+      },
+    }));
+  };
+
   handleConfirmPickup = (itemId) => {
     if (!itemId) {
       console.error("Invalid Item ID:", itemId);
       return;
     }
-  
+
     axios
       .patch(`/api/fooditems/confirmpickup/${itemId}`)
       .then(() => {
@@ -59,6 +69,7 @@ class ClaimedItemsPage extends Component {
         console.error("Error confirming pickup:", err);
       });
   };
+
   handleMouseDown = (itemId) => {
     this.setState({ slidingItem: itemId, isMouseDown: true });
   };
@@ -103,81 +114,76 @@ class ClaimedItemsPage extends Component {
     }, {});
   };
 
-  displayVendorAddressAndPhoto = (vendorName) => {
-    const vendor = this.state.allVendors.find((v) => v.vendor_name === vendorName);
-    if (vendor) {
-      return (
-        <>
-          <div className="vendor-address-field">
-            <p className="address-text">{vendor.address_field}</p>
-          </div>
-          <div className="clientImageWrapperForClientDisplay">
-            <img
-              className="client-claimed-items-profile-pic"
-              src={vendor.profile_picture}
-              alt={`${vendorName} profile`}
-            />
-          </div>
-        </>
-      );
-    }
-    return null;
-  };
-
   renderVendorSections = () => {
     const itemsByVendor = this.organizeFoodItemsByVendor();
-    const { slideProgress } = this.state;
+    const { slideProgress, openDropdowns } = this.state;
 
     return Object.keys(itemsByVendor).map((vendorName, index) => {
       const vendorItems = itemsByVendor[vendorName];
 
       return (
         <div key={index} className="claimedListContainer">
-
           <div id="vendor-items-header-client">
             <h4 id="item-name">Food Item</h4>
             <h4 id="weight">Weight</h4>
             <h4 id="feeds">Feeds</h4>
             <h4 id="pick-up">Pick-Up Time</h4>
-            <h4 id="actions">Confirm Pickup ➡️</h4>
+            <h4 id="actions">Actions</h4>
           </div>
-          {vendorItems.map((item, idx) => (
-            <div key={idx} className="display-vendor-items">
-              <div id="item-name-container">
-                <p>{item.name}</p>
-              </div>
-              <div id="item-weight-container">
-                <p>{item.quantity * 3} Kilograms</p>
-              </div>
-              <div id="item-feeds-container">
-                <p>{item.quantity} people</p>
-              </div>
-              <div id="item-pickup-container">
-                <p>{item.set_time}</p>
-              </div>
-              <div id="item-actions-container">
-              <div
-  className="slider-container"
-  onMouseMove={(e) => this.handleMouseMove(e, item.id)}
-  onMouseUp={() => {
-    console.log("Confirming Pickup for Item ID:", item.id); // Debug Log
-    this.handleMouseUp(item.id);
-  }}
-  onMouseLeave={() => this.handleMouseUp(item.id)}
->
-                  <div
-                    className="slider"
-                    onMouseDown={() => this.handleMouseDown(item.id)}
-                    style={{
-                      left: `${(slideProgress[item.id] || 0) * 100}%`,
-                      backgroundColor:
-                        slideProgress[item.id] >= 0.50 ? "#4caf50" : "#ccc",
-                    }}
-                  />
+          {vendorItems.map((item, idx) => {
+            const isDropdownOpen = openDropdowns[item.id];
+
+            return (
+              <div key={idx} className="display-vendor-items">
+                <div id="item-name-container">
+                  <p>{item.name}</p>
                 </div>
+                <div id="item-weight-container">
+                  <p>{item.quantity * 3} Kilograms</p>
+                </div>
+                <div id="item-feeds-container">
+                  <p>{item.quantity} people</p>
+                </div>
+                <div id="item-pickup-container">
+                  <p>{item.set_time}</p>
+                </div>
+                <div id="item-actions-container">
+                  <div
+                    className="slider-container"
+                    onMouseMove={(e) => this.handleMouseMove(e, item.id)}
+                    onMouseUp={() => this.handleMouseUp(item.id)}
+                    onMouseLeave={() => this.handleMouseUp(item.id)}
+                  >
+                    <div
+                      className="slider"
+                      onMouseDown={() => this.handleMouseDown(item.id)}
+                      style={{
+                        left: `${(slideProgress[item.id] || 0) * 100}%`,
+                        backgroundColor:
+                          slideProgress[item.id] >= 0.5 ? "#4caf50" : "#ccc",
+                      }}
+                    />
+                  </div>
+                  <button
+                    className="details-button"
+                    onClick={() => this.toggleDropdown(item.id)}
+                  >
+                    {isDropdownOpen ? "Hide Details" : "View Details"}
+                  </button>
+                </div>
+                {isDropdownOpen && (
+                  <div className="vendor-pickup-code">
+                    <p>
+                      <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Comment:</strong> {item.comment || "No comments provided"}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       );
     });

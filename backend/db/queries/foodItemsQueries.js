@@ -178,25 +178,40 @@ const createNewFoodItem = (req, res, next) => {
     });
 };
 
-foodItemClaimStatus = (req, res, next) => {
-  db.none(
-    "UPDATE food_items SET is_claimed=${is_claimed}, client_id=${client_id} WHERE id=${id}",
-    {
-      is_claimed: req.body.is_claimed,
-      // client_id: +req.session.currentUser.id,
-      client_id: req.body.client_id,
-      id: parseInt(req.params.id)
-    }
-  )
-    .then(() => {
-      res.status(200).json({
-        status: "success",
-        message: "updated food item"
+const foodItemClaimStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { is_claimed, client_id } = req.body;
+
+    // Fetch the food item to check pickup time
+    const foodItem = await db.one(
+      "SELECT set_time FROM food_items WHERE id = $1",
+      [id]
+    );
+
+    const currentTime = new Date(); // Server's current time
+    const pickupTime = new Date(foodItem.set_time); // Pickup time from database
+
+    if (currentTime >= pickupTime) {
+      return res.status(400).json({
+        status: "error",
+        message: "Item cannot be claimed after the pickup time."
       });
-    })
-    .catch(err => {
-      return next(err);
+    }
+
+    // Proceed with claiming
+    await db.none(
+      "UPDATE food_items SET is_claimed = $1, client_id = $2 WHERE id = $3",
+      [is_claimed, client_id, id]
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Claim status updated successfully."
     });
+  } catch (err) {
+    next(err);
+  }
 };
 
 updateFoodItem = (req, res, next) => {
