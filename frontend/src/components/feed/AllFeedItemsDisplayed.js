@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-// import green from "@material-ui/core/colors/green";
 import "./feedCSS/AllFeedItemsDisplayed.css";
 import { format } from 'date-fns';
 
@@ -17,24 +16,27 @@ const theme = createMuiTheme({
   }
 });
 
+const formatDate = (isoString) => {
+  return format(new Date(isoString), 'MMMM dd, yyyy'); // Example: "November 22, 2024"
+};
+
 const formatTime = (isoString) => {
   return format(new Date(isoString), 'hh:mm a'); // Example: "08:30 PM"
 };
 
 class AllFeedItemsDisplayed extends Component {
   render() {
-    let converted_time;
     return (
       <div className="vendor-items-wrapper">
         <div className="search-items-results-header">
-          <h4 className="vendor-item-name">Food Item </h4>
-          <h4 className="vendor-weight">Weight </h4>
-          <h4 className="vendor-feeds">Feeds </h4>
-          <h4 className="vendor-pick-up">Pick Up Time </h4>
+          <h4 className="vendor-item-name">Food Item</h4>
+          <h4 className="vendor-weight">Weight</h4>
+          <h4 className="vendor-feeds">Feeds</h4>
+          <h4 className="vendor-pick-up">Pick-Up Time</h4>
           <div className="vendor-spacing" />
         </div>
-        {this.props.foodDataObj[this.props.vendorName].map((food, b) => {
-          converted_time = Number(food.set_time.slice(0, 2));
+        {this.props.foodDataObj[this.props.vendorName].map((food, index) => {
+          const isExpired = new Date(food.set_time) < new Date();
           return (
             <div
               className={
@@ -42,7 +44,7 @@ class AllFeedItemsDisplayed extends Component {
                   ? "vendor-items-container fade-out"
                   : "vendor-profile-container-vendor-version"
               }
-              key={b}
+              key={index}
             >
               <div className="display-claimed-items-for-client">
                 <div id="item-name-container">
@@ -55,35 +57,36 @@ class AllFeedItemsDisplayed extends Component {
                   <p>{food.quantity} people</p>
                 </div>
                 <div id="item-pickup-container">
-                <p>{formatTime(food.set_time)}</p>
+                  <p className="pickup-date">{formatDate(food.set_time)}</p>
+                  <p className="pickup-time">{formatTime(food.set_time)}</p>
                 </div>
                 <span
-  id={food.id}
-  className="span-claim-button"
-  onClick={(e) => {
-    if (new Date(food.set_time) < new Date()) {
-      alert("Pickup time has passed. This item cannot be claimed.");
-      return;
-    }
-    this.props.claimItem(e, food.is_claimed, food.id);
-    this.props.receivedOpenSnackbar();
-  }}
->
-  <MuiThemeProvider theme={theme}>
-    <Button
-      variant="contained"
-      color="secondary"
-      className={
-        food.is_claimed || new Date(food.set_time) < new Date()
-          ? "claimed-button"
-          : "unclaimed-button"
-      }
-      disabled={new Date(food.set_time) < new Date()}
-    >
-      {food.is_claimed ? "Unclaim" : "Claim"}
-    </Button>
-  </MuiThemeProvider>
-</span>
+                  id={food.id}
+                  className="span-claim-button"
+                  onClick={(e) => {
+                    if (isExpired) {
+                      alert("Pickup time has passed. This item cannot be claimed.");
+                      return;
+                    }
+                    this.props.claimItem(e, food.is_claimed, food.id);
+                    this.props.receivedOpenSnackbar();
+                  }}
+                >
+                  <MuiThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={
+                        food.is_claimed || isExpired
+                          ? "claimed-button"
+                          : "unclaimed-button"
+                      }
+                      disabled={isExpired}
+                    >
+                      {food.is_claimed ? "Unclaim" : "Claim"}
+                    </Button>
+                  </MuiThemeProvider>
+                </span>
               </div>
             </div>
           );

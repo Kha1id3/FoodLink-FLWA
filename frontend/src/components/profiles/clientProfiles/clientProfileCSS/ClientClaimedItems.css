@@ -39,6 +39,7 @@
 #item-feeds-container,
 #item-pickup-container {
   text-align: center; /* Keep these centered */
+
 }
 
 #item-actions-container {
@@ -46,6 +47,21 @@
   justify-content: space-between; /* Space out slider and button */
   align-items: center;
   gap: 10px; /* Add spacing between slider and button */
+}
+#item-pickup-container {
+  text-align: center; /* Center-align the date and time */
+}
+
+.pickup-date {
+  font-weight: bold;
+  font-size: 0.7rem;
+  color: #5c4e4e; /* Theme color for date */
+}
+
+.pickup-time {
+  font-size: 0.9rem;
+  color: #37d337; /* Lighter shade for time */
+  margin-top: 5px; /* Small spacing between date and time */
 }
 
 .details-button {

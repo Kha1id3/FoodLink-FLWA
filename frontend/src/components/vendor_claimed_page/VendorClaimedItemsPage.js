@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { notify } from "react-notify-toast";
+import { format } from "date-fns";
 import "../profiles/clientProfiles/clientProfileCSS/ClientClaimedItems.css";
+
+const formatDate = (isoString) => {
+  return format(new Date(isoString), "MMMM dd, yyyy"); // Example: "November 22, 2024"
+};
+
+const formatTime = (isoString) => {
+  return format(new Date(isoString), "hh:mm a"); // Example: "08:30 PM"
+};
 
 class VendorClaimedItemsPage extends Component {
   constructor() {
@@ -122,7 +131,8 @@ class VendorClaimedItemsPage extends Component {
   
           {/* Pick-Up Time */}
           <div id="item-pickup-container">
-            <p>{item.set_time}</p>
+            <p className="pickup-date">{formatDate(item.set_time)}</p>
+            <p className="pickup-time">{formatTime(item.set_time)}</p>
           </div>
   
           {/* Actions (Slider + View Details) */}
@@ -167,7 +177,6 @@ class VendorClaimedItemsPage extends Component {
     });
   };
   
-
   render() {
     return (
       <div>

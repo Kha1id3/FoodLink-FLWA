@@ -6,6 +6,7 @@ import CountUp from "react-countup";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
 import "./vendorProfilesCSS/VendorProfile.css";
+import { format } from "date-fns";
 
 const theme = createMuiTheme({
   palette: {
@@ -18,6 +19,27 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
 });
+
+// Formatting functions
+const formatDate = (isoString) => {
+  if (!isoString) return "N/A"; // Handle null or undefined dates
+  try {
+    return format(new Date(isoString), "MMMM dd, yyyy"); // Example: "November 22, 2024"
+  } catch (error) {
+    console.error("Error formatting date:", isoString, error);
+    return "Invalid Date";
+  }
+};
+
+const formatTime = (isoString) => {
+  if (!isoString) return "N/A"; // Handle null or undefined times
+  try {
+    return format(new Date(isoString), "hh:mm a"); // Example: "08:30 PM"
+  } catch (error) {
+    console.error("Error formatting time:", isoString, error);
+    return "Invalid Time";
+  }
+};
 
 class DonatePage extends Component {
   constructor() {
@@ -49,22 +71,20 @@ class DonatePage extends Component {
   };
 
   componentDidMount() {
-    console.log("Current User:", this.props.currentUser); // Debug log
     if (this.props.currentUser) {
-      this.fetchFoodItems(); // Fetch all items
-      this.getFeedingCount(); // Get feeding count
+      this.fetchFoodItems();
+      this.getFeedingCount();
     } else {
       console.error("Current User is not defined.");
     }
   }
 
   fetchFoodItems = () => {
-    const vendorName = this.props.currentUser.name; // Use vendor name for the backend query
+    const vendorName = this.props.currentUser.name;
     axios
-      .get(`/api/fooditems/vendor/${vendorName}`) // Fetch items for the vendor
+      .get(`/api/fooditems/vendor/${vendorName}`)
       .then((res) => {
         const sortedItems = res.data.food_items.sort((a, b) => {
-          // Sort by status: Claim Pending > Pickup Pending > Pickup Confirmed
           if (!a.is_claimed && !a.is_confirmed) return -1;
           if (!b.is_claimed && !b.is_confirmed) return 1;
           if (a.is_claimed && !a.is_confirmed) return -1;
@@ -121,14 +141,14 @@ class DonatePage extends Component {
     this.setState({
       hasAdded: true,
     });
-    const { quantity, name, set_time, comment } = this.state; // Include comment
+    const { quantity, name, set_time, comment } = this.state;
     axios
       .post("/api/fooditems/", {
-        quantity: quantity,
-        name: name,
-        set_time: set_time,
-        vendor_id: this.props.currentUser.id, // Include vendor ID
-        comment: comment, // Send comment to the backend
+        quantity,
+        name,
+        set_time,
+        vendor_id: this.props.currentUser.id,
+        comment,
       })
       .then(() => {
         this.setState({
@@ -162,7 +182,6 @@ class DonatePage extends Component {
 
   displayFoodItems = () => {
     return this.state.foodItems.map((item) => {
-      const converted_time = Number(item.set_time.slice(0, 2));
       let status;
 
       if (!item.is_claimed && !item.is_confirmed) {
@@ -193,14 +212,14 @@ class DonatePage extends Component {
               )}
               {item.name}
             </div>
-            <p className="vendor-page-item-Kilograms">{item.quantity * 3} Kilograms</p>
+            <p className="vendor-page-item-Kilograms">
+              {item.quantity * 3} Kilograms
+            </p>
             <p className="vendor-page-item-quantity">{item.quantity} people</p>
             <p className="vendor-page-pickup-time">
-              {converted_time < 13 && converted_time !== 0
-                ? converted_time + "am"
-                : converted_time === 0
-                ? 12 + "am"
-                : converted_time - 12 + "pm"}
+              <span className="pickup-date">{formatDate(item.set_time)}</span>
+              <br />
+              <span className="pickup-time">{formatTime(item.set_time)}</span>
             </p>
             <p
               className={`vendor-page-item-status ${
@@ -236,10 +255,6 @@ class DonatePage extends Component {
   };
 
   render() {
-    let vendorUser;
-    if (this.props.currentUser.type === 2) {
-      vendorUser = this.props.match.params.vendor;
-    }
     return (
       <div id="vendor-container">
         <MainSnackbarContainer />

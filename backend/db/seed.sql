@@ -33,6 +33,11 @@ CREATE TABLE food_items
     client_id INT REFERENCES users(id) DEFAULT NULL,
     vendor_id INT REFERENCES users(id),
     set_time VARCHAR NOT NULL
+    is_confirmed BOOLEAN DEFAULT FALSE, -- New field
+    pickup_code VARCHAR(50),            -- New field
+    comment TEXT,                       -- New field
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE favorites
@@ -61,6 +66,29 @@ CREATE TABLE business_hours
     sun_start VARCHAR NOT NULL,
     sun_end VARCHAR NOT NULL
 );
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON food_items
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
 INSERT INTO users
     (

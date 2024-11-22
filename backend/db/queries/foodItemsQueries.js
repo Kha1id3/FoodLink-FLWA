@@ -17,6 +17,17 @@ getFedCount = (req, res, next) => {
     });
 };
 
+async function createNotification(userId, message) {
+  try {
+    await db.none(
+      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
+      [userId, message, false]
+    );
+  } catch (error) {
+    console.error("Error creating notification:", error);
+  }
+}
+
 getAllFoodItems = (req, res, next) => {
   db.any(
     "SELECT food_items.*, users.name AS vendor_name, users.address_field, users.telephone_number FROM food_items JOIN users ON food_items.vendor_id = users.id ORDER BY food_items.set_time ASC"
@@ -183,31 +194,34 @@ const foodItemClaimStatus = async (req, res, next) => {
     const { id } = req.params;
     const { is_claimed, client_id } = req.body;
 
-    // Fetch the food item to check pickup time
     const foodItem = await db.one(
-      "SELECT set_time FROM food_items WHERE id = $1",
+      "SELECT set_time, vendor_id, name FROM food_items WHERE id = $1",
       [id]
     );
 
-    const currentTime = new Date(); // Server's current time
-    const pickupTime = new Date(foodItem.set_time); // Pickup time from database
+    const currentTime = new Date();
+    const pickupTime = new Date(foodItem.set_time);
 
     if (currentTime >= pickupTime) {
       return res.status(400).json({
         status: "error",
-        message: "Item cannot be claimed after the pickup time."
+        message: "Item cannot be claimed after the pickup time.",
       });
     }
 
-    // Proceed with claiming
     await db.none(
       "UPDATE food_items SET is_claimed = $1, client_id = $2 WHERE id = $3",
       [is_claimed, client_id, id]
     );
 
+    await createNotification(
+      foodItem.vendor_id,
+      `🍗Your item ${foodItem.name} has been claimed.Check it out!`
+    );
+
     res.status(200).json({
       status: "success",
-      message: "Claim status updated successfully."
+      message: "Claim status updated and notification sent.",
     });
   } catch (err) {
     next(err);
@@ -265,41 +279,45 @@ deleteFoodItem = (req, res, next) => {
     .catch(err => next(err));
 };
 
-const confirmPickup = (req, res, next) => {
+const confirmPickup = async (req, res, next) => {
   const { id } = req.params;
 
-  if (!id || isNaN(Number(id))) {
-    return res.status(400).json({
+  try {
+    const foodItem = await db.one(
+      `UPDATE food_items 
+       SET is_confirmed = TRUE, is_claimed = FALSE 
+       WHERE id = $1 
+       RETURNING *`,
+      [id]
+    );
+
+    if (!foodItem) {
+      throw new Error("Food item not found or update failed");
+    }
+
+    // Create a notification for the client
+    await db.none(
+      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
+      [
+        foodItem.client_id,
+        `Your item '${foodItem.name}' is ready for pickup.`,
+        false,
+      ]
+    );
+
+    res.status(200).json({
+      status: "success",
+      food_item: foodItem,
+      message: "Pickup confirmed and notification sent.",
+    });
+  } catch (err) {
+    console.error("Error in confirmPickup function:", err);
+    res.status(500).json({
       status: "error",
-      message: "Invalid food item ID",
+      message: "Failed to confirm pickup",
+      error: err.message,
     });
   }
-
-  db.one(
-    `UPDATE food_items 
-     SET is_confirmed = TRUE, is_claimed = FALSE 
-     WHERE id = $1 
-     RETURNING *`,
-    [id]
-  )
-    .then((foodItem) => {
-      if (!foodItem) {
-        throw new Error("Food item not found or update failed");
-      }
-      res.status(200).json({
-        status: "success",
-        food_item: foodItem,
-        message: "Pickup confirmed and item unclaimed",
-      });
-    })
-    .catch((err) => {
-      console.error("Error in confirmPickup function:", err);
-      res.status(500).json({
-        status: "error",
-        message: "Failed to confirm pickup",
-        error: err.message,
-      });
-    });
 };
 
 // Function to get confirmed items for a specific vendor

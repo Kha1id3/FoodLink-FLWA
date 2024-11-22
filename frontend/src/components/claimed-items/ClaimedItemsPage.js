@@ -2,6 +2,30 @@ import React, { Component } from "react";
 import axios from "axios";
 import "../profiles/clientProfiles/clientProfileCSS/ClientClaimedItems.css";
 import { notify } from "react-notify-toast";
+import { format } from "date-fns";
+
+
+// Formatting functions
+const formatDate = (isoString) => {
+  if (!isoString) return "N/A"; // Handle null or undefined dates
+  try {
+    return format(new Date(isoString), "MMMM dd, yyyy"); // Example: "November 22, 2024"
+  } catch (error) {
+    console.error("Error formatting date:", isoString, error);
+    return "Invalid Date";
+  }
+};
+
+const formatTime = (isoString) => {
+  if (!isoString) return "N/A"; // Handle null or undefined times
+  try {
+    return format(new Date(isoString), "hh:mm a"); // Example: "08:30 PM"
+  } catch (error) {
+    console.error("Error formatting time:", isoString, error);
+    return "Invalid Time";
+  }
+};
+
 
 class ClaimedItemsPage extends Component {
   constructor() {
@@ -21,6 +45,10 @@ class ClaimedItemsPage extends Component {
     this.getAllVendors();
   }
 
+
+
+
+  
   getAllClaimedFoodItems = () => {
     axios
       .get("/api/fooditems/client/")
@@ -145,7 +173,8 @@ class ClaimedItemsPage extends Component {
                   <p>{item.quantity} people</p>
                 </div>
                 <div id="item-pickup-container">
-                  <p>{item.set_time}</p>
+                  <p className="pickup-date">{formatDate(item.set_time)}</p>
+                  <p className="pickup-time">{formatTime(item.set_time)}</p>
                 </div>
                 <div id="item-actions-container">
                   <div

@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const passport = require("passport");
 const session = require("express-session");
+const notificationsRouter = require("./routes/notifications");
 
 var indexRouter = require("./routes/index");
 let foodItemRouter = require("./routes/foodItems.js");
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use("/api/notifications", notificationsRouter);
 
 app.use(
   session({
@@ -62,5 +64,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.json("error");
 });
+
+
+async function createNotification(userId, message) {
+  try {
+    await db.none(
+      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
+      [userId, message, false]
+    );
+  } catch (error) {
+    console.error("Error creating notification:", error);
+  }
+}
+
+
 
 module.exports = app;

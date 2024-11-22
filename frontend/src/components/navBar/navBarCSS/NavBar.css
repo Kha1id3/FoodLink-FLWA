@@ -103,3 +103,95 @@
 #profile-icon:hover {
   border-color: #988686;
 }
+
+
+.notification-bell-container {
+  position: relative;
+  left: 430px;
+}
+
+.notification-bell {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  
+}
+
+/* Notification Panel Styles */
+.notification-panel {
+  position: fixed;
+  top: 95px; /* Match navbar height */
+  right: 20px;
+  width: 320px;
+  background: #ffffff; /* White background for contrast */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateY(-150%);
+  transition: transform 0.3s ease-in-out;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+
+.notification-panel-visible {
+  transform: translateY(0%);
+}
+
+.notification-panel-hidden {
+  transform: translateY(-300%);
+}
+
+
+
+.notification-items {
+  padding: 5px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 9px;
+  border-bottom: 1px solid #f1f1f1;
+  background-color: #f9f9f9; /* Light background for contrast */
+  color: #272e48;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  border-left: 4px solid #75e975; /* Add a left border for emphasis */
+  transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+.notification-item:hover {
+  background-color: #c9dceb; /* Light blue background on hover */
+  border-left-color: #d18e41; /* Blue accent on hover */
+}
+
+.notification-item:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Optional: Add subtle animation when notifications appear */
+.notification-panel .notification-item {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -29,4 +29,37 @@ router.post("/login", (req, res, next) => {
 router.get("/isLoggedIn", isLoggedIn);
 router.post("/logout", loginRequired, logoutUser);
 
+
+router.get("/notifications/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const notifications = await db.any(
+      "SELECT * FROM notifications WHERE user_id = $1 ORDER BY created_at DESC",
+      [userId]
+    );
+    res.json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).send("Error fetching notifications");
+  }
+});
+
+// Mark notifications as read
+router.patch("/notifications/mark-read/:notificationId", async (req, res) => {
+  const { notificationId } = req.params;
+
+  try {
+    await db.none(
+      "UPDATE notifications SET is_read = TRUE WHERE id = $1",
+      [notificationId]
+    );
+    res.send("Notification marked as read");
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+    res.status(500).send("Error marking notification as read");
+  }
+});
+
+
 module.exports = router;

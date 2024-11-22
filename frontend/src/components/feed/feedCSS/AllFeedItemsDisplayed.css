@@ -70,3 +70,22 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: left; /* Align header text slightly to the left */
 }
+
+
+#item-pickup-container {
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9em;
+  color: #555; /* Neutral color for time info */
+}
+
+.pickup-date {
+  font-weight: bold;
+  color: #333; /* Darker shade for the date */
+}
+
+.pickup-time {
+  margin-top: 2px;
+  font-style: italic;
+  color: #666; /* Subtle shade for the time */
+}
