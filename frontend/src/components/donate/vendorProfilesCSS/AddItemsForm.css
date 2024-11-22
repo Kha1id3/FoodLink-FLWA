@@ -60,17 +60,7 @@
   box-shadow: 0 0 8px rgba(92, 78, 78, 0.5); /* Subtle glow */
 }
 
-#select-pickup-time {
-  width: 100%; /* Full width for dropdown */
-  max-width: 500px;
-  height: 45px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: "Montserrat", sans-serif;
-  padding-left: 10px; /* Padding for content spacing */
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
+
 
 #select-pickup-time:focus {
   border-color: #5C4E4E;
@@ -112,6 +102,29 @@ textarea#input-comment::placeholder {
 }
 
 textarea#input-comment:focus {
+  border-color: #5C4E4E;
+  outline: none;
+  box-shadow: 0 0 8px rgba(92, 78, 78, 0.5);
+}
+
+
+
+
+.custom-date-picker {
+
+  width: 110%;
+  max-width: 600px; /* Uniform field size */
+  height: 45px; /* Slightly larger height for ease */
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  padding: 10px 10px; /* Padding for better spacing */
+  border: 1px solid #ccc;
+  font-family: "Montserrat", sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+}
+
+.custom-date-picker:focus {
   border-color: #5C4E4E;
   outline: none;
   box-shadow: 0 0 8px rgba(92, 78, 78, 0.5);

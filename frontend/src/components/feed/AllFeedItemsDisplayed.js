@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 // import green from "@material-ui/core/colors/green";
 import "./feedCSS/AllFeedItemsDisplayed.css";
+import { format } from 'date-fns';
 
 const theme = createMuiTheme({
   palette: {
@@ -15,6 +16,10 @@ const theme = createMuiTheme({
     useNextVariants: true
   }
 });
+
+const formatTime = (isoString) => {
+  return format(new Date(isoString), 'hh:mm a'); // Example: "08:30 PM"
+};
 
 class AllFeedItemsDisplayed extends Component {
   render() {
@@ -50,13 +55,7 @@ class AllFeedItemsDisplayed extends Component {
                   <p>{food.quantity} people</p>
                 </div>
                 <div id="item-pickup-container">
-                  <p>
-                    {converted_time < 13 && converted_time !== 0
-                      ? converted_time + "am"
-                      : converted_time === 0
-                      ? 12 + "am"
-                      : converted_time - 12 + "pm"}
-                  </p>
+                <p>{formatTime(food.set_time)}</p>
                 </div>
                 <span
   id={food.id}

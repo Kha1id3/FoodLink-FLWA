@@ -9,39 +9,54 @@ export const receiveUserStatus = user => {
   };
 };
 
-export const checkAuthenticateStatus = () => dispatch => {
-  return axios.get("/api/sessions/isLoggedIn").then(user => {
-    if (user.data.email === Auth.getToken()) {
-      return dispatch(
+export const checkAuthenticateStatus = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/api/sessions/isLoggedIn");
+    const user = response.data;
+
+    if (user.email === Auth.getToken()) {
+      dispatch(
         receiveUserStatus({
-          isLoggedIn: Auth.isUserAuthenticated(),
+          isLoggedIn: true,
           user: Auth.getToken(),
-          userInfoObj: user.data
+          userInfoObj: user,
         })
       );
     } else {
-      if (user.data.email) {
+      if (user.email) {
         logoutUser();
       } else {
         Auth.deauthenticateUser();
+        dispatch(
+          receiveUserStatus({
+            isLoggedIn: false,
+            userInfoObj: { email: null },
+          })
+        );
       }
     }
-  });
+  } catch (error) {
+    console.error("Error checking authentication status:", error);
+    Auth.deauthenticateUser();
+    dispatch(
+      receiveUserStatus({
+        isLoggedIn: false,
+        userInfoObj: { email: null },
+      })
+    );
+  }
 };
-
-export const logoutUser = () => dispatch => {
-  return axios
-    .post("/api/sessions/logout")
-    .then(() => {
-      Auth.deauthenticateUser();
-    })
-    .then(() => {
-      checkAuthenticateStatus();
-      dispatch(
-        receiveUserStatus({
-          isLoggedIn: false,
-          userInfoObj: { email: null }
-        })
-      );
-    });
+export const logoutUser = () => async (dispatch) => {
+  try {
+    await axios.post("/api/sessions/logout");
+    Auth.deauthenticateUser();
+    dispatch(
+      receiveUserStatus({
+        isLoggedIn: false,
+        userInfoObj: { email: null },
+      })
+    );
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
 };

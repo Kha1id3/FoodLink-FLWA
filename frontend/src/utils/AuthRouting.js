@@ -5,14 +5,14 @@ import Auth from "./Auth.js";
 export const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       Auth.isUserAuthenticated() ? (
         <Component {...props} {...rest} />
       ) : (
         <Redirect
           to={{
             pathname: "/user/login",
-            state: { from: props.location }
+            state: { from: props.location },
           }}
         />
       )

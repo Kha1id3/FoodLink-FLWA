@@ -19,18 +19,31 @@ export default class Feed extends Component {
   componentDidMount() {
     this.getAllFoodItems();
     this.getAllVendors();
+    // Optional: Set an interval to refresh the food items periodically
+    this.interval = setInterval(() => {
+      this.getAllFoodItems();
+    }, 60000); // Refresh every minute
+  }
+  
+  // Clear the interval when the component unmounts
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   getAllFoodItems = () => {
     axios
       .get("/api/foodItems")
-      .then(foodItems => {
+      .then((foodItems) => {
+        const currentTime = new Date().toISOString(); // Get the current time in ISO format
+        const validItems = foodItems.data.food_items.filter((item) => {
+          return new Date(item.set_time) > new Date(currentTime); // Compare pickup time with current time
+        });
         this.setState({
-          allFoodItems: foodItems.data.food_items
+          allFoodItems: validItems, // Set only valid (non-expired) items to state
         });
       })
-      .catch(err => {
-        console.log(err);
+      .catch((err) => {
+        console.error(err);
       });
   };
 

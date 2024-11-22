@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./vendorProfilesCSS/AddItemsForm.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
@@ -16,6 +18,42 @@ const theme = createMuiTheme({
 });
 
 const AddItemForm = (props) => {
+  const [pickupDateTime, setPickupDateTime] = useState(null);
+
+  const handleDateChange = (date) => {
+    if (date instanceof Date && !isNaN(date)) {
+      setPickupDateTime(date);
+      props.handleChange({
+        target: {
+          name: "set_time",
+          value: date.toISOString(),
+        },
+      });
+    }
+  };
+
+  const filterPassedTimes = (time) => {
+    const currentDate = new Date();
+    const selectedDate = pickupDateTime || currentDate;
+
+    // Only show times between 6:00 AM and 11:00 PM
+    const startTime = new Date(time);
+    startTime.setHours(6, 0, 0); // 6:00 AM
+
+    const endTime = new Date(time);
+    endTime.setHours(24, 0, 0); // 11:00 PM
+
+    // Show times between startTime and endTime
+    const isValidTime = time >= startTime && time <= endTime;
+
+    // Additionally filter out passed times if it's today
+    return (
+      isValidTime &&
+      (selectedDate.getDate() !== currentDate.getDate() ||
+        time.getTime() > currentDate.getTime())
+    );
+  };
+
   return (
     <div className="donationFormWrapper">
       <h1 id="donation-form-header">Donation Form</h1>
@@ -51,50 +89,29 @@ const AddItemForm = (props) => {
             rows="4"
           ></textarea>
           <br />
-          <div className="dropdownButtonContainer">
-            <select
-              onChange={props.handleChange}
-              name="set_time"
-              id="select-pickup-time"
-            >
-              <option value="null"> Select Pick-Up Time </option>
-              {/* Other options */}
-              <option value="12:00"> 12:00 pm </option>
-              <option value="13:00"> 1:00 pm </option>
-              <option value="14:00"> 2:00 pm </option>
-              <option value="15:00"> 3:00 pm </option>
-              <option value="16:00"> 4:00 pm </option>
-              <option value="17:00"> 5:00 pm </option>
-              <option value="18:00"> 6:00 pm </option>
-              <option value="19:00"> 7:00 pm </option>
-              <option value="20:00"> 8:00 pm </option>
-              <option value="21:00"> 9:00 pm </option>
-              <option value="22:00"> 10:00 pm </option>
-              <option value="23:00"> 11:00 pm </option>
-              <option value="000"> 12:00 am </option>
-              <option value="01:00"> 1:00 am </option>
-              <option value="02:00"> 2:00 am </option>
-              <option value="03:00"> 3:00 am </option>
-              <option value="04:00"> 4:00 am </option>
-              <option value="05:00"> 5:00 am </option>
-              <option value="06:00"> 6:00 am </option>
-              <option value="07:00"> 7:00 am </option>
-              <option value="08:00"> 8:00 am </option>
-              <option value="09:00"> 9:00 am </option>
-              <option value="10:00"> 10:00 am </option>
-              <option value="11:00"> 11:00 am </option>
-            </select>
-            <MuiThemeProvider theme={theme}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                id="add-food-item-button"
-              >
-                <div id="add-item">Submit</div>
-              </Button>
-            </MuiThemeProvider>
+          <div className="datePickerContainer">
+            <DatePicker
+              selected={pickupDateTime}
+              onChange={handleDateChange}
+              showTimeSelect
+              dateFormat="MMMM d, yyyy h:mm aa"
+              timeIntervals={1}
+              filterTime={filterPassedTimes}
+              placeholderText="Select pickup date and time"
+              className="custom-date-picker"
+              minDate={new Date()}
+            />
           </div>
+          <MuiThemeProvider theme={theme}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              id="add-food-item-button"
+            >
+              <div id="add-item">Submit</div>
+            </Button>
+          </MuiThemeProvider>
         </form>
       </div>
     </div>
