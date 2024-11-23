@@ -56,23 +56,23 @@ export const LoggedInNavBar = (props) => {
 
   // Mark a notification as read on hover
   const handleNotificationHover = async (notificationId) => {
-    const notification = notifications.find(
-      (n) => n.id === notificationId && !n.is_read
-    );
+    if (!notificationId) return; // Ensure ID is valid
+    const notification = notifications.find((n) => n.id === notificationId && !n.is_read);
     if (notification) {
       try {
-        await axios.patch(`/api/notifications/${notificationId}/read`);
-        setNotifications((prevNotifications) =>
-          prevNotifications.map((n) =>
-            n.id === notificationId ? { ...n, is_read: true } : n
-          )
-        );
+        const response = await axios.patch(`/api/notifications/${notificationId}/read`);
+        if (response.status === 200) {
+          setNotifications((prevNotifications) =>
+            prevNotifications.map((n) =>
+              n.id === notificationId ? { ...n, is_read: true } : n
+            )
+          );
+        }
       } catch (error) {
         console.error("Error marking notification as read:", error);
       }
     }
   };
-
   // Redirect to claimed items page
   const redirectToClaimedItems = () => {
     history.push(type === "vendor" ? "/vendor_claimed_page" : "/claimed-items");
@@ -156,11 +156,11 @@ export const LoggedInNavBar = (props) => {
                       onClick={redirectToClaimedItems}
                     >
                       <div className="notification-content">
-                        🍏 <strong>{notification.message.split(" ")[2]}</strong>{" "}
-                        <span className="notification-claimed">claimed</span>.
-                        <span className="notification-action">
-                          Check it out!
-                        </span>
+                      🍏 <strong>{notification.message.replace("🍏", "").split("claimed")[0].trim()}</strong>{" "}
+                      <span className="notification-claimed">claimed</span>.
+                      <span className="notification-action">
+                        Check it out!
+                      </span>
                       </div>
                       <div className="notification-timestamp">
                         {new Date(notification.created_at).toLocaleDateString()}

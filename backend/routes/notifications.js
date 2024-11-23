@@ -22,6 +22,7 @@ router.get("/:userId", async (req, res, next) => {
 });
 
 // Mark a notification as read
+/* */
 router.patch("/mark-all-read/:userId", async (req, res, next) => {
     try {
       const { userId } = req.params;
@@ -37,6 +38,23 @@ router.patch("/mark-all-read/:userId", async (req, res, next) => {
       next(error);
     }
   });
+
+router.patch("/:id/read", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await db.none("UPDATE notifications SET is_read = TRUE WHERE id = $1", [
+      id,
+    ]);
+    res.status(200).json({
+      status: "success",
+      message: "Notification marked as read",
+    });
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+    next(error);
+  }
+});
+/* */
 
 // Delete a notification
 router.delete("/:id", async (req, res, next) => {
@@ -67,6 +85,18 @@ router.post("/", async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error creating notification:", error);
+    next(error);
+  }
+});
+
+
+router.patch("/:id/read", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await db.none("UPDATE notifications SET is_read = TRUE WHERE id = $1", [id]);
+    res.status(200).json({ status: "success", message: "Notification marked as read." });
+  } catch (error) {
+    console.error("Error updating notification:", error);
     next(error);
   }
 });
