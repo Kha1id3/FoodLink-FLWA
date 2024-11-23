@@ -5,9 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
+    "@reach/combobox": "^0.18.0",
+    "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
-    "google-map-react": "^1.1.7",
     "lodash": "^4.17.11",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
@@ -22,7 +23,8 @@
     "react-scripts": "^5.0.1",
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "use-places-autocomplete": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

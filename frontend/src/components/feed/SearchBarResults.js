@@ -1,10 +1,10 @@
 import React from "react";
 import SearchBarResultsVendorDisplay from "./SearchBarResultsVendorDisplay.js";
 import SearchBarResultsVendorItemsDisplay from "./SearchBarResultsVendorItemsDisplay.js";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import "./feedCSS/SearchBarResults.css";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {

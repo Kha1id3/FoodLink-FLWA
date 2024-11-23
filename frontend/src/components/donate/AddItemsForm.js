@@ -3,9 +3,9 @@ import Button from "@material-ui/core/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./vendorProfilesCSS/AddItemsForm.css";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {

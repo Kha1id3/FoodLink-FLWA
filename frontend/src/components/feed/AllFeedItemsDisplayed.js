@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import "./feedCSS/AllFeedItemsDisplayed.css";
 import { format } from 'date-fns';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {
