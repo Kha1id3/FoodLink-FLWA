@@ -107,12 +107,13 @@
 
 .notification-bell-container {
   position: relative;
-  left: 430px;
+  left: 440px;
+
 }
 
 .notification-bell {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   
 }
@@ -120,8 +121,8 @@
 /* Notification Panel Styles */
 .notification-panel {
   position: fixed;
-  top: 95px; /* Match navbar height */
-  right: 20px;
+  top: 80px; /* Match navbar height */
+  right: 10px;
   width: 320px;
   background: #ffffff; /* White background for contrast */
   border: 1px solid #ddd;
@@ -131,7 +132,7 @@
   transform: translateY(-150%);
   transition: transform 0.3s ease-in-out;
   max-height: 400px;
-  overflow-y: auto;
+  overflow-y: auto; /* Allow scrolling for long lists */
 }
 
 
@@ -151,15 +152,24 @@
 
 .notification-item {
   display: flex;
+  justify-content: space-between; /* Align timestamp to the right */
+  flex-direction: column;
   align-items: center;
-  padding: 9px;
-  border-bottom: 1px solid #f1f1f1;
+  padding: 15px;
+  border-bottom: 5px solid #f1f1f1;
   background-color: #f9f9f9; /* Light background for contrast */
   color: #272e48;
   font-size: 14px;
   font-family: "Montserrat", sans-serif;
-  border-left: 4px solid #75e975; /* Add a left border for emphasis */
+  border-left: 4px solid #75e975; /* Default green for unread */
   transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+.notification-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10px; /* Space between content and bottom section */
 }
 
 .notification-item:hover {
@@ -172,12 +182,39 @@
   border-top-right-radius: 8px;
 }
 
+.notification-message strong {
+  font-weight: bold; /* Make the item name bold */
+}
+
+.notification-claimed {
+  color: #28a745; /* Green for the word 'claimed' */
+  font-weight: bold;
+}
+
+.notification-action {
+  color: #5792ce; /* Blue for 'Check it out!' */
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+
+.notification-action:hover {
+  text-decoration: underline; /* Add underline on hover for action */
+}
+
+.notification-content {
+  flex-grow: 1;
+}
 .no-notifications {
   text-align: center;
   color: #888;
   padding: 20px;
   font-style: italic;
   font-size: 14px;
+}
+.notification-content {
+  flex-grow: 1;
 }
 
 /* Optional: Add subtle animation when notifications appear */
@@ -194,4 +231,34 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+
+.notification-item.read {
+  border-left-color: #f0a72b; /* Orange for read notifications */
+}
+.notification-item:hover {
+  background-color: #c9dceb; /* Light blue background on hover */
+}
+
+.notification-timestamp {
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
+
+.notification-timestamp div {
+  line-height: 1.2; /* Compact spacing for date and time */
+}
+
+.notification-link:hover {
+  text-decoration: underline;
+}
+
+.notification-link {
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff;
+  cursor: pointer;
+  text-align: left;
 }
