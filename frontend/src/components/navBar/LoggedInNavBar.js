@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { NavLink, useHistory } from "react-router-dom";
 import "./navBarCSS/NavBar.css";
 import axios from "axios";
 
 export const LoggedInNavBar = (props) => {
   const [profilePic, setProfilePic] = useState(""); // Store profile picture URL
   const [notifications, setNotifications] = useState([]);
-  const [showPanel, setShowPanel] = useState(false); // State to control panel visibility
+  const [showDropdown, setShowDropdown] = useState(false); // Notification dropdown visibility
+  const history = useHistory();
+  const dropdownRef = useRef(null);
 
-  let type;
-  if (props.currentUser.type === 1) {
-    type = "vendor";
-  } else {
-    type = "client";
-  }
-
-  let profileLink = `/${type}/${props.currentUser.name}`;
+  const type = props.currentUser.type === 1 ? "vendor" : "client";
+  const profileLink = `/${type}/${props.currentUser.name}`;
 
   // Fetch the profile picture
   useEffect(() => {
@@ -37,8 +33,7 @@ export const LoggedInNavBar = (props) => {
         const response = await axios.get(
           `/api/notifications/${props.currentUser.id}`
         );
-        const latestNotifications = response.data.notifications.slice(0, 5); // Fetch latest 5 notifications
-        setNotifications(latestNotifications);
+        setNotifications(response.data.notifications || []);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -46,6 +41,44 @@ export const LoggedInNavBar = (props) => {
     fetchNotifications();
   }, [props.currentUser.id]);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Mark a notification as read on hover
+  const handleNotificationHover = async (notificationId) => {
+    const notification = notifications.find(
+      (n) => n.id === notificationId && !n.is_read
+    );
+    if (notification) {
+      try {
+        await axios.patch(`/api/notifications/${notificationId}/read`);
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((n) =>
+            n.id === notificationId ? { ...n, is_read: true } : n
+          )
+        );
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+      }
+    }
+  };
+
+  // Redirect to claimed items page
+  const redirectToClaimedItems = () => {
+    history.push(type === "vendor" ? "/vendor_claimed_page" : "/claimed-items");
+  };
+
+  // Render NavBar
   return (
     <nav id="nav">
       <span id="nav-title">
@@ -65,15 +98,25 @@ export const LoggedInNavBar = (props) => {
         >
           Map
         </NavLink>
+        {type === "vendor" ? (
+          <NavLink
+            to="/donate"
+            className="nav-link"
+            activeClassName="nav-link--active"
+          >
+            Donate
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/feed"
+            className="nav-link"
+            activeClassName="nav-link--active"
+          >
+            Donations
+          </NavLink>
+        )}
         <NavLink
-          to="/donate"
-          className="nav-link"
-          activeClassName="nav-link--active"
-        >
-          Donate
-        </NavLink>
-        <NavLink
-          to="/claimed-items"
+          to={type === "vendor" ? "/vendor_claimed_page" : "/claimed-items"}
           className="nav-link"
           activeClassName="nav-link--active"
         >
@@ -90,13 +133,48 @@ export const LoggedInNavBar = (props) => {
           Logout
         </button>
         {/* Notification Bell */}
-        <div className="notification-bell-container">
+        <div className="notification-bell-container" ref={dropdownRef}>
           <img
             src={require("./bell-icon.png")}
             alt="notifications"
             className="notification-bell"
-            onClick={() => setShowPanel(!showPanel)}
+            onClick={() => setShowDropdown((prev) => !prev)}
           />
+          {showDropdown && (
+            <div className="notification-panel notification-panel-visible">
+              <div className="notification-items">
+                {notifications.length > 0 ? (
+                  notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`notification-item ${
+                        notification.is_read ? "read" : ""
+                      }`}
+                      onMouseEnter={() =>
+                        handleNotificationHover(notification.id)
+                      }
+                      onClick={redirectToClaimedItems}
+                    >
+                      <div className="notification-content">
+                        🍏 <strong>{notification.message.split(" ")[2]}</strong>{" "}
+                        <span className="notification-claimed">claimed</span>.
+                        <span className="notification-action">
+                          Check it out!
+                        </span>
+                      </div>
+                      <div className="notification-timestamp">
+                        {new Date(notification.created_at).toLocaleDateString()}
+                        <br />
+                        {new Date(notification.created_at).toLocaleTimeString()}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-notifications">No notifications</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <NavLink to={profileLink} id="profile-link">
           <img
@@ -106,25 +184,6 @@ export const LoggedInNavBar = (props) => {
             className="nav-profile-icon"
           />
         </NavLink>
-      </div>
-      {/* Notification Panel */}
-      <div
-        className={`notification-panel ${
-          showPanel ? "notification-panel-visible" : "notification-panel-hidden"
-        }`}
-      >
-
-        <div className="notification-items">
-          {notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <div key={index} className="notification-item">
-                {notification.message}
-              </div>
-            ))
-          ) : (
-            <div className="no-notifications">No notifications</div>
-          )}
-        </div>
       </div>
     </nav>
   );

@@ -216,7 +216,7 @@ const foodItemClaimStatus = async (req, res, next) => {
 
     await createNotification(
       foodItem.vendor_id,
-      `🍗Your item ${foodItem.name} has been claimed.Check it out!`
+      `🍏 Your item ${foodItem.name} has been claimed.Check it out!`
     );
 
     res.status(200).json({
