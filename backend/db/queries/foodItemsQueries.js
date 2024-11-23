@@ -176,7 +176,17 @@ const createNewFoodItem = (req, res, next) => {
       pickup_code: generatePickupCode(),
     }
   )
-    .then((foodItem) => {
+    .then(async (foodItem) => {
+      // Send a notification to the vendor
+      await db.none(
+        "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
+        [
+          foodItem.vendor_id,
+          `🍏 Your item "${foodItem.name}" has been added successfully.`,
+          false,
+        ]
+      );
+
       res.status(200).json({
         status: "success",
         foodItem,
@@ -214,16 +224,15 @@ const foodItemClaimStatus = async (req, res, next) => {
       [is_claimed, client_id, id]
     );
 
+    // Only notify the vendor about the claim
     await createNotification(
       foodItem.vendor_id,
-
-      `🍏 Your item ${foodItem.name} has been claimed.Check it out!`
-
+      `🍏 Your item '${foodItem.name}' has been claimed. Check it out!`
     );
 
     res.status(200).json({
       status: "success",
-      message: "Claim status updated and notification sent.",
+      message: "Claim status updated and notification sent to vendor.",
     });
   } catch (err) {
     next(err);
@@ -299,10 +308,22 @@ const confirmPickup = async (req, res, next) => {
 
     // Create a notification for the client
     await db.none(
-      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
+      "INSERT INTO notifications (user_id, client_id, message, is_read) VALUES ($1, $2, $3, $4)",
       [
         foodItem.client_id,
-        `Your item '${foodItem.name}' is ready for pickup.`,
+        null,
+        `☑️ Your item '${foodItem.name}' has been confirmed as picked up.`,
+        false,
+      ]
+    );
+
+    // Create a notification for the vendor
+    await db.none(
+      "INSERT INTO notifications (user_id, client_id, message, is_read) VALUES ($1, $2, $3, $4)",
+      [
+        foodItem.vendor_id,
+        null,
+        `🍏 The item '${foodItem.name}' you donated has been confirmed as picked up.`,
         false,
       ]
     );
@@ -310,7 +331,7 @@ const confirmPickup = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       food_item: foodItem,
-      message: "Pickup confirmed and notification sent.",
+      message: "Pickup confirmed and notifications sent.",
     });
   } catch (err) {
     console.error("Error in confirmPickup function:", err);

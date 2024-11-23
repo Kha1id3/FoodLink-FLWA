@@ -30,16 +30,25 @@ export const LoggedInNavBar = (props) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(
-          `/api/notifications/${props.currentUser.id}`
-        );
+        const response = await axios.get(`/api/notifications/${props.currentUser.id}`);
         setNotifications(response.data.notifications || []);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     };
+  
+    // Initial fetch
     fetchNotifications();
+  
+    // Set up periodic refresh
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 5000); // Fetch notifications every 5 seconds
+  
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [props.currentUser.id]);
+  
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -155,18 +164,20 @@ export const LoggedInNavBar = (props) => {
                       }
                       onClick={redirectToClaimedItems}
                     >
-                      <div className="notification-content">
-                      🍏 <strong>{notification.message.replace("🍏", "").split("claimed")[0].trim()}</strong>{" "}
-                      <span className="notification-claimed">claimed</span>.
-                      <span className="notification-action">
-                        Check it out!
-                      </span>
-                      </div>
-                      <div className="notification-timestamp">
-                        {new Date(notification.created_at).toLocaleDateString()}
-                        <br />
-                        {new Date(notification.created_at).toLocaleTimeString()}
-                      </div>
+<div className="notification-content">
+  {notification.message.includes("claimed") ? (
+    <>
+      🍏 <strong>{notification.message.replace("claimed claimed", "claimed")}</strong> 
+      <span className="notification-action"> Check it out!</span>
+    </>
+  ) : notification.message.includes("confirmed") ? (
+    <>
+      🍏 <strong>{notification.message.split("'")[1]}</strong> has been confirmed as picked up.
+    </>
+  ) : (
+    <>{notification.message}</>
+  )}
+</div>
                     </div>
                   ))
                 ) : (

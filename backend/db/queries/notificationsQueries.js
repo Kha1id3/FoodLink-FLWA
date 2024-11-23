@@ -17,7 +17,20 @@ const deleteNotification = (notificationId) => {
   return db.none("DELETE FROM notifications WHERE id = $1", [notificationId]);
 };
 
+const createNotification = async (userId, message) => {
+  try {
+    await db.none(
+      "INSERT INTO notifications (user_id, message, is_read, created_at) VALUES ($1, $2, FALSE, NOW())",
+      [userId, message]
+    );
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    throw error;
+  }
+};
+
 module.exports = {
+  createNotification,
   getNotificationsByUser,
   markNotificationAsRead,
   deleteNotification,
