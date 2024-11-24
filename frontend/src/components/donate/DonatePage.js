@@ -142,6 +142,7 @@ class DonatePage extends Component {
       hasAdded: true,
     });
     const { quantity, name, set_time, comment } = this.state;
+  
     axios
       .post("/api/fooditems/", {
         quantity,
@@ -151,13 +152,20 @@ class DonatePage extends Component {
         comment,
       })
       .then(() => {
-        this.setState({
-          toAddItem: false,
-        });
+        // Refresh food items list and notifications
+        this.setState({ toAddItem: false });
         this.fetchFoodItems();
+  
+        // Refresh notifications
+        axios
+          .get(`/api/notifications/${this.props.currentUser.id}`)
+          .then((res) => {
+            this.props.setNotifications(res.data.notifications); // Assuming `setNotifications` updates the notifications globally
+          })
+          .catch((err) => console.error("Error refreshing notifications:", err));
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error adding food item:", err);
       });
   };
 

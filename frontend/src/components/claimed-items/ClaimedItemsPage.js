@@ -81,21 +81,36 @@ class ClaimedItemsPage extends Component {
       console.error("Invalid Item ID:", itemId);
       return;
     }
-
+  
     axios
       .patch(`/api/fooditems/confirmpickup/${itemId}`)
       .then(() => {
         notify.show("Pickup confirmed successfully!", "success", 3000);
+  
+        // Remove the item from claimed items list
         this.setState((prevState) => ({
           claimedFoodItems: prevState.claimedFoodItems.filter(
             (item) => item.id !== itemId
           ),
         }));
+  
+        // Fetch new notifications to update the notification panel
+        this.fetchNotifications();
       })
       .catch((err) => {
         notify.show("Failed to confirm pickup. Please try again.", "error", 3000);
         console.error("Error confirming pickup:", err);
       });
+  };
+  
+  // Function to fetch updated notifications
+  fetchNotifications = () => {
+    axios
+      .get(`/api/notifications/${this.props.currentUser.id}`)
+      .then((res) => {
+        this.setState({ notifications: res.data.notifications });
+      })
+      .catch((err) => console.error("Error fetching notifications:", err));
   };
 
   handleMouseDown = (itemId) => {

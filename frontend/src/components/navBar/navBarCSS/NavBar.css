@@ -262,3 +262,21 @@
   cursor: pointer;
   text-align: left;
 }
+
+.notification-content strong {
+  display: inline-block;
+  word-wrap: break-word; /* Ensures long words break into new lines */
+  max-width: 100%; /* Prevents overflow */
+}
+
+
+.notification-bell-container img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.notification-bell-container img:hover {
+  transform: scale(1.1);
+}

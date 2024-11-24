@@ -9,6 +9,7 @@ export const LoggedInNavBar = (props) => {
   const [showDropdown, setShowDropdown] = useState(false); // Notification dropdown visibility
   const history = useHistory();
   const dropdownRef = useRef(null);
+  const [hasUnread, setHasUnread] = useState(false);
 
   const type = props.currentUser.type === 1 ? "vendor" : "client";
   const profileLink = `/${type}/${props.currentUser.name}`;
@@ -30,17 +31,35 @@ export const LoggedInNavBar = (props) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(
-          `/api/notifications/${props.currentUser.id}`
-        );
+        const response = await axios.get(`/api/notifications/${props.currentUser.id}`);
         setNotifications(response.data.notifications || []);
+
+        // Check for unread notifications
+        const unread = response.data.notifications.some((notif) => !notif.is_read);
+        setHasUnread(unread);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     };
-    fetchNotifications();
-  }, [props.currentUser.id]);
 
+    fetchNotifications();
+  
+  
+    const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
+    // Set up periodic refresh
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 5000); // Fetch notifications every 5 seconds
+  
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, [props.currentUser.id]);
+  
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,27 +75,46 @@ export const LoggedInNavBar = (props) => {
 
   // Mark a notification as read on hover
   const handleNotificationHover = async (notificationId) => {
-    const notification = notifications.find(
-      (n) => n.id === notificationId && !n.is_read
-    );
+    if (!notificationId) return; // Ensure ID is valid
+    const notification = notifications.find((n) => n.id === notificationId && !n.is_read);
     if (notification) {
       try {
-        await axios.patch(`/api/notifications/${notificationId}/read`);
-        setNotifications((prevNotifications) =>
-          prevNotifications.map((n) =>
-            n.id === notificationId ? { ...n, is_read: true } : n
-          )
-        );
+        const response = await axios.patch(`/api/notifications/${notificationId}/read`);
+        if (response.status === 200) {
+          setNotifications((prevNotifications) =>
+            prevNotifications.map((n) =>
+              n.id === notificationId ? { ...n, is_read: true } : n
+            )
+          );
+        }
       } catch (error) {
         console.error("Error marking notification as read:", error);
       }
     }
   };
-
   // Redirect to claimed items page
   const redirectToClaimedItems = () => {
     history.push(type === "vendor" ? "/vendor_claimed_page" : "/claimed-items");
   };
+
+  const markAllAsRead = async () => {
+    try {
+      await axios.patch(`/api/notifications/mark-all-read/${props.currentUser.id}`);
+      setNotifications((prev) =>
+        prev.map((notif) => ({
+          ...notif,
+          is_read: true,
+        }))
+      );
+      setHasUnread(false); // Update state to indicate all notifications are read
+    } catch (error) {
+      console.error("Error marking notifications as read:", error);
+    }
+  };
+
+  const notificationIcon = hasUnread
+  ? require("./dish hot.png") // Hot dish for new notifications
+  : require("./dish cold.png"); // Cold dish for all notifications read
 
   // Render NavBar
   return (
@@ -135,10 +173,13 @@ export const LoggedInNavBar = (props) => {
         {/* Notification Bell */}
         <div className="notification-bell-container" ref={dropdownRef}>
           <img
-            src={require("./bell-icon.png")}
+            src={notificationIcon} // Dynamic notification icon
             alt="notifications"
             className="notification-bell"
-            onClick={() => setShowDropdown((prev) => !prev)}
+            onClick={() => {
+              toggleDropdown();
+              markAllAsRead(); // Mark all notifications as read when dropdown is opened
+            }}
           />
           {showDropdown && (
             <div className="notification-panel notification-panel-visible">
@@ -148,19 +189,11 @@ export const LoggedInNavBar = (props) => {
                     <div
                       key={notification.id}
                       className={`notification-item ${
-                        notification.is_read ? "read" : ""
+                        notification.is_read ? "read" : "unread"
                       }`}
-                      onMouseEnter={() =>
-                        handleNotificationHover(notification.id)
-                      }
-                      onClick={redirectToClaimedItems}
                     >
                       <div className="notification-content">
-                        🍏 <strong>{notification.message.split(" ")[2]}</strong>{" "}
-                        <span className="notification-claimed">claimed</span>.
-                        <span className="notification-action">
-                          Check it out!
-                        </span>
+                        {notification.message}
                       </div>
                       <div className="notification-timestamp">
                         {new Date(notification.created_at).toLocaleDateString()}
