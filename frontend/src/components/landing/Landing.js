@@ -2,11 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Carousel from "./Carousel.js";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./landingCSS/Landing.css";
 
-const buttonColor = createTheme({
+const buttonColor = createMuiTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {

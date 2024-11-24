@@ -3,24 +3,19 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Remove scrollbars */
+  /* Remove the overflow: hidden; to allow scrolling */
 }
 
 .map-container {
-  position: fixed; /* Fixed to cover the entire screen */
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100vw; /* Full viewport width */
-  height: calc(100vh - 100px); /* Adjust to subtract the height of the navbar + some spacing */
+  width: 100%; /* Full width */
+  height: calc(100vh - 150px); /* Adjusted height to leave space for scrolling if needed */
   margin-top: 100px; /* Assuming your navbar has a height of 100px */
 }
 
 /* Style the search box to position below the navbar */
 .places-container {
   position: absolute;
-  top: 90px; /* Adjusted to position just below the navbar */
+  top: 100px; /* Adjusted to position just below the navbar */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10; /* Ensure it is on top of the map */

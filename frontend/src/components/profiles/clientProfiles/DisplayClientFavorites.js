@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "./clientProfileCSS/DisplayClientFavorites.css";
 
-const theme = createTheme({
+const theme = createMuiTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {

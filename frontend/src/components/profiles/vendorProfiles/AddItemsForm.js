@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import "./vendorProfilesCSS/AddItemsForm.css";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-const theme = createTheme({
+const theme = createMuiTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {
