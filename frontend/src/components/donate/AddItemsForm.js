@@ -21,16 +21,16 @@ const AddItemForm = (props) => {
   const [pickupDateTime, setPickupDateTime] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleDateChange = (date) => {
-    if (date instanceof Date && !isNaN(date)) {
-      setPickupDateTime(date);
-      props.handleChange({
-        target: {
-          name: "set_time",
-          value: date.toISOString(),
-        },
-      });
-    }
+  const handleDateChange = (e) => {
+    const selectedDateTime = e.target.value;
+    setPickupDateTime(selectedDateTime);
+
+    props.handleChange({
+      target: {
+        name: "set_time",
+        value: selectedDateTime, // Pass the selected date-time in ISO format
+      },
+    });
   };
 
   const filterPassedTimes = (time) => {
@@ -108,17 +108,19 @@ const AddItemForm = (props) => {
           ></textarea>
           <br />
           <div className="datePickerContainer">
-            <DatePicker
-              selected={pickupDateTime}
+            <label htmlFor="pickupDateTime">Select Pickup Date and Time</label>
+            <input
+              type="datetime-local"
+              id="pickupDateTime"
+              name="pickupDateTime"
+              value={pickupDateTime}
               onChange={handleDateChange}
-              showTimeSelect
-              dateFormat="MMMM d, yyyy h:mm aa"
-              timeIntervals={30}
-              placeholderText="Select pickup date and time"
               className="custom-date-picker"
-              minDate={new Date()}
+              min={new Date().toISOString().slice(0, 16)} // Prevent past dates
+              required
             />
           </div>
+
           <MuiThemeProvider theme={theme}>
             <Button
               type="submit"

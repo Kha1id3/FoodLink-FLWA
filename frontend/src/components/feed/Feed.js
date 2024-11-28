@@ -297,6 +297,7 @@ renderRequestForm = () => {
               name="neededBy"
               placeholder="Pickup Time"
               value={requestForm.neededBy}
+              className="custom-date-picker"
               onChange={this.handleRequestChange}
             />
             <textarea

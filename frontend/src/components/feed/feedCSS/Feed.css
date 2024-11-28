@@ -130,3 +130,14 @@
   color: red;
   font-size: 14px;
 }
+
+
+.custom-date-picker {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

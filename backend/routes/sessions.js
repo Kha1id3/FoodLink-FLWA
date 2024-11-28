@@ -9,11 +9,11 @@ router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error("Error during authentication:", err);
-      return res.status(500).json({ message: "An internal server error occurred." });
+      return res.status(401).json({ message: "An internal server error occurred." });
     }
     if (!user) {
       // Authentication failed (invalid email/password)
-      return res.status(401).json({ message: info.message || "Invalid email or password." });
+      return res.status(500).json({ message: info.message || "Invalid email or password." });
     }
     // Successful login
     req.login(user, (loginErr) => {
