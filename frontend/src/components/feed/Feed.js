@@ -6,6 +6,23 @@ import AllFeedItems from "./AllFeedItems.js";
 import { SearchBarResults } from "./SearchBarResults.js";
 import "./feedCSS/Feed.css";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
+import { Button } from "@material-ui/core";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
+
+
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { 500: "#5C4E4E" },
+    secondary: {
+      main: "#5C4E4E",
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+})
 
 export default class Feed extends Component {
   state = {
@@ -13,12 +30,24 @@ export default class Feed extends Component {
     textInput: "",
     searchText: "",
     allVendors: [],
-    fadeTrigger: []
+    fadeTrigger: [],
+    selectedCategory: null,
+    allCategories: [],
+    requestForm: {
+      name: "",
+      category: "",
+      quantity: "",
+      neededBy: "",
+      comment: "",
+    },
+    showRequestForm: false,
+    requestError: null,
   };
 
   componentDidMount() {
     this.getAllFoodItems();
     this.getAllVendors();
+    this.getCategories();
     // Optional: Set an interval to refresh the food items periodically
     this.interval = setInterval(() => {
       this.getAllFoodItems();
@@ -159,15 +188,159 @@ export default class Feed extends Component {
     });
   };
 
+  toggleRequestForm = () => {
+    this.setState((prevState) => ({
+      showRequestForm: !prevState.showRequestForm,
+      requestError: null,
+    }));
+  };
+
+  handleRequestChange = (e) => {
+    const { name, value } = e.target;
+    this.setState((prevState) => ({
+      requestForm: { ...prevState.requestForm, [name]: value },
+    }));
+  };
+
+
+  handleCategorySelect = (categoryId) => {
+    this.setState((prevState) => ({
+      requestForm: { ...prevState.requestForm, category: categoryId },
+    }));
+  };
+
+
+  handleRequestSubmit = async (e) => {
+    e.preventDefault();
+    const { name, category, quantity, neededBy, comment } = this.state.requestForm;
+  
+    if (!name || !category || !quantity || !neededBy) {
+      this.setState({ requestError: "All fields are required." });
+      return;
+    }
+  
+    console.log("Submitting Request Form:", this.state.requestForm); // Debugging Log
+  
+    try {
+      const response = await axios.post("/api/fooditems/create-request", {
+        name,
+        category_id: category, // Make sure this is set correctly
+        quantity,
+        set_time: neededBy,
+        comment,
+        client_id: this.props.currentUser.id,
+        type: "request",
+      });
+  
+      if (response.status === 201) {
+        this.setState({
+          requestForm: { name: "", category: null, quantity: "", neededBy: "", comment: "" },
+          requestError: null,
+          showRequestForm: false,
+        });
+        this.getAllFoodItems();
+      }
+    } catch (error) {
+      console.error("Error submitting request:", error.response || error.message);
+      this.setState({ requestError: "Failed to submit request. Try again." });
+    }
+  };
+  
+getCategories = () => {
+  axios
+    .get("/api/categories")
+    .then((response) => {
+      this.setState({ allCategories: response.data.categories });
+    })
+    .catch((err) => console.error("Error fetching categories:", err));
+};
+
+renderRequestForm = () => {
+  const { requestForm, requestError, allCategories } = this.state;
+
+  return (
+    <MuiThemeProvider theme={theme}>
+      <div className="request-form-modal">
+        <div className="request-form-container">
+          <h3>Request a Donation</h3>
+          {requestError && <p className="error">{requestError}</p>}
+          <div className="category-buttons-container">
+            {allCategories.map((category) => (
+              <div
+                key={category.id}
+                className={`category-button ${
+                  requestForm.category === category.id ? "selected" : ""
+                }`}
+                onClick={() => this.handleCategorySelect(category.id)}
+              >
+                <span>{category.name}</span>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={this.handleRequestSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Item Name"
+              value={requestForm.name}
+              onChange={this.handleRequestChange}
+            />
+            <input
+              type="number"
+              name="quantity"
+              placeholder="Quantity (Kg)"
+              value={requestForm.quantity}
+              onChange={this.handleRequestChange}
+            />
+            <input
+              type="datetime-local"
+              name="neededBy"
+              placeholder="Pickup Time"
+              value={requestForm.neededBy}
+              onChange={this.handleRequestChange}
+            />
+            <textarea
+              name="comment"
+              placeholder="Additional Comments"
+              value={requestForm.comment}
+              onChange={this.handleRequestChange}
+              rows="3"
+            ></textarea>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.toggleRequestForm}
+            >
+              Cancel
+            </Button>
+          </form>
+        </div>
+      </div>
+    </MuiThemeProvider>
+  );
+};
+
   render() {
     const filteredFoodItems = this.search(
       this.state.allFoodItems,
       this.state.searchText
     );
+
+    const { showRequestForm } = this.state;
     return (
       <div className="feedWrapper">
         <MainSnackbarContainer />
-        <div id="feed">Donation List</div>
+        <div id="feed-header">
+          <div id="feed">Donation List</div>
+          <button onClick={this.toggleRequestForm} className="request-button">
+            Request Donation
+          </button>
+        </div>
+        {showRequestForm && this.renderRequestForm()}
+
         <SearchBar
           allFoodItems={this.state.allFoodItems}
           userSearchResults={this.state.userSearchResults}

@@ -17,16 +17,24 @@ getFedCount = (req, res, next) => {
     });
 };
 
-async function createNotification(userId, message) {
+
+const createNotification = async ({ vendor_id, client_id, message }) => {
+  if (!vendor_id && !client_id) {
+    console.error("Error creating notification: Both vendor_id and client_id are missing.");
+    throw new Error("Either vendor_id or client_id is required to create a notification.");
+  }
+
   try {
     await db.none(
-      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
-      [userId, message, false]
+      `INSERT INTO notifications (vendor_id, client_id, message, is_read, created_at) 
+       VALUES ($1, $2, $3, FALSE, NOW())`,
+      [vendor_id || null, client_id || null, message]
     );
   } catch (error) {
     console.error("Error creating notification:", error);
+    throw error;
   }
-}
+};
 
 getAllFoodItems = (req, res, next) => {
   db.any(
@@ -160,43 +168,46 @@ getFoodItemsByVendorId = (req, res, next) => {
     });
 };
 
-const createNewFoodItem = (req, res, next) => {
-  const generatePickupCode = () => {
-    return Math.floor(10000 + Math.random() * 90000).toString(); // Generate a 5-digit random code
-  };
+const createNewFoodItem = async (req, res, next) => {
+  const generatePickupCode = () => Math.floor(10000 + Math.random() * 90000).toString();
 
-  db.one(
-    "INSERT INTO food_items (quantity, name, vendor_id, set_time, comment, pickup_code) VALUES (${quantity}, ${name}, ${vendor_id}, ${set_time}, ${comment}, ${pickup_code}) RETURNING *",
-    {
-      quantity: req.body.quantity,
-      name: req.body.name,
-      vendor_id: req.body.vendor_id,
-      set_time: req.body.set_time,
-      comment: req.body.comment,
-      pickup_code: generatePickupCode(),
-    }
-  )
-    .then(async (foodItem) => {
-      // Send a notification to the vendor
-      await db.none(
-        "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
-        [
-          foodItem.vendor_id,
-          `🍏 Your item "${foodItem.name}" has been added successfully.`,
-          false,
-        ]
-      );
+  try {
+    const { quantity, name, vendor_id, set_time, comment, category_id } = req.body;
 
-      res.status(200).json({
-        status: "success",
-        foodItem,
-        message: "Food item created with pickup code",
+    if (!quantity || !name || !vendor_id || !set_time || !category_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Missing required fields: quantity, name, vendor_id, set_time, or category_id.",
       });
-    })
-    .catch((err) => {
-      console.error("Error creating food item:", err);
-      next(err);
+    }
+
+    const foodItem = await db.one(
+      `INSERT INTO food_items (quantity, name, vendor_id, set_time, comment, pickup_code, category_id, type) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING *`,
+      [quantity, name, vendor_id, set_time, comment, generatePickupCode(), category_id, "donation"]
+    );
+
+    await createNotification({
+      vendor_id,
+      message: `🍏 Your item "${foodItem.name}" has been added successfully.`,
     });
+
+    await matchDonationsAndRequests(foodItem);
+
+    res.status(201).json({
+      status: "success",
+      foodItem,
+      message: "Food item created successfully with a pickup code.",
+    });
+  } catch (err) {
+    console.error("Error creating food item:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to create food item.",
+      error: err.message,
+    });
+  }
 };
 
 const foodItemClaimStatus = async (req, res, next) => {
@@ -204,8 +215,19 @@ const foodItemClaimStatus = async (req, res, next) => {
     const { id } = req.params;
     const { is_claimed, client_id } = req.body;
 
+    // Validate input
+    if (!id || typeof is_claimed !== "boolean" || !client_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Missing or invalid fields: id, is_claimed, or client_id.",
+      });
+    }
+
+    // Fetch food item details
     const foodItem = await db.one(
-      "SELECT set_time, vendor_id, name FROM food_items WHERE id = $1",
+      `SELECT id, set_time, vendor_id, name 
+       FROM food_items 
+       WHERE id = $1`,
       [id]
     );
 
@@ -219,23 +241,42 @@ const foodItemClaimStatus = async (req, res, next) => {
       });
     }
 
+    // Update claim status
     await db.none(
-      "UPDATE food_items SET is_claimed = $1, client_id = $2 WHERE id = $3",
+      `UPDATE food_items 
+       SET is_claimed = $1, client_id = $2 
+       WHERE id = $3`,
       [is_claimed, client_id, id]
     );
 
-    // Only notify the vendor about the claim
-    await createNotification(
-      foodItem.vendor_id,
-      `🍏 Your item '${foodItem.name}' has been claimed. Check it out!`
-    );
+    // Notifications
+    if (is_claimed) {
+      // Notify client
+      await db.none(
+        `INSERT INTO notifications (client_id, message, is_read, created_at) 
+         VALUES ($1, $2, FALSE, NOW())`,
+        [client_id, `☑️ You have successfully claimed the item '${foodItem.name}'.`]
+      );
+
+      // Notify vendor
+      await db.none(
+        `INSERT INTO notifications (vendor_id, message, is_read, created_at) 
+         VALUES ($1, $2, FALSE, NOW())`,
+        [foodItem.vendor_id, `🍏 Your item '${foodItem.name}' has been claimed.`]
+      );
+    }
 
     res.status(200).json({
       status: "success",
-      message: "Claim status updated and notification sent to vendor.",
+      message: "Claim status updated successfully.",
     });
   } catch (err) {
-    next(err);
+    console.error("Error in foodItemClaimStatus:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update claim status.",
+      error: err.message,
+    });
   }
 };
 
@@ -307,26 +348,28 @@ const confirmPickup = async (req, res, next) => {
     }
 
     // Create a notification for the client
-    await db.none(
-      "INSERT INTO notifications (user_id, client_id, message, is_read) VALUES ($1, $2, $3, $4)",
-      [
-        foodItem.client_id,
-        null,
-        `☑️ Your item '${foodItem.name}' has been confirmed as picked up.`,
-        false,
-      ]
-    );
+    if (foodItem.client_id) {
+      await db.none(
+        `INSERT INTO notifications (client_id, message, is_read, created_at) 
+         VALUES ($1, $2, FALSE, NOW())`,
+        [
+          foodItem.client_id,
+          `☑️ Your item '${foodItem.name}' has been confirmed as picked up.`,
+        ]
+      );
+    }
 
     // Create a notification for the vendor
-    await db.none(
-      "INSERT INTO notifications (user_id, client_id, message, is_read) VALUES ($1, $2, $3, $4)",
-      [
-        foodItem.vendor_id,
-        null,
-        `🍏 The item '${foodItem.name}' you donated has been confirmed as picked up.`,
-        false,
-      ]
-    );
+    if (foodItem.vendor_id) {
+      await db.none(
+        `INSERT INTO notifications (vendor_id, message, is_read, created_at) 
+         VALUES ($1, $2, FALSE, NOW())`,
+        [
+          foodItem.vendor_id,
+          `🍏 The item '${foodItem.name}' you donated has been confirmed as picked up.`,
+        ]
+      );
+    }
 
     res.status(200).json({
       status: "success",
@@ -361,6 +404,206 @@ const getConfirmedFoodItemsByVendor = (req, res, next) => {
     });
 };
 
+
+const findMatchingDonations = async (category_id, quantity) => {
+  return db.any(
+    `SELECT * FROM food_items 
+     WHERE category_id = $1 AND quantity >= $2 AND type = 'donation' AND is_matched = FALSE`,
+    [category_id, quantity]
+  );
+};
+
+
+const matchDonationsToRequest = async (requestedItem) => {
+  try {
+    const { category_id, quantity } = requestedItem;
+
+    // Find donations that match the request's category and have enough quantity
+    const matchingDonations = await db.any(
+      `SELECT * FROM food_items 
+       WHERE category_id = $1 
+       AND quantity >= $2 
+       AND type = 'donation' 
+       AND is_matched = FALSE`,
+      [category_id, quantity]
+    );
+
+    for (const donation of matchingDonations) {
+      // Create notifications for both the client and the vendor
+      await db.none(
+        `INSERT INTO notifications (user_id, message, is_read) 
+         VALUES ($1, $2, FALSE)`,
+        [
+          requestedItem.client_id,
+          `🔔 A matching donation for your request (${requestedItem.quantity} units) is available: ${donation.comment || "No comment"}`
+        ]
+      );
+
+      await db.none(
+        `INSERT INTO notifications (user_id, message, is_read) 
+         VALUES ($1, $2, FALSE)`,
+        [
+          donation.vendor_id,
+          `🔔 A client has requested an item matching your donation (${donation.quantity} units).`
+        ]
+      );
+
+      // Mark the donation as matched to avoid duplicate matches
+      await db.none(
+        `UPDATE food_items SET is_matched = TRUE WHERE id = $1`,
+        [donation.id]
+      );
+    }
+  } catch (err) {
+    console.error("Error matching donations to request:", err);
+    throw err; // Propagate the error to the caller
+  }
+};
+
+
+const createRequestedItem = async (req, res, next) => {
+  try {
+    const { name, category_id, quantity, comment, set_time, client_id } = req.body;
+
+    if (!name || !category_id || !quantity || !client_id || !set_time) {
+      return res.status(400).json({
+        status: "error",
+        message: "Missing required fields: name, category_id, quantity, set_time, or client_id.",
+      });
+    }
+
+    const requestedItem = await db.one(
+      `INSERT INTO food_items (name, category_id, quantity, client_id, comment, type, set_time, expires_at) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING *`,
+      [
+        name,
+        category_id,
+        quantity,
+        client_id,
+        comment,
+        "request",
+        set_time,
+        set_time,
+      ]
+    );
+
+    await createNotification({
+      client_id,
+      message: `🔔 Your request for '${requestedItem.quantity}' items has been successfully created and will expire at ${set_time}.`,
+    });
+
+    await matchDonationsAndRequests(requestedItem);
+
+    res.status(201).json({
+      status: "success",
+      requestedItem,
+      message: "Requested item created successfully with a pickup time.",
+    });
+  } catch (err) {
+    console.error("Error creating requested item:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to create requested item.",
+      error: err.message,
+    });
+  }
+};
+
+
+const matchDonationsAndRequests = async (newItem) => {
+  const { id, category_id, quantity, type, set_time } = newItem;
+
+  try {
+    // Match requests with donations or donations with requests
+    const oppositeType = type === "request" ? "donation" : "request";
+    const matches = await db.any(
+      `SELECT * 
+       FROM food_items 
+       WHERE category_id = $1 
+       AND quantity = $2 
+       AND type = $3 
+       AND is_matched = FALSE 
+       AND DATE(set_time) = DATE($4)`, // Match on same date
+      [category_id, quantity, oppositeType, set_time]
+    );
+
+    for (const match of matches) {
+      // Create a match record in the matched_items table
+      await db.none(
+        `INSERT INTO matched_items (request_id, donation_id) 
+         VALUES ($1, $2)`,
+        [type === "request" ? id : match.id, type === "request" ? match.id : id]
+      );
+
+      // Update `is_matched` for both items
+      await db.none(
+        `UPDATE food_items 
+         SET is_matched = TRUE 
+         WHERE id IN ($1, $2)`,
+        [id, match.id]
+      );
+
+      // Send notifications
+      if (type === "request") {
+        // Notify client
+        await createNotification({
+          client_id: newItem.client_id,
+          message: `🔔 Your request for '${quantity}' items has been matched with a donation!`,
+        });
+
+        // Notify vendor
+        await createNotification({
+          vendor_id: match.vendor_id,
+          message: `🔔 Your donation has been matched with a client request!`,
+        });
+      } else {
+        // Notify client
+        await createNotification({
+          client_id: match.client_id,
+          message: `🔔 Your request has been matched with a donation!`,
+        });
+
+        // Notify vendor
+        await createNotification({
+          vendor_id: newItem.vendor_id,
+          message: `🔔 Your donation has been matched with a client request!`,
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Error in matchDonationsAndRequests:", err);
+    throw err;
+  }
+};
+
+
+const getAllRequestedItems = async (req, res, next) => {
+  try {
+    const requestedItems = await db.any(
+      `SELECT food_items.*, food_categories.name AS category_name, users.name AS client_name 
+       FROM food_items 
+       JOIN food_categories ON food_items.category_id = food_categories.id 
+       JOIN users ON food_items.client_id = users.id 
+       WHERE type = 'request' 
+       ORDER BY created_at DESC`
+    );
+
+    res.status(200).json({
+      status: "success",
+      requestedItems,
+      message: "Fetched all requested items.",
+    });
+  } catch (err) {
+    console.error("Error fetching requested items:", err);
+    next(err);
+  }
+};
+
+
+
+
+
 module.exports = {
   getFedCount,
   getAllFoodItems,
@@ -372,5 +615,9 @@ module.exports = {
   updateFoodItem,
   deleteFoodItem,
   confirmPickup,                
-  getConfirmedFoodItemsByVendor 
+  getConfirmedFoodItemsByVendor,
+  getAllRequestedItems,
+  createRequestedItem,
+  findMatchingDonations,
+  matchDonationsAndRequests
 };

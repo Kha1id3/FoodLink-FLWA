@@ -31,6 +31,7 @@ class SimpleModal extends React.Component {
               handleChange={this.props.handleChange}
               submitItem={this.props.submitItem}
               receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+              categories={this.props.categories} // Pass categories here
             />
           </div>
         </Modal>

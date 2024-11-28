@@ -3,9 +3,13 @@ import Button from "@material-ui/core/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./vendorProfilesCSS/AddItemsForm.css";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import {renderCategoryDropdown} from "./DonatePage.js";
 
-const theme = createTheme({
+
+
+
+const theme = createMuiTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {
@@ -19,6 +23,7 @@ const theme = createTheme({
 
 const AddItemForm = (props) => {
   const [pickupDateTime, setPickupDateTime] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleDateChange = (date) => {
     if (date instanceof Date && !isNaN(date)) {
@@ -33,26 +38,23 @@ const AddItemForm = (props) => {
   };
 
   const filterPassedTimes = (time) => {
-    const currentDate = new Date();
-    const selectedDate = pickupDateTime || currentDate;
+    const selectedDate = pickupDateTime || new Date();
+    const selectedHour = time.getHours();
 
-    // Only show times between 6:00 AM and 11:00 PM
-    const startTime = new Date(time);
-    startTime.setHours(6, 0, 0); // 6:00 AM
-
-    const endTime = new Date(time);
-    endTime.setHours(24, 0, 0); // 11:00 PM
-
-    // Show times between startTime and endTime
-    const isValidTime = time >= startTime && time <= endTime;
-
-    // Additionally filter out passed times if it's today
-    return (
-      isValidTime &&
-      (selectedDate.getDate() !== currentDate.getDate() ||
-        time.getTime() > currentDate.getTime())
-    );
+    // Allow only times between 6:00 AM and 11:00 PM
+    return selectedHour >= 6 && selectedHour <= 23;
   };
+
+  const handleCategorySelection = (categoryId) => {
+    setSelectedCategory(categoryId);
+    props.handleChange({
+      target: {
+        name: "category_id",
+        value: categoryId,
+      },
+    });
+  };
+
 
   return (
     <div className="donationFormWrapper">
@@ -65,6 +67,26 @@ const AddItemForm = (props) => {
           }}
           id="add-items-form"
         >
+          {/* Category Selection */}
+          <div className="category-selection-container">
+            <h4>Select a Category</h4>
+            <div className="category-grid">
+              {props.categories.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  className={`category-button ${
+                    selectedCategory === category.id ? "selected" : ""
+                  }`}
+                  onClick={() => handleCategorySelection(category.id)}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          <br />
+          {/* Input Fields */}
           <input
             type="text"
             onChange={props.handleChange}
@@ -77,7 +99,7 @@ const AddItemForm = (props) => {
             type="text"
             onChange={props.handleChange}
             name="quantity"
-            placeholder="How many people can this donation feed?"
+            placeholder="Quantity (kg)"
             id="input-quantity"
           />
           <br />
@@ -95,8 +117,7 @@ const AddItemForm = (props) => {
               onChange={handleDateChange}
               showTimeSelect
               dateFormat="MMMM d, yyyy h:mm aa"
-              timeIntervals={1}
-              filterTime={filterPassedTimes}
+              timeIntervals={30}
               placeholderText="Select pickup date and time"
               className="custom-date-picker"
               minDate={new Date()}

@@ -19,6 +19,7 @@ import PrivateRoute from "./utils/AuthRouting.js";
 import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
 import VendorClaimedItemsContainer from "./containers/VendorClaimedItemsContainer";
 import DonatePageContainer from "./containers/DonatePageContainer.js";
+import MatchedItemsPage from "./components/matched-items/MatchedItemsPage.js";
 
 class App extends Component {
   componentDidMount() {
@@ -66,6 +67,7 @@ class App extends Component {
               path="/client/:client"
               component={ClientProfileContainer}
             />
+            <PrivateRoute exact path="/matched-items" component={MatchedItemsPage} />
             <PrivateRoute
               exact
               path="/vendor/:vendor"

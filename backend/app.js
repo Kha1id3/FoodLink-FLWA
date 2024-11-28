@@ -6,6 +6,7 @@ var logger = require("morgan");
 const passport = require("passport");
 const session = require("express-session");
 const notificationsRouter = require("./routes/notifications");
+const categoriesRouter = require("./routes/categories");
 
 var indexRouter = require("./routes/index");
 let foodItemRouter = require("./routes/foodItems.js");
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.use("/api/notifications", notificationsRouter);
+app.use("/api/categories", categoriesRouter);
 
 app.use(
   session({
@@ -66,17 +68,10 @@ app.use(function(err, req, res, next) {
 });
 
 
-async function createNotification(userId, message) {
-  try {
-    await db.none(
-      "INSERT INTO notifications (user_id, message, is_read) VALUES ($1, $2, $3)",
-      [userId, message, false]
-    );
-  } catch (error) {
-    console.error("Error creating notification:", error);
-  }
-}
-
-
+app.use((req, res, next) => {
+  console.log("Session data:", req.session);
+  console.log("Current user:", req.session?.currentUser);
+  next();
+});
 
 module.exports = app;

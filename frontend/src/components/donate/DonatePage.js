@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CountUp from "react-countup";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
 import "./vendorProfilesCSS/VendorProfile.css";
 import { format } from "date-fns";
 
-const theme = createTheme({
+const theme = createMuiTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {
@@ -51,13 +51,14 @@ class DonatePage extends Component {
       comment: "",
       toAddItem: false,
       hasAdded: false,
-      foodItems: [], // Unified list of items with statuses
+      foodItems: [],
       fedCount: 0,
       profilePic: "",
       phoneNumber: "",
       body: "",
       open: false, // for modal
       openDropdowns: {},
+      categories: [], // Add state for categories
     };
   }
 
@@ -74,10 +75,23 @@ class DonatePage extends Component {
     if (this.props.currentUser) {
       this.fetchFoodItems();
       this.getFeedingCount();
+      this.fetchCategories();
     } else {
       console.error("Current User is not defined.");
     }
   }
+
+  fetchCategories = () => {
+    axios
+      .get("/api/categories") // Adjust the route if necessary
+      .then((res) => {
+        this.setState({ categories: res.data.categories });
+      })
+      .catch((err) => console.error("Error fetching categories:", err));
+  };
+
+
+
 
   fetchFoodItems = () => {
     const vendorName = this.props.currentUser.name;
@@ -141,7 +155,7 @@ class DonatePage extends Component {
     this.setState({
       hasAdded: true,
     });
-    const { quantity, name, set_time, comment } = this.state;
+    const { quantity, name, set_time, comment, category_id } = this.state;
   
     axios
       .post("/api/fooditems/", {
@@ -150,6 +164,8 @@ class DonatePage extends Component {
         set_time,
         vendor_id: this.props.currentUser.id,
         comment,
+        category_id, // Include category_id
+        type: "donation", // Set type explicitly
       })
       .then(() => {
         // Refresh food items list and notifications
@@ -262,6 +278,22 @@ class DonatePage extends Component {
     });
   };
 
+  renderCategoryDropdown = () => (
+    <select
+      name="category_id"
+      value={this.state.category_id}
+      onChange={this.handleChange}
+      className="category-dropdown"
+    >
+      <option value="">Select Category</option>
+      {this.state.categories.map((category) => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      ))}
+    </select>
+  );
+
   render() {
     return (
       <div id="vendor-container">
@@ -282,6 +314,7 @@ class DonatePage extends Component {
                 handleChange={this.handleChange}
                 submitItem={this.submitItem}
                 receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+                categories={this.state.categories} // Pass categories to SimpleModal
               />
             ) : (
               this.addItemButton()

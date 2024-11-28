@@ -19,3 +19,5 @@ export const fetchUserFoodItems = (id) => dispatch => {
       console.log(err)
     })
 }
+
+

@@ -32,7 +32,7 @@ CREATE TABLE food_items
     is_claimed BOOLEAN DEFAULT FALSE NOT NULL,
     client_id INT REFERENCES users(id) DEFAULT NULL,
     vendor_id INT REFERENCES users(id),
-    set_time VARCHAR NOT NULL
+    set_time VARCHAR NOT NULL,
     is_confirmed BOOLEAN DEFAULT FALSE, -- New field
     pickup_code VARCHAR(50),            -- New field
     comment TEXT,                       -- New field
@@ -86,6 +86,99 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON food_items
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+
+CREATE TABLE IF NOT EXISTS food_categories
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Insert default categories (if not already present)
+INSERT INTO food_categories (id, name)
+VALUES 
+    (1, 'Baby Food'),
+    (2, 'Bakery Items'),
+    (3, 'Canned & Packaged Goods'),
+    (4, 'Dairy Products'),
+    (5, 'Fresh Produce'),
+    (6, 'Frozen Foods'),
+    (7, 'Meat & Poultry'),
+    (8, 'Prepared Meals'),
+    (9, 'Seafood')
+ON CONFLICT DO NOTHING;
+
+-- Alter food_items table to add new columns if they don't already exist
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='is_confirmed') THEN
+        ALTER TABLE food_items ADD COLUMN is_confirmed BOOLEAN DEFAULT FALSE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='pickup_code') THEN
+        ALTER TABLE food_items ADD COLUMN pickup_code VARCHAR(50);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='comment') THEN
+        ALTER TABLE food_items ADD COLUMN comment TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='type') THEN
+        ALTER TABLE food_items ADD COLUMN type VARCHAR(20) DEFAULT 'donation';
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='category_id') THEN
+        ALTER TABLE food_items ADD COLUMN category_id INT REFERENCES food_categories(id) ON DELETE CASCADE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='is_matched') THEN
+        ALTER TABLE food_items ADD COLUMN is_matched BOOLEAN DEFAULT FALSE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='requested_time') THEN
+        ALTER TABLE food_items ADD COLUMN requested_time TIMESTAMP;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='food_items' AND column_name='expires_at') THEN
+        ALTER TABLE food_items ADD COLUMN expires_at TIMESTAMP;
+    END IF;
+END $$;
+
+-- Create matched_items table if it doesn't already exist
+CREATE TABLE IF NOT EXISTS matched_items
+(
+    id SERIAL PRIMARY KEY,
+    request_id INT REFERENCES food_items(id) ON DELETE CASCADE,
+    donation_id INT REFERENCES food_items(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Alter notifications table to match the updated structure
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='vendor_id') THEN
+        ALTER TABLE notifications ADD COLUMN vendor_id INT REFERENCES users(id) ON DELETE CASCADE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='client_id') THEN
+        ALTER TABLE notifications ADD COLUMN client_id INT REFERENCES users(id) ON DELETE CASCADE;
+    END IF;
+END $$;
+
+-- Drop user_id column from notifications if it exists (no longer used)
+DO $$ 
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='notifications' AND column_name='user_id') THEN
+        ALTER TABLE notifications DROP COLUMN user_id;
+    END IF;
+END $$;
+
+-- Ensure triggers for food_items are properly configured
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Recreate trigger to ensure it exists
+CREATE OR REPLACE TRIGGER set_updated_at
 BEFORE UPDATE ON food_items
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
@@ -295,221 +388,7 @@ VALUES
         null,
         'https://falcoscatering.com/wp-content/uploads/2019/05/Renaissance-Updated-1-2-1024x577.jpg'
       );
-INSERT INTO food_items
-    (
-    quantity,
-    name,
-    is_claimed,
-    client_id,
-    vendor_id,
-    set_time
-    )
-VALUES
-    (
-        5,
-        'Massaman Curry',
-        TRUE,
-        8,
-        1,
-        '16:00'
-    ),
-    (
-        30,
-        'French Fries',
-        FALSE,
-        null,
-        1,
-        '18:30'
-    ),
-    (
-        35,
-        'Assorted Muffins',
-        FALSE,
-        null,
-        2,
-        '11:00'
-    ),
-    (
-        20,
-        'Neapolitan Pizza',
-        TRUE,
-        9,
-        2,
-        '18:00'
-    ),
-    (
-        15,
-        'Sushi',
-        TRUE,
-        10,
-        3,
-        '18:00'
-    ),
-    (
-        21,
-        'Chicken Pot Pies',
-        FALSE,
-        null,
-        3,
-        '20:00'
-    ),
-    (
-        20,
-        'Peking Duck',
-        TRUE,
-        11,
-        4,
-        '19:00'
-    ),
-    (
-        50,
-        'Bagels',
-        FALSE,
-        null,
-        4,
-        '10:00'
-    ),
-    (
-        25,
-        'Shish Kebab',
-        TRUE,
-        12,
-        5,
-        '17:00'
-    ),
-    (
-        26,
-        'Chimichanga',
-        FALSE,
-        null,
-        5,
-        '18:30'
-    ),
-    (
-        2,
-        'Arepas',
-        FALSE,
-        null,
-        6,
-        '17:30'
-    ),
-    (
-        40,
-        'Chicken Tenders',
-        FALSE,
-        null,
-        6,
-        '20:00'
-    ),
-    (
-        25,
-        'Lasagna',
-        FALSE,
-        null,
-        7,
-        '17:00'
-    ),
-    (
-        41,
-        'Broccoli',
-        FALSE,
-        null,
-        7,
-        '18:30'
-    ),
-    (
-        5,
-        'Butter Garlic Crab',
-        TRUE,
-        null,
-        15,
-        '18:30'
-    ),
-    (
-        10,
-        'Fajitas',
-        TRUE,
-        1,
-        15,
-        '18:00'
-    ),
-    (
-        15,
-        'Fish N Chips',
-        TRUE,
-        13,
-        15,
-        '18:00'
-    ),
-    (
-        20,
-        'Chicken Parm',
-        TRUE,
-        13,
-        15,
-        '19:00'
-    ),
-    (
-        25,
-        'Tacos',
-        TRUE,
-        13,
-        14,
-        '17:00'
-    ),
-    (
-        2,
-        'Poutine',
-        FALSE,
-        null,
-        14,
-        '17:30'
-    ),
-    (
-        25,
-        'Seafood Paella',
-        FALSE,
-        null,
-        14,
-        '17:00'
-    );
 
-
-
-INSERT INTO favorites
-    (
-    client_id,
-    vendor_id
-    )
-VALUES
-    (
-        8,
-        1
-    ),
-    (
-        9,
-        2
-    ),
-    (
-        10,
-        3
-    ),
-    (
-        11,
-        4
-    ),
-    (
-        12,
-        5
-    ),
-    (
-        8,
-        6
-    ),
-    (
-        9,
-        15
-    );
 
 
 INSERT INTO business_hours
