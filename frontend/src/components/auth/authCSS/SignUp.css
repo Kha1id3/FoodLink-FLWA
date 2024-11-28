@@ -1,50 +1,22 @@
 /* Main Page Layout */
 #signup-page {
   height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 10% auto 10%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   background-color: #d1d0d0;
   padding: 1rem 2rem;
-  margin-top: 7px; 
-}
-
-/* Header Styling */
-#signup-header {
-  font-family: "Montserrat", sans-serif;
-  color: #000000; /* Darker color for better contrast */
-  font-size: 2.65em;
-  width: 100%;
-  grid-column-start: 1;
-  grid-column-end: span 1;
-  grid-row-start: 1;
-  grid-row-end: span 1;
-  padding-top: 15em;
-  text-align: center;
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.5s ease-in-out;
-}
-
-#signup-header.visible {
-  opacity: 1; /* Make visible when a user type is selected */
+  margin-top: 7px;
 }
 
 /* User Type Selection Section */
 .choose-user-signup-form {
-  width: 90%;
-  grid-column: 1;
+  width: 80%;
   display: flex;
   justify-content: center;
-  padding: 0.5em;
-  margin-top: 0.5rem;
-}
-
-#signup-header-body {
-  color: #7c5d44;
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  padding: 1rem;
+  margin-top: 20vh;
+  transition: all 0.5s ease-in-out;
 }
 
 .radioGroupContainer {
@@ -56,7 +28,8 @@
   background-color: #f7f7fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  width: 90%; /* Adjusted to fit better */
+  width: 100%;
+  max-width: 500px; /* Ensure it stays consistent */
 }
 
 .radioGroupContainer:hover {
@@ -64,25 +37,23 @@
   transform: scale(1.01);
 }
 
-.foodVendorRadioContainer, .npoRadioContainer {
+/* Back Arrow Styling */
+.back-arrow {
   display: flex;
   align-items: center;
-  padding: 0.5em;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.foodVendorRadioContainer:hover, .npoRadioContainer:hover {
-  background-color: #e1e1e1;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 /* Signup Form Container */
 .signup-form-wrapper {
-  grid-column: 2;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -1rem; /* Move form slightly upwards */
+  transition: all 0.5s ease-in-out;
+  margin-top: 5vh; /* Keep margin consistent with other forms */
 }
 
 .signup-form {
@@ -94,10 +65,17 @@
   background-color: #988686;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 480px; /* Adjusted size for better fit */
 }
 
-/* Input Field Styling */
+/* Buttons */
+.signup-demo-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 1em;
+}
+
+/* Ensuring Consistency for all Form Input Fields */
 .icon-input-field {
   display: flex;
   align-items: center;
@@ -115,30 +93,7 @@
 }
 
 .input-field {
-  width: 100%;
+  width: calc(100% - 35px);
   background-color: transparent;
   border: none;
-}
-
-/* Buttons */
-.signup-demo-buttons {
-  display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  margin-top: 1em;
-}
-
-.signup-button {
-  padding: 0.5em 1.5em;
-  font-family: "Montserrat", sans-serif;
-  font-weight: bold;
-  border-radius: 5px;
-  color: #fff;
-  background-color: #919090;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.signup-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
