@@ -3,11 +3,7 @@ import Button from "@material-ui/core/Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./vendorProfilesCSS/AddItemsForm.css";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import {renderCategoryDropdown} from "./DonatePage.js";
-
-
-
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   palette: {

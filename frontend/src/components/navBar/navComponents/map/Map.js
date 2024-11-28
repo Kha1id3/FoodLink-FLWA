@@ -40,7 +40,9 @@ export default function Places() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Map isLoaded={isLoaded} />
+      <div className="map-wrapper">
+        <Map isLoaded={isLoaded} />
+      </div>
     </ThemeProvider>
   );
 }
