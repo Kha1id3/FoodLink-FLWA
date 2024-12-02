@@ -12,6 +12,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import "./authCSS/SignUp.css";
 import Typography from "@material-ui/core/Typography";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { CSSTransition } from "react-transition-group";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const orange = createMuiTheme({
   palette: {
@@ -50,12 +52,27 @@ class SignUp extends Component {
     client_certificate: "",
     ein: "",
     profile_pic: "",
-    isSubmitted: false
+    isSubmitted: false,
+    formVisible: false
   };
 
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
+    });
+  };
+
+  handleRadioChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+      formVisible: true
+    });
+  };
+
+  handleBackClick = () => {
+    this.setState({
+      formVisible: false,
+      type: ""
     });
   };
 
@@ -142,332 +159,345 @@ class SignUp extends Component {
       client_certificate: "",
       ein: "",
       profile_pic: "",
-      isSubmitted: true
+      isSubmitted: true,
+      formVisible: false
     });
   };
 
   signUpForm = () => {
     if (this.state.type === "1") {
       return (
-        <form
-          onSubmit={this.registerUser}
-          className="signup-form"
-          id="vendor-signup-form">
-          <h1 className="signup-form-header">Food Vendor</h1>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/name.png")}
-              alt="name"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Name"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="name"
-              placeholder="Business Name"
-              value={this.state.name}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/email.png")}
-              alt="email"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Email"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="email"
-              placeholder="Email"
-              value={this.state.email}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/password.png")}
-              alt="password"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Password"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="password"
-              name="password_digest"
-              placeholder="Password"
-              value={this.state.password_digest}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/address.png")}
-              alt="address"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Address"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="address_field"
-              placeholder="Address"
-              value={this.state.address_field}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/phone.png")}
-              alt="phone"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Telephone Number"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="telephone_number"
-              placeholder="Telephone Number"
-              value={this.state.telephone_number}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/info.png")}
-              alt="info"
-              className="icons"
-            />
-            <TextField
-              className="input-field"
-              label="Business Info"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="body"
-              placeholder="Business Info"
-              value={this.state.body}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img src={require("./icons/id.png")} alt="id" className="icons" />
-            <TextField
-              className="input-field"
-              label="Employee ID Number"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="ein"
-              placeholder="Employee ID Number"
-              value={this.state.ein}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/profile-pic.png")}
-              alt="profile pic"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Profile Picture (URL)"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="profile_pic"
-              placeholder="Profile Picture"
-              value={this.state.profile_pic}
-            />
-          </div>
-          <div className="signup-demo-buttons">
-            <MuiThemeProvider theme={orange}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className="signup-button">
-                Sign Up
-              </Button>
-            </MuiThemeProvider>
-            <br />
-            <MuiThemeProvider theme={blue}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className="signup-button"
-                onClick={this.vendorDemoLogin}>
-                Vendor Demo
-              </Button>
-            </MuiThemeProvider>
-          </div>
-        </form>
+        <CSSTransition
+          in={this.state.formVisible}
+          timeout={300}
+          classNames="form-slide"
+          unmountOnExit>
+          <form
+            onSubmit={this.registerUser}
+            className="signup-form"
+            id="vendor-signup-form">
+            <h1 className="signup-form-header">Food Vendor</h1>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/name.png")}
+                alt="name"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Name"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="name"
+                placeholder="Business Name"
+                value={this.state.name}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/email.png")}
+                alt="email"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Email"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={this.state.email}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/password.png")}
+                alt="password"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Password"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="password"
+                name="password_digest"
+                placeholder="Password"
+                value={this.state.password_digest}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/address.png")}
+                alt="address"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Address"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="address_field"
+                placeholder="Address"
+                value={this.state.address_field}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/phone.png")}
+                alt="phone"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Telephone Number"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="telephone_number"
+                placeholder="Telephone Number"
+                value={this.state.telephone_number}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/info.png")}
+                alt="info"
+                className="icons"
+              />
+              <TextField
+                className="input-field"
+                label="Business Info"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="body"
+                placeholder="Business Info"
+                value={this.state.body}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img src={require("./icons/id.png")} alt="id" className="icons" />
+              <TextField
+                className="input-field"
+                label="Employee ID Number"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="ein"
+                placeholder="Employee ID Number"
+                value={this.state.ein}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/profile-pic.png")}
+                alt="profile pic"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Profile Picture (URL)"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="profile_pic"
+                placeholder="Profile Picture"
+                value={this.state.profile_pic}
+              />
+            </div>
+            <div className="signup-demo-buttons">
+              <MuiThemeProvider theme={orange}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className="signup-button">
+                  Sign Up
+                </Button>
+              </MuiThemeProvider>
+              <br />
+              <MuiThemeProvider theme={blue}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className="signup-button"
+                  onClick={this.vendorDemoLogin}>
+                  Vendor Demo
+                </Button>
+              </MuiThemeProvider>
+            </div>
+          </form>
+        </CSSTransition>
       );
     } else if (this.state.type === "2") {
       return (
-        <form
-          onSubmit={this.registerUser}
-          className="signup-form"
-          id="client-signup-form">
-          <h1 className="signup-form-header">Non-Profit Org</h1>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/name.png")}
-              alt="name"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Name"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="name"
-              placeholder="Non-Profit Name"
-              value={this.state.name}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/email.png")}
-              alt="email"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Email"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="email"
-              placeholder="Email"
-              value={this.state.email}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/password.png")}
-              alt="password"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Password"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="password"
-              name="password_digest"
-              placeholder="Password"
-              value={this.state.password_digest}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/address.png")}
-              alt="address"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Address"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="address_field"
-              placeholder="Address"
-              value={this.state.address_field}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/certificate.png")}
-              alt="certificate"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Client Certificate"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="client_certificate"
-              placeholder="Client Certificate"
-              value={this.state.client_certificate}
-            />
-          </div>
-          <div className="icon-input-field">
-            <img
-              src={require("./icons/profile-pic.png")}
-              alt="profile pic"
-              className="icons"
-            />
-            <TextField
-              required
-              className="input-field"
-              label="Profile Picture (URL)"
-              margin="dense"
-              variant="outlined"
-              onChange={this.handleChange}
-              type="text"
-              name="profile_pic"
-              placeholder="Profile Picture"
-              value={this.state.profile_pic}
-            />
-          </div>
-          <div className="signup-demo-buttons">
-            <MuiThemeProvider theme={orange}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className="signup-button">
-                Sign Up
-              </Button>
-            </MuiThemeProvider>
-            <br />
-            <MuiThemeProvider theme={blue}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className="signup-button"
-                onClick={this.clientDemoLogin}>
-                Non-Profit Demo
-              </Button>
-            </MuiThemeProvider>
-          </div>
-        </form>
+        <CSSTransition
+          in={this.state.formVisible}
+          timeout={300}
+          classNames="form-slide"
+          unmountOnExit>
+          <form
+            onSubmit={this.registerUser}
+            className="signup-form"
+            id="client-signup-form">
+            <h1 className="signup-form-header">Non-Profit Org</h1>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/name.png")}
+                alt="name"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Name"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="name"
+                placeholder="Non-Profit Name"
+                value={this.state.name}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/email.png")}
+                alt="email"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Email"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={this.state.email}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/password.png")}
+                alt="password"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Password"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="password"
+                name="password_digest"
+                placeholder="Password"
+                value={this.state.password_digest}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/address.png")}
+                alt="address"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Address"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="address_field"
+                placeholder="Address"
+                value={this.state.address_field}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/certificate.png")}
+                alt="certificate"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Client Certificate"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="client_certificate"
+                placeholder="Client Certificate"
+                value={this.state.client_certificate}
+              />
+            </div>
+            <div className="icon-input-field">
+              <img
+                src={require("./icons/profile-pic.png")}
+                alt="profile pic"
+                className="icons"
+              />
+              <TextField
+                required
+                className="input-field"
+                label="Profile Picture (URL)"
+                margin="dense"
+                variant="outlined"
+                onChange={this.handleChange}
+                type="text"
+                name="profile_pic"
+                placeholder="Profile Picture"
+                value={this.state.profile_pic}
+              />
+            </div>
+            <div className="signup-demo-buttons">
+              <MuiThemeProvider theme={orange}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className="signup-button">
+                  Sign Up
+                </Button>
+              </MuiThemeProvider>
+              <br />
+              <MuiThemeProvider theme={blue}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className="signup-button"
+                  onClick={this.clientDemoLogin}>
+                  Non-Profit Demo
+                </Button>
+              </MuiThemeProvider>
+            </div>
+          </form>
+        </CSSTransition>
       );
     } else {
       return null;
@@ -522,38 +552,50 @@ class SignUp extends Component {
     return (
       <div id="signup-page">
         {this.conditionalRouting()}
-        <h3 id="signup-header">Join FoodLink Plate!</h3>
-        <div className="choose-user-signup-form">
-          <FormControl component="fieldset">
-            <FormLabel component="legend" className="user-type">
-              <p id="signup-header-body">
-                Are you a food vendor or non-profit organization?
-              </p>
-            </FormLabel>
-            <RadioGroup
-              aria-label="User Type"
-              name="type"
-              value={this.state.type}
-              onChange={this.handleChange}
-              className="radioGroupContainer">
-              <FormControlLabel
-                value="1"
-                control={<Radio />}
-                label={<Typography variant="h6">Food Vendor</Typography>}
-                className="foodVendorRadioContainer"
-              />
-              <FormControlLabel
-                value="2"
-                control={<Radio />}
-                label={
-                  <Typography variant="h6">Non-profit Organization</Typography>
-                }
-                className="npoRadioContainer"
-              />
-            </RadioGroup>
-          </FormControl>
-        </div>
-        <div className="signup-form-wrapper">{this.signUpForm()}</div>
+        {!this.state.formVisible && (
+          <div className="choose-user-signup-form" style={{ justifyContent: "center", margin: "20vh auto" }}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" className="user-type">
+                <p id="signup-header-body">
+                  Are you a food vendor or non-profit organization?
+                </p>
+              </FormLabel>
+              <RadioGroup
+                aria-label="User Type"
+                name="type"
+                value={this.state.type}
+                onChange={this.handleRadioChange}
+                className="radioGroupContainer">
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label={<Typography variant="h6">Food Vendor</Typography>}
+                  className="foodVendorRadioContainer"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label={
+                    <Typography variant="h6">Non-profit Organization</Typography>
+                  }
+                  className="npoRadioContainer"
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
+        )}
+        {this.state.formVisible && (
+          <div className="back-arrow" onClick={this.handleBackClick} style={{ cursor: "pointer", marginBottom: "20px", marginLeft: "40px", position: "absolute", left: "40px", top: "20vh" }}>
+            <ArrowBackIcon /> Back
+          </div>
+        )}
+        <CSSTransition
+          in={this.state.formVisible}
+          timeout={300}
+          classNames="form-slide"
+          unmountOnExit>
+          <div className="signup-form-wrapper" style={{ margin: "0 auto", marginTop: "5vh" }}>{this.signUpForm()}</div>
+        </CSSTransition>
       </div>
     );
   }
