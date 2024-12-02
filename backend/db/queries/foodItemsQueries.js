@@ -512,11 +512,13 @@ const createRequestedItem = async (req, res, next) => {
 
 
 const matchDonationsAndRequests = async (newItem) => {
-  const { id, category_id, quantity, type, set_time } = newItem;
+  const { id, category_id, quantity, type, set_time, name, client_id, vendor_id } = newItem;
 
   try {
-    // Match requests with donations or donations with requests
+    // Determine the opposite type for matching (request matches donation, and vice versa)
     const oppositeType = type === "request" ? "donation" : "request";
+
+    // Find matches with the same category, quantity, and date
     const matches = await db.any(
       `SELECT * 
        FROM food_items 
@@ -524,7 +526,7 @@ const matchDonationsAndRequests = async (newItem) => {
        AND quantity = $2 
        AND type = $3 
        AND is_matched = FALSE 
-       AND DATE(set_time) = DATE($4)`, // Match on same date
+       AND DATE(set_time) = DATE($4)`, // Match on the same date
       [category_id, quantity, oppositeType, set_time]
     );
 
@@ -544,31 +546,39 @@ const matchDonationsAndRequests = async (newItem) => {
         [id, match.id]
       );
 
-      // Send notifications
+      // Send notifications with the food item name instead of the quantity
       if (type === "request") {
-        // Notify client
-        await createNotification({
-          client_id: newItem.client_id,
-          message: `🔔 Your request for '${quantity}' items has been matched with a donation!`,
-        });
+        // Notify the client
+        if (client_id) {
+          await createNotification({
+            client_id: client_id,
+            message: `🔔 Your request for '${name}' has been matched with a donation!`,
+          });
+        }
 
-        // Notify vendor
-        await createNotification({
-          vendor_id: match.vendor_id,
-          message: `🔔 Your donation has been matched with a client request!`,
-        });
+        // Notify the vendor
+        if (match.vendor_id) {
+          await createNotification({
+            vendor_id: match.vendor_id,
+            message: `🔔 Your donation '${match.name}' has been matched with a client request!`,
+          });
+        }
       } else {
-        // Notify client
-        await createNotification({
-          client_id: match.client_id,
-          message: `🔔 Your request has been matched with a donation!`,
-        });
+        // Notify the client
+        if (match.client_id) {
+          await createNotification({
+            client_id: match.client_id,
+            message: `🔔 Your request for '${match.name}' has been matched with a donation!`,
+          });
+        }
 
-        // Notify vendor
-        await createNotification({
-          vendor_id: newItem.vendor_id,
-          message: `🔔 Your donation has been matched with a client request!`,
-        });
+        // Notify the vendor
+        if (vendor_id) {
+          await createNotification({
+            vendor_id: vendor_id,
+            message: `🔔 Your donation '${name}' has been matched with a client request!`,
+          });
+        }
       }
     }
   } catch (err) {

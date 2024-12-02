@@ -15,43 +15,37 @@ class AllFeedItemsDisplayVendorName extends Component {
     }
     return null;
   };
+
   getAllAddress = (foodDataObj, vendorName) => {
     let newArr = [];
-
     if (foodDataObj[vendorName].length > 1) {
-      foodDataObj[vendorName].forEach((name, i) => {
+      foodDataObj[vendorName].forEach((name) => {
         newArr.push(foodDataObj[vendorName][0].address_field);
         newArr.slice(0, 0);
       });
     } else {
-      foodDataObj[vendorName].forEach((name, i) => {
+      foodDataObj[vendorName].forEach((name) => {
         newArr.push(name.address_field);
       });
     }
 
-    if (newArr.length > 1) {
-      return (
-        <>
-          <div className="vendor-address-field">
-            <p className="address-text">{newArr[0]}</p>
-          </div>
-          <div className="vendor-account-profile-pic">
-            {this.displayVendorPhoto(newArr)}
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <div className="vendor-address-field">
-            <p className="address-text">{newArr}</p>
-          </div>
-          <div className="vendor-account-profile-pic">
-            {this.displayVendorPhoto(newArr)}
-          </div>
-        </>
-      );
-    }
+    const address = newArr[0];
+
+    return (
+      <>
+        <div className="vendor-address-field">
+          <Link
+            to={`/map?address=${encodeURIComponent(address)}`}
+            className="address-link"
+          >
+            <p className="address-text">{address}</p>
+          </Link>
+        </div>
+        <div className="vendor-account-profile-pic">
+          {this.displayVendorPhoto(newArr)}
+        </div>
+      </>
+    );
   };
 
   render() {
@@ -59,7 +53,7 @@ class AllFeedItemsDisplayVendorName extends Component {
       <div className="display-vendor-name-feed">
         <span className="vendor-span-container">
           <Link
-            to={"/clientview/" + this.props.vendorName}
+            to={`/clientview/${this.props.vendorName}`}
             className="display-item-name"
           >
             {this.props.vendorName}

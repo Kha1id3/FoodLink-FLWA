@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useLoadScript } from "@react-google-maps/api";
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
+import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import { useLocation } from "react-router-dom";
 import {
   Combobox,
   ComboboxInput,
@@ -13,8 +11,6 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { IconButton } from "@material-ui/core";
-import CloseIcon from '@material-ui/icons/Close';
 import "./Map.css";
 
 const theme = createTheme({
@@ -28,11 +24,14 @@ const theme = createTheme({
   },
 });
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function Places() {
   const libraries = useMemo(() => ["places"], []);
-
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyBkN1LKjBkqmtz-8Pz-kCkG_lBM6Hm7y_0', // Replace with your actual API key
+    googleMapsApiKey: "AIzaSyBkN1LKjBkqmtz-8Pz-kCkG_lBM6Hm7y_0", // Replace with your actual API key
     libraries,
   });
 
@@ -52,32 +51,45 @@ function Map({ isLoaded }) {
   const [selected, setSelected] = useState(null);
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
+  const query = useQuery();
+  const address = query.get("address");
 
   useEffect(() => {
     if (isLoaded && mapContainerRef.current && !mapRef.current) {
-      // Initialize map only once
       mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
         center: center,
         zoom: 10,
       });
     }
 
-    if (selected && mapRef.current) {
-      new window.google.maps.Marker({
-        map: mapRef.current,
-        position: selected,
-      });
-
-      mapRef.current.setCenter(selected);
+    if (address) {
+      handleAddressSearch(address);
     }
-  }, [isLoaded, selected, center]);
+  }, [isLoaded, address]);
+
+  const handleAddressSearch = async (address) => {
+    try {
+      const results = await getGeocode({ address });
+      const { lat, lng } = await getLatLng(results[0]);
+      const position = { lat, lng };
+      setSelected(position);
+      if (mapRef.current) {
+        new window.google.maps.Marker({
+          map: mapRef.current,
+          position,
+        });
+        mapRef.current.setCenter(position);
+      }
+    } catch (error) {
+      console.error("Error getting geocode for the selected address:", error);
+    }
+  };
 
   return (
     <>
       <div className="places-container">
         <PlacesAutocomplete setSelected={setSelected} />
       </div>
-      {/* Assigning mapContainerRef to the map div */}
       <div ref={mapContainerRef} className="map-container"></div>
     </>
   );
@@ -105,29 +117,16 @@ const PlacesAutocomplete = ({ setSelected }) => {
     }
   };
 
-  const handleClear = () => {
-    setValue('');
-    setSelected(null);
-    clearSuggestions();
-  };
-
   return (
     <div className="search-box">
       <Combobox onSelect={handleSelect}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <ComboboxInput
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            disabled={!ready}
-            className="combobox-input"
-            placeholder="Search an address"
-          />
-          {value && (
-            <IconButton onClick={handleClear} aria-label="clear search">
-              <CloseIcon />
-            </IconButton>
-          )}
-        </div>
+        <ComboboxInput
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          disabled={!ready}
+          className="combobox-input"
+          placeholder="Search an address"
+        />
         <ComboboxPopover>
           <ComboboxList>
             {status === "OK" &&
