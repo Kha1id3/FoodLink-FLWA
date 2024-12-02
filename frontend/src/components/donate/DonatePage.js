@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import CountUp from "react-countup";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
 import "./vendorProfilesCSS/VendorProfile.css";
 import { format } from "date-fns";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {

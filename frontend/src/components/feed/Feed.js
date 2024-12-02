@@ -7,12 +7,12 @@ import { SearchBarResults } from "./SearchBarResults.js";
 import "./feedCSS/Feed.css";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import { Button } from "@material-ui/core";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {
