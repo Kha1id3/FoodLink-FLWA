@@ -12,16 +12,15 @@ class AllFeedItems extends Component {
   }
 
   allVendorsMapped = (foodDataObj) => {
-    if (!foodDataObj || !this.props.allVendors) return null;
+    if (!foodDataObj || !this.props.allVendors) return {};
+  
     let newObj = {};
   
-    Object.keys(foodDataObj).forEach((vendorName) => {
-      foodDataObj[vendorName].forEach((vendor) => {
-        const profilePicture = this.props.allVendors[vendorName]; // Get the profile picture by vendor name
-        if (profilePicture) {
-          newObj[vendor.address_field] = profilePicture;
-        }
-      });
+    Object.keys(foodDataObj).forEach((vendorId) => {
+      const vendorName = foodDataObj[vendorId][0]?.vendor_name; // Ensure vendor_name exists
+      if (vendorName && this.props.allVendors[vendorName]) {
+        newObj[vendorName] = this.props.allVendors[vendorName]; // Map vendorName to its profile picture
+      }
     });
   
     return newObj;
@@ -45,7 +44,7 @@ class AllFeedItems extends Component {
             vendorName={vendorName}
             vendorId={vendorId}
             foodDataObj={{ [vendorId]: items }}
-            profilePicture={this.allVendorsMapped({ [vendorId]: items })}
+            allVendors={this.props.allVendors}
           />
           <AllFeedItemsDisplayed
             foodDataObj={{ [vendorId]: items }}

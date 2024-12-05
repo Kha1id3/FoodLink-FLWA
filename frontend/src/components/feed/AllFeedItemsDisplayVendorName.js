@@ -9,16 +9,16 @@ class AllFeedItemsDisplayVendorName extends Component {
       return (
         <img
           className="feed-profile-pic"
-          src={allVendors[vendorName]}
-          alt={`${vendorName} Profile`}
+          src={allVendors[vendorName]} // Fetch by vendorName
+          alt={`${vendorName} Profile`} // Display vendor name in alt attribute
         />
       );
     }
-    return null;
+    return null; // Return nothing if profile picture is missing
   };
   render() {
     const { vendorName, vendorId, foodDataObj } = this.props;
-
+  
     return (
       <div className="display-vendor-name-feed">
         <span className="vendor-span-container">
@@ -39,7 +39,7 @@ class AllFeedItemsDisplayVendorName extends Component {
             </Link>
           </div>
           <div className="vendor-account-profile-pic">
-            {this.displayVendorPhoto(vendorName)} {/* Display vendor photo */}
+            {this.displayVendorPhoto()} {/* Display the vendor's profile picture */}
           </div>
         </span>
       </div>
