@@ -62,26 +62,61 @@ export default class Feed extends Component {
   getAllFoodItems = () => {
     axios
       .get("/api/foodItems")
-      .then((foodItems) => {
-        const currentTime = new Date().toISOString(); // Get the current time in ISO format
-        const validItems = foodItems.data.food_items.filter((item) => {
-          return new Date(item.set_time) > new Date(currentTime); // Compare pickup time with current time
-        });
+      .then((response) => {
+        const foodItems = response.data.food_items || [];
+        const currentTime = new Date().toISOString();
+  
+        // Filter out expired items and items with is_claimed or is_confirmed set to true
+        const validItems = foodItems.filter(
+          (item) =>
+            new Date(item.set_time) > new Date(currentTime) &&
+            !item.is_claimed &&
+            !item.is_confirmed
+        );
+  
+        // Group items by vendor_id, and include vendorName
+        const groupedItems = validItems.reduce((acc, item) => {
+          const vendorId = item.vendor_id;
+          const vendorName = item.vendor_name; // Extract vendor_name from item
+  
+          if (!acc[vendorId]) {
+            acc[vendorId] = {
+              vendorName, // Store vendorName in the group
+              items: [],  // Initialize an items array
+            };
+          }
+          acc[vendorId].items.push(item); // Push the current item
+          return acc;
+        }, {});
+  
         this.setState({
-          allFoodItems: validItems, // Set only valid (non-expired) items to state
+          allFoodItems: groupedItems,
         });
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Error fetching food items:", err);
+        this.setState({ allFoodItems: {} });
       });
   };
+  
+  
 
   getAllVendors = () => {
-    axios.get("/api/users/vendors/").then(foodItems => {
-      this.setState({
-        allVendors: foodItems.data.vendors
-      });
-    });
+    axios
+      .get("/api/users/vendors/")
+      .then((response) => {
+        const vendors = response.data.vendors || [];
+        // Create a mapping of vendor names to their profile pictures
+        const vendorProfiles = vendors.reduce((acc, vendor) => {
+          acc[vendor.name] = vendor.profile_picture; // Assuming 'name' and 'profile_picture' exist in the API response
+          return acc;
+        }, {});
+  
+        this.setState({
+          allVendors: vendorProfiles, // Map vendor names to profile pictures
+        });
+      })
+      .catch((err) => console.error("Error fetching vendors:", err));
   };
 
   claimItem = (e, isClaimed, food_id) => {
@@ -366,7 +401,7 @@ renderRequestForm = () => {
             allFoodItems={this.state.allFoodItems}
             userSearchResults={this.state.userSearchResults}
             receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-            allVendors={this.state.allVendors}
+            allVendors={this.state.allVendors} // Pass vendor profiles
             fadeTrigger={this.state.fadeTrigger}
           />
         )}

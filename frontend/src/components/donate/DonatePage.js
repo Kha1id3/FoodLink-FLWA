@@ -92,13 +92,13 @@ class DonatePage extends Component {
 
 
 
-
   fetchFoodItems = () => {
-    const vendorName = this.props.currentUser.name;
+    const vendorId = this.props.currentUser.id; // Use vendor ID
     axios
-      .get(`/api/fooditems/vendor/${vendorName}`)
+      .get(`/api/fooditems/vendor/id/${vendorId}`) // Updated route
       .then((res) => {
-        const sortedItems = res.data.food_items.sort((a, b) => {
+        const foodItems = res.data.food_items || []; // Ensure food_items is an array
+        const sortedItems = foodItems.sort((a, b) => {
           if (!a.is_claimed && !a.is_confirmed) return -1;
           if (!b.is_claimed && !b.is_confirmed) return 1;
           if (a.is_claimed && !a.is_confirmed) return -1;
@@ -109,7 +109,9 @@ class DonatePage extends Component {
         });
         this.setState({ foodItems: sortedItems });
       })
-      .catch((err) => console.error("Error fetching food items:", err));
+      .catch((err) => {
+        console.error("Error fetching food items:", err);
+      });
   };
 
   getFeedingCount = () => {
@@ -152,11 +154,9 @@ class DonatePage extends Component {
 
   submitItem = (e) => {
     e.preventDefault();
-    this.setState({
-      hasAdded: true,
-    });
-    const { quantity, name, set_time, comment, category_id } = this.state;
+    this.setState({ hasAdded: true });
   
+    const { quantity, name, set_time, comment, category_id } = this.state;
     axios
       .post("/api/fooditems/", {
         quantity,
@@ -164,19 +164,20 @@ class DonatePage extends Component {
         set_time,
         vendor_id: this.props.currentUser.id,
         comment,
-        category_id, // Include category_id
-        type: "donation", // Set type explicitly
+        category_id,
+        type: "donation",
       })
       .then(() => {
-        // Refresh food items list and notifications
         this.setState({ toAddItem: false });
         this.fetchFoodItems();
   
-        // Refresh notifications
+        // Handle Notifications
         axios
           .get(`/api/notifications/${this.props.currentUser.id}`)
           .then((res) => {
-            this.props.setNotifications(res.data.notifications); // Assuming `setNotifications` updates the notifications globally
+            if (this.props.setNotifications) {
+              this.props.setNotifications(res.data.notifications);
+            }
           })
           .catch((err) => console.error("Error refreshing notifications:", err));
       })
@@ -184,6 +185,7 @@ class DonatePage extends Component {
         console.error("Error adding food item:", err);
       });
   };
+  
 
   deleteItem = (e) => {
     axios
@@ -205,6 +207,7 @@ class DonatePage extends Component {
   };
 
   displayFoodItems = () => {
+    console.log("Food Items:", this.state.foodItems); // Debugging
     return this.state.foodItems.map((item) => {
       let status;
 

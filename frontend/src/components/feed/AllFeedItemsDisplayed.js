@@ -2,30 +2,35 @@ import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import "./feedCSS/AllFeedItemsDisplayed.css";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 const theme = createTheme({
   palette: {
     primary: { 500: "#D35348" },
     secondary: {
-      main: "#988686"
-    }
+      main: "#988686",
+    },
   },
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
 const formatDate = (isoString) => {
-  return format(new Date(isoString), 'MMMM dd, yyyy'); // Example: "November 22, 2024"
+  return format(new Date(isoString), "MMMM dd, yyyy"); // Example: "November 22, 2024"
 };
 
 const formatTime = (isoString) => {
-  return format(new Date(isoString), 'hh:mm a'); // Example: "08:30 PM"
+  return format(new Date(isoString), "hh:mm a"); // Example: "08:30 PM"
 };
 
 class AllFeedItemsDisplayed extends Component {
   render() {
+    const { foodDataObj, vendorId, fadeTrigger, claimItem, receivedOpenSnackbar } = this.props;
+
+    // Check if foodDataObj[vendorId] is an array
+    const foodItems = Array.isArray(foodDataObj[vendorId]) ? foodDataObj[vendorId] : [];
+
     return (
       <div className="vendor-items-wrapper">
         <div className="search-items-results-header">
@@ -35,12 +40,12 @@ class AllFeedItemsDisplayed extends Component {
           <h4 className="vendor-pick-up">Pick-Up Time</h4>
           <div className="vendor-spacing" />
         </div>
-        {this.props.foodDataObj[this.props.vendorName].map((food, index) => {
+        {foodItems.map((food, index) => {
           const isExpired = new Date(food.set_time) < new Date();
           return (
             <div
               className={
-                this.props.fadeTrigger.includes(food.id)
+                fadeTrigger.includes(food.id)
                   ? "vendor-items-container fade-out"
                   : "vendor-profile-container-vendor-version"
               }
@@ -68,8 +73,8 @@ class AllFeedItemsDisplayed extends Component {
                       alert("Pickup time has passed. This item cannot be claimed.");
                       return;
                     }
-                    this.props.claimItem(e, food.is_claimed, food.id);
-                    this.props.receivedOpenSnackbar();
+                    claimItem(e, food.is_claimed, food.id);
+                    receivedOpenSnackbar();
                   }}
                 >
                   <MuiThemeProvider theme={theme}>

@@ -11,60 +11,52 @@ class AllFeedItems extends Component {
     };
   }
 
-  allVendorsMapped = foodDataObj => {
-    if (!foodDataObj) return null;
+  allVendorsMapped = (foodDataObj) => {
+    if (!foodDataObj || !this.props.allVendors) return null;
     let newObj = {};
-    let vendorNameArr = Object.keys(foodDataObj);
-    vendorNameArr.forEach((vendorName, i) => {
-      foodDataObj[vendorName].forEach(vendor => {
-        this.props.allVendors.forEach(pics => {
-          if (vendor.vendor_id === pics.vendor_id) {
-            newObj[vendor.address_field] = pics.profile_picture;
-          }
-        });
+  
+    Object.keys(foodDataObj).forEach((vendorName) => {
+      foodDataObj[vendorName].forEach((vendor) => {
+        const profilePicture = this.props.allVendors[vendorName]; // Get the profile picture by vendor name
+        if (profilePicture) {
+          newObj[vendor.address_field] = profilePicture;
+        }
       });
     });
-
+  
     return newObj;
   };
 
   allFoodItemsMapped = () => {
-    if (this.props.allFoodItems) {
-      let foodDataObj = {};
-      let converted_time;
-      // Map over the food items and only include those that are not claimed and not confirmed
-      this.props.allFoodItems.forEach((food) => {
-        if (!food.is_claimed && !food.is_confirmed) {
-          if (!foodDataObj[food.vendor_name]) {
-            foodDataObj[food.vendor_name] = [food];
-          } else {
-            foodDataObj[food.vendor_name].push(food);
-          }
-        }
-      });
-
-      let vendorNameArr = Object.keys(foodDataObj);
-
-      let vendorName = vendorNameArr.map((vendorName, i) => {
-        return (
-          <div key={i}>
-            <AllFeedItemsDisplayVendorName
-              vendorName={vendorName}
-              foodDataObj={foodDataObj}
-              profilePicture={this.allVendorsMapped(foodDataObj)}
-            />
-            <AllFeedItemsDisplayed
-              foodDataObj={foodDataObj}
-              claimItem={this.props.claimItem}
-              vendorName={vendorName}
-              receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-              fadeTrigger={this.props.fadeTrigger}
-            />
-          </div>
-        );
-      });
-      return vendorName;
+    const { allFoodItems } = this.props;
+  
+    if (!allFoodItems || typeof allFoodItems !== "object") {
+      console.error("allFoodItems is not an object:", allFoodItems);
+      return null;
     }
+  
+    const vendorIds = Object.keys(allFoodItems);
+  
+    return vendorIds.map((vendorId, i) => {
+      const { vendorName, items } = allFoodItems[vendorId];
+      return (
+        <div key={i}>
+          <AllFeedItemsDisplayVendorName
+            vendorName={vendorName}
+            vendorId={vendorId}
+            foodDataObj={{ [vendorId]: items }}
+            profilePicture={this.allVendorsMapped({ [vendorId]: items })}
+          />
+          <AllFeedItemsDisplayed
+            foodDataObj={{ [vendorId]: items }}
+            claimItem={this.props.claimItem}
+            vendorId={vendorId}
+            receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+            fadeTrigger={this.props.fadeTrigger}
+          />
+        </div>
+      );
+    });
   };
 
   render() {
