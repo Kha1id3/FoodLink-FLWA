@@ -31,6 +31,7 @@ export default class Feed extends Component {
     searchText: "",
     allVendors: [],
     fadeTrigger: [],
+    filteredFoodItems: [],
     selectedCategory: null,
     allCategories: [],
     requestForm: {
@@ -66,7 +67,6 @@ export default class Feed extends Component {
         const foodItems = response.data.food_items || [];
         const currentTime = new Date().toISOString();
   
-        // Filter out expired items and items with is_claimed or is_confirmed set to true
         const validItems = foodItems.filter(
           (item) =>
             new Date(item.set_time) > new Date(currentTime) &&
@@ -74,28 +74,28 @@ export default class Feed extends Component {
             !item.is_confirmed
         );
   
-        // Group items by vendor_id, and include vendorName
         const groupedItems = validItems.reduce((acc, item) => {
           const vendorId = item.vendor_id;
-          const vendorName = item.vendor_name; // Extract vendor_name from item
   
           if (!acc[vendorId]) {
             acc[vendorId] = {
-              vendorName, // Store vendorName in the group
-              items: [],  // Initialize an items array
+              vendorName: item.vendor_name,
+              vendorAddress: item.address_field,
+              vendorProfilePic: item.profile_picture, // Ensure profile_picture is included
+              items: [],
             };
           }
-          acc[vendorId].items.push(item); // Push the current item
+          acc[vendorId].items.push(item);
           return acc;
         }, {});
   
         this.setState({
           allFoodItems: groupedItems,
+          filteredFoodItems: Object.values(groupedItems).flatMap((vendor) => vendor.items),
         });
       })
       .catch((err) => {
         console.error("Error fetching food items:", err);
-        this.setState({ allFoodItems: {} });
       });
   };
   
@@ -106,18 +106,20 @@ export default class Feed extends Component {
       .get("/api/users/vendors/")
       .then((response) => {
         const vendors = response.data.vendors || [];
-        // Create a mapping of vendor names to their profile pictures
+        console.log("Fetched Vendors:", vendors); // Debugging log
         const vendorProfiles = vendors.reduce((acc, vendor) => {
-          acc[vendor.name] = vendor.profile_picture; // Assuming 'name' and 'profile_picture' exist in the API response
+          acc[vendor.id] = vendor.profile_picture; 
           return acc;
         }, {});
+        console.log("Processed Vendor Profiles:", vendorProfiles); // Debugging log
   
         this.setState({
-          allVendors: vendorProfiles, // Map vendor names to profile pictures
+          allVendors: vendorProfiles, // Map vendor_id to profile picture
         });
       })
       .catch((err) => console.error("Error fetching vendors:", err));
   };
+  
 
   claimItem = (e, isClaimed, food_id) => {
     let targetId;
@@ -174,25 +176,50 @@ export default class Feed extends Component {
       });
   };
 
-  handleSubmit = async e => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    // let searchResult = this.state.allFoodItems.filter(item => {
-    //   let vendor = item.vendor_name.toLowerCase();
-    //   let food = item.name.toLowerCase();
-    //   let text = this.state.textInput.toLowerCase();
-    //   let claimed = item.is_claimed;
-    //
-    //   return (vendor.includes(text) && claimed !== true) || food.includes(text);
-    // });
-    // const searchResults = this.search(
-    //   this.state.allFoodItems,
-    //   this.state.textInput.toLowerCase()
-    // );
-    await this.setState({
-      searchText: this.state.textInput.toLowerCase(),
-      textInput: ""
+    const { textInput } = this.state;
+  
+    const allItems = Object.values(this.state.allFoodItems).flatMap((vendor) =>
+      vendor.items
+    );
+  
+    const searchResults = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(textInput);
+      const matchesFood = item.name.toLowerCase().includes(textInput);
+      return (
+        (matchesVendor || matchesFood) &&
+        !item.is_claimed &&
+        !item.is_confirmed
+      );
+    });
+  
+    this.setState({
+      userSearchResults: searchResults,
     });
   };
+
+
+  handleSearch = (e) => {
+    const searchText = e.target.value.toLowerCase();
+
+    const allItems = Object.values(this.state.allFoodItems).flatMap(
+      (vendor) => vendor.items
+    );
+
+    const filteredItems = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(searchText);
+      const matchesFood = item.name.toLowerCase().includes(searchText);
+      return matchesVendor || matchesFood;
+    });
+
+    this.setState({
+      textInput: searchText,
+      filteredFoodItems: filteredItems,
+    });
+  };
+
+
   search = (allFoodItems, searchText) => {
     //if search text is blank, return empty arr for length
     if (this.state.searchText === "") return [];
@@ -210,16 +237,26 @@ export default class Feed extends Component {
     return searchResult;
   };
 
-  handleChange = e => {
-    let searchResult = this.state.allFoodItems.filter(item => {
+  handleChange = (e) => {
+    const searchText = e.target.value.toLowerCase();
+  
+    const allItems = Object.values(this.state.allFoodItems).flatMap((vendor) =>
+      vendor.items
+    );
+  
+    const searchResult = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(searchText);
+      const matchesFood = item.name.toLowerCase().includes(searchText);
       return (
-        item.vendor_name.toLowerCase() === this.state.textInput.toLowerCase() ||
-        item.name.toLowerCase() === this.state.textInput.toLowerCase()
+        (matchesVendor || matchesFood) &&
+        !item.is_claimed &&
+        !item.is_confirmed
       );
     });
+  
     this.setState({
-      textInput: e.target.value,
-      userSearchResults: searchResult
+      textInput: searchText,
+      userSearchResults: searchResult,
     });
   };
 
@@ -360,10 +397,7 @@ renderRequestForm = () => {
 };
 
   render() {
-    const filteredFoodItems = this.search(
-      this.state.allFoodItems,
-      this.state.searchText
-    );
+ const { textInput, filteredFoodItems, allFoodItems, allVendors } = this.state;
 
     const { showRequestForm } = this.state;
     return (
@@ -378,22 +412,15 @@ renderRequestForm = () => {
         {showRequestForm && this.renderRequestForm()}
 
         <SearchBar
-          allFoodItems={this.state.allFoodItems}
-          userSearchResults={this.state.userSearchResults}
-          handleSubmit={this.handleSubmit}
-          textInput={this.state.textInput}
-          handleChange={this.handleChange}
-          receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+          handleSubmit={(e) => e.preventDefault()}
+          handleChange={this.handleSearch}
+          textInput={textInput}
         />
-        {filteredFoodItems.length > 0 ? (
+        {textInput ? (
           <SearchBarResults
-            claimItem={this.claimItem}
             userSearchResults={filteredFoodItems}
-            currentUser={this.props.currentUser.type}
-            getAllFoodItems={this.getAllFoodItems}
-            foodItems={this.state.getAllFoodItems}
+            claimItem={this.claimItem}
             receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-            allVendors={this.state.allVendors}
           />
         ) : (
           <AllFeedItems

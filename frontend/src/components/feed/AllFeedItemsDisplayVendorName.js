@@ -1,24 +1,50 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./feedCSS/AllFeedItemsDisplayVendorName.css";
 
 class AllFeedItemsDisplayVendorName extends Component {
-  displayVendorPhoto = (vendorName) => {
-    const { allVendors } = this.props;
-    if (allVendors && allVendors[vendorName]) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profilePic: "", // State to hold the dynamically fetched profile picture
+    };
+  }
+
+  componentDidMount() {
+    this.fetchVendorProfilePicture();
+  }
+
+  fetchVendorProfilePicture = async () => {
+    const { vendorId } = this.props;
+
+    try {
+      const response = await axios.get(`/api/users/${vendorId}`);
+      const profilePic = response.data.data[0]?.profile_picture || "default.png";
+      this.setState({ profilePic });
+    } catch (error) {
+      console.error(`Error fetching profile picture for vendor ${vendorId}:`, error);
+    }
+  };
+
+  displayVendorPhoto = () => {
+    const { profilePic } = this.state;
+
+    if (profilePic) {
       return (
         <img
           className="feed-profile-pic"
-          src={allVendors[vendorName]} // Fetch by vendorName
-          alt={`${vendorName} Profile`} // Display vendor name in alt attribute
+          src={profilePic} // Use the dynamically fetched profile picture
+          alt="Vendor Profile"
         />
       );
     }
     return null; // Return nothing if profile picture is missing
   };
+
   render() {
     const { vendorName, vendorId, foodDataObj } = this.props;
-  
+
     return (
       <div className="display-vendor-name-feed">
         <span className="vendor-span-container">

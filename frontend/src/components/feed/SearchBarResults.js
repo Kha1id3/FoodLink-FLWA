@@ -1,71 +1,45 @@
-import React from "react";
-import SearchBarResultsVendorDisplay from "./SearchBarResultsVendorDisplay.js";
-import SearchBarResultsVendorItemsDisplay from "./SearchBarResultsVendorItemsDisplay.js";
-import { createTheme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import SearchBarResultsVendorDisplay from "./SearchBarResultsVendorDisplay";
+import SearchBarResultsVendorItemsDisplay from "./SearchBarResultsVendorItemsDisplay";
+import axios from "axios";
 import "./feedCSS/SearchBarResults.css";
 
-const theme = createTheme({
-  palette: {
-    primary: { 500: "#5C4E4E" },
-    secondary: {
-      main: "#988686"
+export const SearchBarResults = ({ userSearchResults, claimItem, receivedOpenSnackbar }) => {
+  const groupedResults = userSearchResults.reduce((acc, item) => {
+    const vendorId = item.vendor_id;
+    const vendorName = item.vendor_name;
+
+    if (!acc[vendorId]) {
+      acc[vendorId] = {
+        vendorName,
+        vendorId,
+        items: [],
+      };
     }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
+    acc[vendorId].items.push(item);
+    return acc;
+  }, {});
 
-// will need to apply the search object filter here just like all the others to get it to work to group
-export const SearchBarResults = props => {
-  let searchDataObj = {};
-
-  if (props.userSearchResults.length > 0) {
-    let searchResults = props.userSearchResults.filter(result => {
-      return result.is_claimed !== true;
-    });
-    // eslint-disable-next-line
-    searchResults.map((results, i) => {
-      if (!searchDataObj[results.vendor_name]) {
-        searchDataObj[results.vendor_name] = [results];
-      } else if (searchDataObj[results.vendor_name]) {
-        searchDataObj[results.vendor_name].push(results);
-      }
-    });
-    let vendorNameArr = Object.keys(searchDataObj);
-
-    let vendorName = vendorNameArr.map((vendorName, a) => {
-      return (
-        <div key="a">
+  return (
+    <div className="search-results-wrapper">
+      {Object.values(groupedResults).map((vendor) => (
+        <div key={vendor.vendorId} className="vendor-results-group">
           <SearchBarResultsVendorDisplay
-            vendorName={vendorName}
-            allVendors={props.allVendors}
+            vendorName={vendor.vendorName}
+            vendorId={vendor.vendorId} // Pass vendorId to fetch details
           />
-
-          <div className="vendorItemsWrapper">
-            <div id="search-items-header">
-              <h4 className="search-results-item-name-results">Food Item </h4>
-              <h4 className="search-results-weight">Weight </h4>
-              <h4 className="search-results-feeds">Feeds </h4>
-              <h4 className="search-results-pick-up">Pick Up Time </h4>
-              <div id="spacing" />
-            </div>
-            {searchDataObj[vendorName].map((food, b) => {
-              return (
-                <div className="search-results-container" key={b}>
-                  <SearchBarResultsVendorItemsDisplay
-                    food={food}
-                    claimItem={props.claimItem}
-                    receivedOpenSnackbar={props.receivedOpenSnackbar}
-                    theme={theme}
-                  />
-                </div>
-              );
-            })}
+          <div className="vendor-items-wrapper">
+            {vendor.items.map((foodItem) => (
+              <SearchBarResultsVendorItemsDisplay
+                key={foodItem.id}
+                food={foodItem}
+                claimItem={claimItem}
+                receivedOpenSnackbar={receivedOpenSnackbar}
+              />
+            ))}
           </div>
         </div>
-      );
-    });
-    return vendorName;
-  }
+      ))}
+    </div>
+  );
 };
