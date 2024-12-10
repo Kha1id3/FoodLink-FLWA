@@ -12,6 +12,17 @@ import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 
 
+const theme = createTheme({
+  palette: {
+    primary: { 500: "#33443c" },
+    secondary: {
+      main: "#988686",
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+});
 
 export default class Feed extends Component {
   state = {
@@ -322,7 +333,7 @@ renderRequestForm = () => {
   const { requestForm, requestError, allCategories } = this.state;
 
   return (
- 
+    <MuiThemeProvider theme={theme}>
       <div className="request-form-modal">
         <div className="request-form-container">
           <h3>Request a Donation</h3>
@@ -383,7 +394,7 @@ renderRequestForm = () => {
           </form>
         </div>
       </div>
-
+    </MuiThemeProvider>
   );
 };
 
