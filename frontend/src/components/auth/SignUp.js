@@ -11,11 +11,11 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import "./authCSS/SignUp.css";
 import Typography from "@material-ui/core/Typography";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import { CSSTransition } from "react-transition-group";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const orange = createMuiTheme({
+const orange = createTheme({
   palette: {
     primary: { 500: "#FFA500" },
     secondary: {
@@ -28,7 +28,7 @@ const orange = createMuiTheme({
   }
 });
 
-const blue = createMuiTheme({
+const blue = createTheme({
   palette: {
     primary: { 500: "#d1d0d0" },
     secondary: {

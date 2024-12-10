@@ -1,31 +1,99 @@
-.display-vendor-name-feed-version {
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-justify-content: space-around;
-  justify-content: space-around;
-  -webkit-align-items: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 5px;
-  height: 80px;
-  background-color: #ebf4f4;
-  margin: 0;
-  float: right;
-  margin-right: 15%;
+.all-vendors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Slightly larger cards */
+  gap: 24px; /* Increase spacing for better readability */
+  width: 90%;
+  margin: 20px auto; /* Add some top margin for spacing */
 }
 
-.display-vendor-name-feed {
-  background-color: #988686;
-  color: white;
-  width: 75%;
+.vendor-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px; /* Softer corners for a modern look */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px;
+  text-align: center;
   font-family: "Montserrat", sans-serif;
-  height: 6em;
-  margin: 0 auto;
-  display: -webkit-flex;
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover effects */
+}
+
+.vendor-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Highlight the card on hover */
+}
+
+/* Profile Picture */
+.vendor-profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 15px; /* Center and add bottom spacing */
+  object-fit: cover;
+  border: 3px solid #f6eae0; /* Light border around the image */
+}
+
+/* Vendor Name */
+.vendor-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px; /* Adjust spacing */
+  color: #272e48; /* Darker color for emphasis */
+}
+
+/* Vendor Address */
+.vendor-address {
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Food Item Details */
+.food-item {
+  border-top: 1px solid #eee;
+  padding: 12px 0;
+  text-align: left;
+  font-size: 16px; /* Slightly larger text for better readability */
+  line-height: 1.4; /* Increase line spacing */
+}
+
+.food-item-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 50px;
-  border: 1px solid #272e48;
+  align-items: center; /* Align items properly */
+  font-weight: bold; /* Make headers stand out */
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.food-item-details {
+  font-size: 14px;
+  color: #555;
+  font-style: italic; /* Add slight styling for detail */
+}
+
+/* Claim Button */
+.claim-button {
+  width: 100%;
+  padding: 12px 0; /* Increase padding for a better click target */
+  background-color: #5c8a63; /* Softer green for aesthetics */
+  color: white;
+  font-size: 16px; /* Larger text for buttons */
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.claim-button:hover {
+  background-color: #477a4c; /* Darker green on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.claimed {
+  background-color: #dc3545;
+}
+
+.claimed:hover {
+  background-color: #a21b24;
 }

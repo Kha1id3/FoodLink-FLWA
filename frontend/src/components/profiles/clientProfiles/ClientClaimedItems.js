@@ -3,10 +3,10 @@ import axios from "axios";
 import { withRouter, Link } from "react-router-dom";
 import _ from "lodash";
 import Button from "@material-ui/core/Button";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import "./clientProfileCSS/ClientClaimedItems.css";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { 500: "#5C4E4E" },
     secondary: {

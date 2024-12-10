@@ -19,13 +19,13 @@ const {
 router.get("/", getAllFoodItems);
 router.get("/client", getAllClaimedFoodItems);
 router.get("/clientpage/:name", getFoodItemsByClient);
-router.get("/vendor/:name", getFoodItemsByVendorName);
+router.get("/vendor/name/:name", getFoodItemsByVendorName);
 router.get("/feedingcount", getFedCount);
 router.patch("/claimstatus/:id", foodItemClaimStatus);
 router.post("/", createNewFoodItem);
 router.patch("/:id", updateFoodItem);
 router.delete("/:id", deleteFoodItem);
-router.get("/vendor/:id", getFoodItemsByVendorId);
+router.get("/vendor/id/:id", getFoodItemsByVendorId);
 router.patch("/claimstatus/:id", foodItemClaimStatus);
 
 // New Routes for Confirm Pickup Feature
