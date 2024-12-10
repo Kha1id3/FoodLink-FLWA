@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SearchBarResultsVendorDisplay from "./SearchBarResultsVendorDisplay";
 import SearchBarResultsVendorItemsDisplay from "./SearchBarResultsVendorItemsDisplay";
-import axios from "axios";
 import "./feedCSS/SearchBarResults.css";
 
 export const SearchBarResults = ({ userSearchResults, claimItem, receivedOpenSnackbar }) => {
@@ -24,11 +23,13 @@ export const SearchBarResults = ({ userSearchResults, claimItem, receivedOpenSna
     <div className="search-results-wrapper">
       {Object.values(groupedResults).map((vendor) => (
         <div key={vendor.vendorId} className="vendor-results-group">
+          {/* Vendor Display */}
           <SearchBarResultsVendorDisplay
             vendorName={vendor.vendorName}
-            vendorId={vendor.vendorId} // Pass vendorId to fetch details
+            vendorId={vendor.vendorId}
           />
-          <div className="vendor-items-wrapper">
+          {/* Grouped Items */}
+          <div className="food-items-container">
             {vendor.items.map((foodItem) => (
               <SearchBarResultsVendorItemsDisplay
                 key={foodItem.id}

@@ -12,17 +12,6 @@ import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 
 
-const theme = createTheme({
-  palette: {
-    primary: { 500: "#5C4E4E" },
-    secondary: {
-      main: "#5C4E4E",
-    },
-  },
-  typography: {
-    useNextVariants: true,
-  },
-})
 
 export default class Feed extends Component {
   state = {
@@ -60,44 +49,44 @@ export default class Feed extends Component {
     clearInterval(this.interval);
   }
 
-  getAllFoodItems = () => {
-    axios
-      .get("/api/foodItems")
-      .then((response) => {
-        const foodItems = response.data.food_items || [];
-        const currentTime = new Date().toISOString();
-  
-        const validItems = foodItems.filter(
-          (item) =>
-            new Date(item.set_time) > new Date(currentTime) &&
-            !item.is_claimed &&
-            !item.is_confirmed
-        );
-  
-        const groupedItems = validItems.reduce((acc, item) => {
-          const vendorId = item.vendor_id;
-  
-          if (!acc[vendorId]) {
-            acc[vendorId] = {
-              vendorName: item.vendor_name,
-              vendorAddress: item.address_field,
-              vendorProfilePic: item.profile_picture, // Ensure profile_picture is included
-              items: [],
-            };
-          }
-          acc[vendorId].items.push(item);
-          return acc;
-        }, {});
-  
-        this.setState({
-          allFoodItems: groupedItems,
-          filteredFoodItems: Object.values(groupedItems).flatMap((vendor) => vendor.items),
-        });
-      })
-      .catch((err) => {
-        console.error("Error fetching food items:", err);
+ getAllFoodItems = () => {
+  axios
+    .get("/api/foodItems")
+    .then((response) => {
+      const foodItems = response.data.food_items || [];
+      const currentTime = new Date().toISOString();
+
+      const validItems = foodItems.filter(
+        (item) =>
+          new Date(item.set_time) > new Date(currentTime) &&
+          !item.is_claimed &&
+          !item.is_confirmed
+      );
+
+      const groupedItems = validItems.reduce((acc, item) => {
+        const vendorId = item.vendor_id;
+
+        if (!acc[vendorId]) {
+          acc[vendorId] = {
+            vendorName: item.vendor_name,
+            vendorAddress: item.address_field,
+            vendorProfilePic: item.profile_picture, // Ensure profile_picture is included
+            items: [],
+          };
+        }
+        acc[vendorId].items.push(item);
+        return acc;
+      }, {});
+
+      this.setState({
+        allFoodItems: groupedItems,
+        filteredFoodItems: Object.values(groupedItems).flatMap((vendor) => vendor.items),
       });
-  };
+    })
+    .catch((err) => {
+      console.error("Error fetching food items:", err);
+    });
+};
   
   
 
@@ -122,15 +111,17 @@ export default class Feed extends Component {
   
 
   claimItem = (e, isClaimed, food_id) => {
-    let targetId;
+    let targetId = food_id; // Use the `food_id` directly
+  
     if (!!e.currentTarget.id) {
-      targetId = e.currentTarget.id;
+      targetId = e.currentTarget.id; // Ensure fallback to button ID if necessary
     }
+  
     if (isClaimed === false) {
-      const currentTime = new Date().toISOString(); // Get user's current time
+      const currentTime = new Date().toISOString(); // Get current time
   
       this.setState({
-        fadeTrigger: [...this.state.fadeTrigger, food_id]
+        fadeTrigger: [...this.state.fadeTrigger, food_id], // Fade-out animation
       });
   
       setTimeout(async () => {
@@ -138,9 +129,9 @@ export default class Feed extends Component {
           await axios.patch(`/api/fooditems/claimstatus/${targetId}`, {
             client_id: this.props.currentUser.id,
             is_claimed: true,
-            current_time: currentTime // Send user's current time
+            current_time: currentTime,
           });
-          this.getAllFoodItems();
+          this.getAllFoodItems(); // Refresh food items
         } catch (error) {
           if (error.response && error.response.status === 400) {
             alert(error.response.data.message); // Show error message
@@ -148,7 +139,7 @@ export default class Feed extends Component {
             console.error("Error claiming item:", error);
           }
           this.setState({
-            fadeTrigger: this.state.fadeTrigger.filter((id) => id !== food_id)
+            fadeTrigger: this.state.fadeTrigger.filter((id) => id !== food_id),
           });
         }
       }, 1100);
@@ -156,7 +147,7 @@ export default class Feed extends Component {
       axios
         .patch(`/api/fooditems/claimstatus/${targetId}`, {
           client_id: null,
-          is_claimed: false
+          is_claimed: false,
         })
         .then(() => {
           this.getAllFoodItems();
@@ -331,7 +322,7 @@ renderRequestForm = () => {
   const { requestForm, requestError, allCategories } = this.state;
 
   return (
-    <MuiThemeProvider theme={theme}>
+ 
       <div className="request-form-modal">
         <div className="request-form-container">
           <h3>Request a Donation</h3>
@@ -392,7 +383,7 @@ renderRequestForm = () => {
           </form>
         </div>
       </div>
-    </MuiThemeProvider>
+
   );
 };
 
@@ -404,7 +395,7 @@ renderRequestForm = () => {
       <div className="feedWrapper">
         <MainSnackbarContainer />
         <div id="feed-header">
-          <div id="feed">Donation List</div>
+          <div id="feed"></div>
           <button onClick={this.toggleRequestForm} className="request-button">
             Request Donation
           </button>

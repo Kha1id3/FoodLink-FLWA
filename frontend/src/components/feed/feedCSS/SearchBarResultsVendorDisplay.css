@@ -1,0 +1,55 @@
+.display-vendor-name-feed {
+    background-color: #ffffff;
+    color: #272e48;
+    border-radius: 8px;
+    width: 75%;
+    font-family: "Montserrat", sans-serif;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vendor-account-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .feed-profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+  
+  .vendor-info-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .vendor-link {
+    font-size: 18px;
+    font-weight: bold;
+    color: #272e48;
+    text-decoration: none;
+    margin-bottom: 5px;
+  }
+  
+  .vendor-link:hover {
+    text-decoration: underline;
+  }
+  
+  .address-link {
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+  }
+  
+  .address-link:hover {
+    color: #272e48;
+    text-decoration: underline;
+  }

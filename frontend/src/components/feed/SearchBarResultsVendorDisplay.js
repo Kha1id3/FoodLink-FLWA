@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import "./feedCSS/AllFeedItemsDisplayVendorName.css";
 
 class SearchBarResultsVendorDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePic: "", // State to hold the dynamically fetched profile picture
-      vendorAddress: "Loading...", // Placeholder for vendor address
+      profilePic: "",
+      vendorAddress: "Loading...",
     };
   }
 
@@ -40,24 +40,27 @@ class SearchBarResultsVendorDisplay extends Component {
     const { profilePic, vendorAddress } = this.state;
 
     return (
-      <div className="display-vendor-name-feed-search">
-        <Link to={`/clientview/${vendorId}`} className="display-item-name">
-          {vendorName}
-        </Link>
-        <div className="vendor-address-field">
-          <Link
-            to={`/map?address=${encodeURIComponent(vendorAddress)}`}
-            className="address-link"
-          >
-            {vendorAddress}
-          </Link>
-        </div>
-        <div className="vendor-account-profile-pic">
+      <div className="display-vendor-name-feed">
+        <div className="vendor-account-container">
           <img
             className="feed-profile-pic"
             src={profilePic}
             alt={`${vendorName} Profile`}
           />
+          <div className="vendor-info-container">
+            <Link
+              to={`/clientview/${vendorId}`}
+              className="vendor-link vendor-name-centered"
+            >
+              {vendorName}
+            </Link>
+            <Link
+              to={`/map?address=${encodeURIComponent(vendorAddress)}`}
+              className="address-link"
+            >
+              {vendorAddress}
+            </Link>
+          </div>
         </div>
       </div>
     );

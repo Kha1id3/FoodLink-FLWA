@@ -7,25 +7,33 @@ class AllFeedItems extends Component {
   constructor() {
     super();
     this.state = {
-      pictureObj: []
+      pictureObj: [], // Holds vendor profile pictures
     };
   }
 
+  /**
+   * Maps all vendors and ensures that the profile pictures
+   * are fetched and displayed properly.
+   */
   allVendorsMapped = (foodDataObj) => {
     if (!foodDataObj || !this.props.allVendors) return {};
-  
-    let newObj = {};
-  
+
+    let mappedVendors = {};
+
     Object.keys(foodDataObj).forEach((vendorId) => {
       const vendorName = foodDataObj[vendorId][0]?.vendor_name; // Ensure vendor_name exists
       if (vendorName && this.props.allVendors[vendorName]) {
-        newObj[vendorName] = this.props.allVendors[vendorName]; // Map vendorName to its profile picture
+        mappedVendors[vendorName] = this.props.allVendors[vendorName]; // Map vendorName to its profile picture
       }
     });
-  
-    return newObj;
+
+    return mappedVendors;
   };
 
+  /**
+   * Maps all food items grouped by vendors and displays
+   * their corresponding vendor and food details.
+   */
   allFoodItemsMapped = () => {
     const { allFoodItems } = this.props;
   
@@ -36,26 +44,42 @@ class AllFeedItems extends Component {
   
     const vendorIds = Object.keys(allFoodItems);
   
-    return vendorIds.map((vendorId, i) => {
-      const { vendorName, items } = allFoodItems[vendorId];
-      return (
-        <div key={i}>
-          <AllFeedItemsDisplayVendorName
-            vendorName={vendorName}
-            vendorId={vendorId}
-            foodDataObj={{ [vendorId]: items }}
-            allVendors={this.props.allVendors}
-          />
-          <AllFeedItemsDisplayed
-            foodDataObj={{ [vendorId]: items }}
-            claimItem={this.props.claimItem}
-            vendorId={vendorId}
-            receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-            fadeTrigger={this.props.fadeTrigger}
-          />
-        </div>
-      );
-    });
+    return (
+      <div className="all-vendors-grid">
+        {vendorIds.map((vendorId, i) => {
+          const vendorData = allFoodItems[vendorId];
+  
+          if (!vendorData.items || vendorData.items.length === 0) {
+            return null; // Skip this vendor if no items are left
+          }
+  
+          const { vendorName, vendorAddress, vendorProfilePic, items } = vendorData;
+  
+          return (
+            <div key={i} className="vendor-card">
+              {/* Vendor Information */}
+              <AllFeedItemsDisplayVendorName
+                vendorName={vendorName}
+                vendorId={vendorId}
+                vendorProfilePic={vendorProfilePic} // Tie profile pic to vendor ID
+                vendorAddress={vendorAddress}
+                foodDataObj={{ [vendorId]: items }}
+                allVendors={this.props.allVendors}
+              />
+  
+              {/* Food Items */}
+              <AllFeedItemsDisplayed
+                foodDataObj={{ [vendorId]: items }}
+                claimItem={this.props.claimItem}
+                vendorId={vendorId}
+                receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+                fadeTrigger={this.props.fadeTrigger}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   render() {

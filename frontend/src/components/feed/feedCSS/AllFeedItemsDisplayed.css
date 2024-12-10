@@ -1,91 +1,55 @@
-#vendor-items-header-client {
+.vendor-items-wrapper {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.food-item {
   display: flex;
-  justify-content: space-between; /* Adjusted for more precise spacing */
+  justify-content: space-between;
   align-items: center;
-  width: 75%; /* Match the width of the content rows */
-  margin: 0 auto;
-  background-color: #D1D0D0;
-  border: 1px solid lightgray;
-  margin-top: 20px;
-  padding: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  flex: 2;
   font-weight: bold;
-  text-align: left; /* Align text left for header */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.display-claimed-items-for-client {
-  display: flex;
-  justify-content: space-between; /* Align columns closer to header */
-  align-items: center;
-  width: 78%; /* Match the width of the header */
-
-
-  border: 1px solid lightgray;
-  border-top: none;
-  background-color: #fff;
-
-}
-
-.display-claimed-items-for-client:hover {
-  background-color: #f9f9f9;
-}
-
-/* Individual Columns */
-.vendor-item-name,
-.vendor-weight,
-.vendor-feeds,
-.vendor-pick-up,
-.vendor-spacing {
-  flex: 1; /* Ensure equal space distribution */
-  text-align: left; /* Shift text alignment slightly to the left */
-  padding: 5px;
-}
-
-.vendor-item-name {
-  flex: 2; /* Food Item column is slightly wider */
-  padding-left: 130px; /* Add padding for a cleaner look */
-}
-
-.vendor-weight,
-.vendor-feeds,
-.vendor-pick-up {
-  text-align: left; /* Align columns slightly to the left */
-  padding-left: 10px;
-}
-
-.span-claim-button {
-  flex: 1; /* Equal space for the Claim button */
+.item-details {
+  flex: 1;
   text-align: center;
 }
 
-.search-items-results-header {
-  display: grid;
-  grid-template-columns: 1.8fr 1fr 1fr 1fr;/* Adjust spacing for headers */
-  align-items: center;
-  width: 75%; /* Match the width of the rows */
-  margin: 0 auto;
-  background-color: #D1D0D0;
-  border: 1px solid lightgray;
-  padding: 10px 20px; /* Match row padding */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left; /* Align header text slightly to the left */
-}
-
-
-#item-pickup-container {
-  text-align: center;
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.9em;
-  color: #555; /* Neutral color for time info */
-}
-
-.pickup-date {
-  font-weight: bold;
-  color: #333; /* Darker shade for the date */
+.item-quantity,
+.item-pickup-time {
+  font-size: 14px;
+  color: #666;
 }
 
 .pickup-time {
-  margin-top: 2px;
   font-style: italic;
-  color: #666; /* Subtle shade for the time */
 }
+
+.claim-button-container {
+  flex: 1;
+  text-align: center;
+}
+
+.food-item-info {
+  text-align: left;
+  flex: 2;
+}
+
+.food-items-list {
+  padding: 10px 15px;
+}
+.food-name {
+  font-weight: bold;
+  font-size: 17px;
+}
+

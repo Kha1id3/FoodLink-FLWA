@@ -1,44 +1,81 @@
-#feed-container {
-  background-color: #f6eae0;
-  border: 2px solid black;
+/* Overall Feed Layout */
+body {
+  position: relative;
+  margin: 0; /* Ensure no unintended margins */
+  font-family: "Montserrat", sans-serif; /* Inherit existing font settings */
+}
+
+body::before {
+  content: ""; /* Required for pseudo-element */
+  position: fixed; /* Keeps the background image in place */
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  width: 80vw;
-  margin: 0 auto;
-  margin-top: 100px;
+  background: url('../foodbox.jpg') no-repeat center center fixed; /* Centralized image */
+  background-size: contain; /* Keeps proportions */
+  opacity: 0.4; /* Adjust opacity of only the image */
+  z-index: -1; /* Push behind all other elements */
+  pointer-events: none; /* Ensures it doesn't block clicks */
 }
 
-.claimed,
-.unclaimed {
-  border-radius: 5px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-}
 
-.claimed {
-  background-color: red;
-}
-
-.unclaimed {
-  background-color: green;
-}
 
 .feedWrapper {
-  margin-top: 8em;
+  margin-top: 150px; /* Push down to avoid overlap */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#feed-container {
+  position: relative; /* Place it in the natural flow */
+  z-index: 3; /* Ensures it's above the background */
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque for visibility */
+  padding: 2em;
+  border-radius: 10px;
 }
 
 #feed {
   color: #272e48;
-  text-decoration: none;
   font-family: "Montserrat", sans-serif;
-  font-size: 46px;
+  font-size: 36px;
   font-weight: 900;
-}
-
-#feed-header {
   margin-bottom: 1em;
 }
 
+#feed-header {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.request-button {
+  padding: 15px 30px;
+  background-color: #33443c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+  position: absolute; /* Adjust for layout alignment */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
+  z-index: 1;
+  position: absolute; 
+}
+
+.request-button:hover {
+  background-color: #97be77;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Request Form Modal */
 .request-form-modal {
   position: fixed;
   top: 0;
@@ -63,8 +100,10 @@
   text-align: center;
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   max-height: 90vh; /* Limit height to 90% of the viewport height */
+  animation: fadeIn 0.5s ease-in-out;
 }
 
+/* Category Buttons in Request Form */
 .category-buttons-container {
   display: flex;
   flex-wrap: wrap; /* Allows buttons to wrap to the next line if needed */
@@ -72,7 +111,6 @@
   gap: 20px; /* Spacing between buttons */
   margin-bottom: 20px; /* Space between buttons and form fields */
 }
-
 
 .category-button {
   display: flex;
@@ -101,17 +139,27 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-
+/* Request Form Fields */
 .request-form-container input,
 .request-form-container textarea {
   width: 100%;
-  margin: 10px -9px;
+  margin: 10px 0;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 14px;
 }
 
+.custom-date-picker {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Request Form Buttons */
 .request-form-container button {
   padding: 10px 20px;
   margin: 10px 5px;
@@ -120,10 +168,19 @@
   background-color: #28a745;
   color: white;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.request-form-container button:hover {
+  background-color: #218838;
 }
 
 .request-form-container .cancel-button {
   background-color: #dc3545;
+}
+
+.request-form-container .cancel-button:hover {
+  background-color: #c82333;
 }
 
 .request-form-container .error {
@@ -131,13 +188,101 @@
   font-size: 14px;
 }
 
+/* Vendor Cards */
+.all-vendors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 90%;
+  margin: 0 auto;
+}
 
-.custom-date-picker {
+.vendor-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  transition: transform 0.3s;
+}
+
+.vendor-card:hover {
+  transform: translateY(-5px);
+}
+
+.vendor-profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.vendor-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.vendor-address {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.food-item {
+  border-top: 1px solid #eee;
+  padding: 10px 0;
+  text-align: left;
+  font-size: 14px;
+}
+
+.food-item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.food-item-details {
+  font-size: 12px;
+  color: #666;
+}
+
+.claim-button {
   width: 100%;
-  max-width: 500px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  padding: 8px 0;
+  background-color: #28a745;
+  color: white;
+  font-size: 14px;
+  border: none;
   border-radius: 5px;
-  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.claim-button:hover {
+  background-color: #218838;
+}
+
+.claimed {
+  background-color: #dc3545;
+}
+
+.claimed:hover {
+  background-color: #c82333;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

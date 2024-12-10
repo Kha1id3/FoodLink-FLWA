@@ -7,17 +7,25 @@ class AllFeedItemsDisplayVendorName extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePic: "", // State to hold the dynamically fetched profile picture
+      profilePic: props.vendorProfilePic || "default.png", // Fallback to prop or default
     };
   }
 
   componentDidMount() {
-    this.fetchVendorProfilePicture();
+    if (!this.props.vendorProfilePic) {
+      this.fetchVendorProfilePicture();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.vendorId !== this.props.vendorId) {
+      this.fetchVendorProfilePicture();
+    }
   }
 
   fetchVendorProfilePicture = async () => {
     const { vendorId } = this.props;
-
+  
     try {
       const response = await axios.get(`/api/users/${vendorId}`);
       const profilePic = response.data.data[0]?.profile_picture || "default.png";
@@ -27,47 +35,34 @@ class AllFeedItemsDisplayVendorName extends Component {
     }
   };
 
-  displayVendorPhoto = () => {
+  render() {
+    const { vendorName, vendorId, vendorAddress } = this.props;
     const { profilePic } = this.state;
 
-    if (profilePic) {
-      return (
-        <img
-          className="feed-profile-pic"
-          src={profilePic} // Use the dynamically fetched profile picture
-          alt="Vendor Profile"
-        />
-      );
-    }
-    return null; // Return nothing if profile picture is missing
-  };
-
-  render() {
-    const { vendorName, vendorId, foodDataObj } = this.props;
-
     return (
-      <div className="display-vendor-name-feed">
-        <span className="vendor-span-container">
-          <Link
-            to={`/clientview/${vendorId}`}
-            className="display-item-name vendor-link"
-          >
-            {vendorName} {/* Ensure the vendor name is displayed */}
+      <div className="vendor-card">
+        {/* Profile Picture Section */}
+        <div
+          className="vendor-profile-pic-top"
+          style={{
+            backgroundImage: `url(${profilePic})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        ></div>
+
+        {/* Vendor Details */}
+        <div className="vendor-details">
+          <Link to={`/clientview/${vendorId}`} className="vendor-name-link">
+            {vendorName}
           </Link>
-          <div className="vendor-address-field">
-            <Link
-              to={`/map?address=${encodeURIComponent(
-                foodDataObj[vendorId][0]?.address_field || "Unknown"
-              )}`}
-              className="address-link"
-            >
-              {foodDataObj[vendorId][0]?.address_field || "No Address"}
-            </Link>
-          </div>
-          <div className="vendor-account-profile-pic">
-            {this.displayVendorPhoto()} {/* Display the vendor's profile picture */}
-          </div>
-        </span>
+          <Link
+            to={`/map?address=${encodeURIComponent(vendorAddress || "Unknown")}`}
+            className="vendor-address-link"
+          >
+            {vendorAddress || "No Address"}
+          </Link>
+        </div>
       </div>
     );
   }
