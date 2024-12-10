@@ -46,6 +46,9 @@ export default class Feed extends Component {
   };
 
   componentDidMount() {
+
+    document.body.id = "donations-page";
+
     this.getAllFoodItems();
     this.getAllVendors();
     this.getCategories();
@@ -57,6 +60,9 @@ export default class Feed extends Component {
   
   // Clear the interval when the component unmounts
   componentWillUnmount() {
+
+    document.body.id = "";
+
     clearInterval(this.interval);
   }
 
