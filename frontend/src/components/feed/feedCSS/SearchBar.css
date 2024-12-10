@@ -38,7 +38,6 @@
   border-radius: 12px;
   padding: 10px 80px;
   position: absolute;
-  top: 125px; /* Same position as toggle button */
   left: 30px; /* Aligned with Request Donation */
   z-index: 10;
 }
