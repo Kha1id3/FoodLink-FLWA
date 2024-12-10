@@ -3,12 +3,11 @@ import axios from "axios";
 import VendorProfileEditForm from "./VendorProfileEditForm";
 import "./vendorProfilesCSS/VendorProfile.css";
 
-
 class VendorProfile extends Component {
   constructor() {
     super();
     this.state = {
-      profilePic: "",
+      profilePic: "/images/default.jpg", // Default profile picture
       phoneNumber: "",
       body: "",
     };
@@ -19,13 +18,20 @@ class VendorProfile extends Component {
   }
 
   getProfileInfo = () => {
-    axios.get(`/api/users/${this.props.currentUser.id}`).then((info) => {
-      this.setState({
-        profilePic: info.data.data[0].profile_picture,
-        phoneNumber: info.data.data[0].telephone_number,
-        body: info.data.data[0].body,
+    axios
+      .get(`/api/users/${this.props.currentUser.id}`)
+      .then((info) => {
+        const fetchedPic = info.data.data[0]?.profile_picture || "/images/default.jpg";
+        this.setState({
+          profilePic: fetchedPic,
+          phoneNumber: info.data.data[0]?.telephone_number || "N/A",
+          body: info.data.data[0]?.body || "No description provided",
+        });
+      })
+      .catch((err) => {
+        console.error("Error fetching profile information:", err);
+        this.setState({ profilePic: "/images/default.jpg" }); // Fallback to default image
       });
-    });
   };
 
   handleLogout = async () => {
@@ -40,12 +46,15 @@ class VendorProfile extends Component {
     return (
       <div className="vendor-profile-container">
         {/* Logout Icon */}
-        
         <div className="vendor-profile-card">
           <img
             className="vendor-profile-picture"
-            alt="profile pic"
-            src={profilePic || "default.png"}
+            alt="Profile"
+            src={profilePic}
+            onError={(e) => {
+              console.warn("Profile picture failed to load, using default.");
+              e.target.src = "/images/default.jpg"; // Fallback to default image
+            }}
           />
           <h1 className="vendor-profile-name">{name}</h1>
           <div className="vendor-contact-container">

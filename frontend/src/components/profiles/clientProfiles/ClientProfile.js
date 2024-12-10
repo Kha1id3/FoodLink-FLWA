@@ -9,7 +9,7 @@ class ClientProfile extends Component {
   constructor() {
     super();
     this.state = {
-      profilePic: "",
+      profilePic: "/images/default.jpg", // Default profile picture
     };
   }
 
@@ -22,9 +22,9 @@ class ClientProfile extends Component {
     axios
       .get(`/api/users/${this.props.currentUser.id}`)
       .then((res) => {
-        const profilePicPath = res.data.data[0]?.profile_picture || "/images/default.jpg";
+        const fetchedPic = res.data.data[0]?.profile_picture || "/images/default.jpg";
         this.setState({
-          profilePic: `${process.env.REACT_APP_API_URL || ""}${profilePicPath}`,
+          profilePic: fetchedPic,
         });
       })
       .catch((err) => {
@@ -49,6 +49,10 @@ class ClientProfile extends Component {
               className="client-profile-picture"
               src={this.state.profilePic}
               alt="Profile"
+              onError={(e) => {
+                console.warn("Profile picture failed to load, using default.");
+                e.target.src = "/images/default.jpg"; // Fallback to default image
+              }}
             />
           </div>
           <h2 className="client-profile-name">{this.props.currentUser.name}</h2>
