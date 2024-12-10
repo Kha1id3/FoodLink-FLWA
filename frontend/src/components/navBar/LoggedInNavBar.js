@@ -5,12 +5,15 @@ import axios from "axios";
 import { format } from "date-fns";
 
 export const LoggedInNavBar = (props) => {
-  const [profilePic, setProfilePic] = useState(""); // Store profile picture URL
+  const [profilePic, setProfilePic] = useState("/images/default.jpg");
   const [notifications, setNotifications] = useState([]);
+  const [imageFailed, setImageFailed] = useState(false); 
   const [showDropdown, setShowDropdown] = useState(false); // Notification dropdown visibility
   const history = useHistory();
   const dropdownRef = useRef(null);
   const [hasUnread, setHasUnread] = useState(false);
+
+  const currentUser = props.currentUser;
 
   const type = props.currentUser.type === 1 ? "vendor" : "client";
   const profileLink = `/${type}/${props.currentUser.name}`;
@@ -28,18 +31,34 @@ export const LoggedInNavBar = (props) => {
   
   
   
+  
   // Fetch the profile picture
   useEffect(() => {
-    const fetchProfilePic = async () => {
-      try {
-        const response = await axios.get(`/api/users/${props.currentUser.id}`);
-        setProfilePic(response.data.data[0].profile_picture || "default.png");
-      } catch (error) {
-        console.error("Error fetching profile picture:", error);
-      }
-    };
-    fetchProfilePic();
-  }, [props.currentUser.id]);
+    if (currentUser?.id && !imageFailed) {
+      const fetchProfilePic = async () => {
+        try {
+          const response = await axios.get(`/api/users/${currentUser.id}`);
+          const fetchedPic = response.data.data[0]?.profile_picture;
+
+          // Validate if the fetched picture is a valid image URL
+          const isValidImage = (url) => /\.(jpg|jpeg|png|gif)$/i.test(url);
+
+          if (fetchedPic && isValidImage(fetchedPic)) {
+            setProfilePic(fetchedPic); // Use fetched picture
+          } else {
+            setProfilePic("/images/default.jpg"); // Use default image
+          }
+        } catch (error) {
+          console.error("Error fetching profile picture:", error);
+          setProfilePic("/images/default.jpg"); // Fallback to default image
+        }
+      };
+
+      fetchProfilePic();
+    }
+  }, [currentUser?.id, imageFailed]);
+
+
 
   // Fetch notifications
   useEffect(() => {
@@ -250,6 +269,10 @@ export const LoggedInNavBar = (props) => {
             alt="profile icon"
             id="profile-icon"
             className="nav-profile-icon"
+            onError={(e) => {
+              console.warn("Profile picture failed to load, using default.");
+              e.target.src = "/images/default.png"; // Fallback to default image
+            }}
           />
         </NavLink>
       </div>

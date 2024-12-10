@@ -28,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/categories", categoriesRouter);
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 app.use(
   session({

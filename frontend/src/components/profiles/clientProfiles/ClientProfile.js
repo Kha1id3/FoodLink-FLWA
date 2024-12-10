@@ -22,14 +22,14 @@ class ClientProfile extends Component {
     axios
       .get(`/api/users/${this.props.currentUser.id}`)
       .then((res) => {
-        const profilePicPath = res.data.data[0]?.profile_picture || "default-profile.png";
+        const profilePicPath = res.data.data[0]?.profile_picture || "/images/default.jpg";
         this.setState({
           profilePic: `${process.env.REACT_APP_API_URL || ""}${profilePicPath}`,
         });
       })
       .catch((err) => {
         console.error("Error fetching profile picture:", err);
-        this.setState({ profilePic: "/default-profile.png" });
+        this.setState({ profilePic: "/images/default.jpg" });
       });
   };
 

@@ -36,10 +36,10 @@
   background-color: #33443c;
   border: 1px solid #ccc;
   border-radius: 12px;
-  padding: 10px 80px;
+  padding: 0px 80px;
   position: absolute;
   left: 30px; /* Aligned with Request Donation */
-  z-index: 10;
+  z-index: 2;
 }
 
 /* Search input field */
