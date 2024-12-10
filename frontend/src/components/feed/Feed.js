@@ -16,7 +16,7 @@ const theme = createTheme({
   palette: {
     primary: { 500: "#33443c" },
     secondary: {
-      main: "#988686",
+      main: "#f3fadc",
     },
   },
   typography: {
@@ -344,65 +344,98 @@ renderRequestForm = () => {
         <div className="request-form-container">
           <h3>Request a Donation</h3>
           {requestError && <p className="error">{requestError}</p>}
-          <div className="category-buttons-container">
-            {allCategories.map((category) => (
-              <div
-                key={category.id}
-                className={`category-button ${
-                  requestForm.category === category.id ? "selected" : ""
-                }`}
-                onClick={() => this.handleCategorySelect(category.id)}
-              >
-                <span>{category.name}</span>
-              </div>
-            ))}
-          </div>
+
           <form onSubmit={this.handleRequestSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Item Name"
-              value={requestForm.name}
-              onChange={this.handleRequestChange}
-            />
-            <input
-              type="number"
-              name="quantity"
-              placeholder="Quantity (Kg)"
-              value={requestForm.quantity}
-              onChange={this.handleRequestChange}
-            />
-            <input
-              type="datetime-local"
-              name="neededBy"
-              placeholder="Pickup Time"
-              value={requestForm.neededBy}
-              className="custom-date-picker"
-              onChange={this.handleRequestChange}
-            />
-            <textarea
-              name="comment"
-              placeholder="Additional Comments"
-              value={requestForm.comment}
-              onChange={this.handleRequestChange}
-              rows="3"
-            ></textarea>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.toggleRequestForm}
-            >
-              Cancel
-            </Button>
+            {/* Item Name */}
+            <div className="form-group">
+              <label htmlFor="name">Item Name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Enter Item Name"
+                value={requestForm.name}
+                onChange={this.handleRequestChange}
+              />
+            </div>
+
+            {/* Categories (Horizontal Scroll or Grid) */}
+            <div className="form-group">
+              <label>Category</label>
+              <div className="category-scroll-container">
+                {allCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    className={`category-button ${
+                      requestForm.category === category.id ? "selected" : ""
+                    }`}
+                    onClick={() => this.handleCategorySelect(category.id)}
+                  >
+                    <span>{category.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quantity and Date-Time Picker */}
+            <div className="form-row">
+              <div className="form-group half">
+                <label htmlFor="quantity">Quantity (Kg)</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  name="quantity"
+                  placeholder="Enter Quantity"
+                  value={requestForm.quantity}
+                  onChange={this.handleRequestChange}
+                />
+              </div>
+              <div className="form-group half">
+                <label htmlFor="neededBy">Pickup Date & Time</label>
+                <input
+                  id="neededBy"
+                  type="datetime-local"
+                  name="neededBy"
+                  value={requestForm.neededBy}
+                  className="custom-date-picker"
+                  onChange={this.handleRequestChange}
+                />
+              </div>
+            </div>
+
+            {/* Comment Section */}
+            <div className="form-group">
+              <label htmlFor="comment">Additional Comments</label>
+              <textarea
+                id="comment"
+                name="comment"
+                placeholder="Add any comments here..."
+                value={requestForm.comment}
+                onChange={this.handleRequestChange}
+                rows="3"
+              ></textarea>
+            </div>
+
+            {/* Submit and Cancel Buttons */}
+            <div className="form-actions">
+              <button type="submit" className="submit-button">
+                Submit
+              </button>
+              <button
+                type="button"
+                className="cancel-button"
+                onClick={this.toggleRequestForm}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </MuiThemeProvider>
   );
 };
+
 
   render() {
  const { textInput, filteredFoodItems, allFoodItems, allVendors } = this.state;

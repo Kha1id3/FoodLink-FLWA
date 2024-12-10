@@ -91,8 +91,8 @@ textarea#input-comment::placeholder {
 }
 
 .category-button.selected {
-  border: 2px solid #5C4E4E;
-  background-color: #e8e4dc; /* Highlight selected button */
+  border: 2px solid #33443c;
+  background-color: #76db76; /* Highlight selected button */
 }
 
 .category-button:hover {
