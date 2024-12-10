@@ -65,19 +65,17 @@
 }
 
 .details-button {
-  background-color: #5c4e4e;
+  background-color: #33443c;
   color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  cursor: pointer;
   border: none;
-  white-space: nowrap; /* Prevent wrapping */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .details-button:hover {
-  background-color: #988686;
+  background-color: #97be77;
 }
 
 .slider-container {
@@ -144,4 +142,94 @@
 
 .vendor-pickup-code strong {
   color: #5c4e4e;
+}
+
+.claimed-items-page {
+  padding: 20px;
+  background-color: #f6f6f6;
+}
+
+
+.page-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 32px;
+  color: #272e48;
+}
+
+
+.claimed-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.claimed-item-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.3s;
+}
+
+.claimed-item-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.food-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #272e48;
+}
+
+.pickup-time {
+  font-size: 14px;
+  color: #555;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-section {
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.card-footer {
+  margin-top: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* Vendor Section */
+.vendor-section {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.vendor-profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.vendor-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5c4e4e;
+  margin-top: 8px;
 }

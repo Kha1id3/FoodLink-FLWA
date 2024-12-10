@@ -1,48 +1,126 @@
-/* CSS for the vendor's profile picture */
-.feed-profile-pic {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 20px;
-}
-
-/* Container for the vendor's address and profile picture */
-.vendor-account-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-/* Ensuring proper layout for the vendor's profile information */
-.vendor-span-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Alignment for the profile picture in the container */
-.vendor-account-profile-pic {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 20px;
-}
-
 .display-vendor-name-feed {
-  background-color: #988686;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
   font-family: "Montserrat", sans-serif;
-  height: 6em;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  padding: 0 20px;
-  border-radius: 8px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.vendor-account-profile-pic img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
 .vendor-address-field {
-  font-size: 18px;
+  font-size: 14px;
+  color: #f5f5f5;
+}
+
+/* Vendor Profile Picture Wrapper */
+.vendor-profile-pic-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Profile Picture Styling */
+.feed-profile-pic {
+  width: 80px; /* Fixed width */
+  height: 80px; /* Fixed height */
+  border-radius: 50%; /* Circular profile picture */
+  object-fit: cover; /* Ensures the image scales properly */
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow */
+}
+
+.vendor-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.vendor-profile-pic-top {
+  width: 100%;
+  height: 150px; /* Adjust height as needed */
+}
+
+/* Vendor Details Section */
+.vendor-details {
+  padding: 15px;
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+}
+
+.vendor-name-link {
+  font-size: 18px; /* Increased font size */
+  font-weight: bold; /* Made it bold */
+  color: #000000;
+  text-decoration: none;
+  display: block; /* Separate line */
+  margin-bottom: 5px; /* Add spacing */
+}
+
+.vendor-name-link:hover {
+  text-decoration: underline;
+}
+
+.vendor-address-link {
+  font-size: 14px; /* Smaller font size */
+  color: #2d6bf0; /* Neutral color */
+  text-decoration: underline; /* Indicates it's a link */
+  cursor: pointer; /* Changes cursor to a pointer on hover */
+  transition: color 0.3s ease; /* Smooth transition for color */
+}
+
+.vendor-address-link:hover {
+  color: #000000; /* Slightly darker color on hover */
+  text-decoration: underline; /* Reinforce the link nature on hover */
+}
+
+.vendor-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vendor-name-centered {
+  font-size: 22px;
+  font-weight: 600;
+  color: #272e48;
+  text-align: center;
+  text-decoration: none;
+  margin-bottom: 5px;
+}
+
+.vendor-name-centered:hover {
+  text-decoration: underline;
+}
+
+.address-link {
+  font-size: 14px; /* Smaller font size */
+  color: #2d6bf0; /* Neutral color */
+  text-decoration: underline; /* Indicates it's a link */
+  cursor: pointer; /* Changes cursor to a pointer on hover */
+  transition: color 0.3s ease;
+}
+
+.address-link:hover {
+  color: #272e48;
+  text-decoration: underline;
 }

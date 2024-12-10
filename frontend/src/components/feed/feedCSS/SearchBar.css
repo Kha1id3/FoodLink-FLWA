@@ -1,37 +1,106 @@
+/* Wrapper for the entire search bar component */
+#search-bar-wrapper {
+  display: flex;
+  align-items: center; /* Vertically center align */
+  position: absolute;
+  left: 30px; /* Aligned horizontally to match spacing */
+  z-index: 2; /* Ensure it stays above other elements */
+}
+
+/* Search toggle button (visible state) */
+#search-toggle-button {
+  display: flex;
+  background-color: #33443c; /* Button background */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+#search-toggle-button:hover {
+  background-color: #7dac7d; /* Darker background on hover */
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Search container (expanded state) */
 #search-container {
   display: flex;
-  justify-content: left;
-  margin: 0 auto;
-  background-color: white;
-  width: 25%;
-  /* border-radius: 10px; */
-  margin-top: 3%;
+  align-items: center;
+  justify-content: center;
+  background-color: #33443c;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 0px 80px;
+  position: absolute;
+  left: 30px; /* Aligned with Request Donation */
+  z-index: 2;
 }
 
-#search-icon {
-  margin-left: 1%;
-  margin-top: 1%;
-}
-
+/* Search input field */
 #search-input {
-  position: relative;
-  width: 23vw;
-  height: 35px;
-  border-left: 1px solid black;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  padding-left: 5%;
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 5px;
+  margin-right: 10px;
+  background-color: #33443c;
+  color: white; /* Ensure text is visible */
 }
 
-#search-submit {
-  width: 15%;
-  height: 50px;
-  /* border-radius: 50px; */
-  /* margin-top: 0.5%; */
-  background-color: #e7e6ef;
-  border: 1px solid black;
+/* Search and close buttons inside the expanded search */
+.search-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 18px;
 }
 
-#search-results-container {
-  background-color: whitesmoke;
+.search-button:hover {
+  color: #7dac7d; /* Darker hover effect */
+}
+
+
+.claim-button {
+  width: 100%;
+  padding: 8px 0;
+  background-color: #28a745;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.claim-button:hover {
+  background-color: #218838;
+}
+
+.claimed {
+  background-color: #dc3545;
+}
+
+.claimed:hover {
+  background-color: #c82333;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

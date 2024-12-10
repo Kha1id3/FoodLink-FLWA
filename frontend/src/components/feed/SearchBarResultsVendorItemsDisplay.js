@@ -1,54 +1,32 @@
 import React from "react";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import "./feedCSS/SearchBarResultsVendorItemsDisplay.css";
 
-const SearchBarResultsVendorItemsDisplay = props => {
-  let converted_time = Number(props.food.set_time.slice(0, 2));
+const SearchBarResultsVendorItemsDisplay = ({ food, claimItem, receivedOpenSnackbar }) => {
+  const formattedDate = new Date(food.set_time).toLocaleString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
-    <div className="search-items-wrapper">
-      <div className="display-search-items-for-feed">
-        <div id="search-item-name-container">
-          <p>{props.food.name}</p>
-        </div>
-        <div id="search-item-weight-container">
-          <p>{props.food.quantity * 3} Kilograms</p>
-        </div>
-        <div id="search-item-feeds-container">
-          <p>{props.food.quantity} people</p>
-        </div>
-        <div id="search-item-pickup-container">
-          <p>
-            {converted_time === 0 || converted_time < 13
-              ? converted_time + "am"
-              : converted_time - 12 + "pm"}
-          </p>
-        </div>
-        <span
-          className="span-claim-button"
-          onClick={e => {
-            props.claimItem(e, props.food.is_claimed);
-            props.receivedOpenSnackbar();
-          }}
-        >
-          <MuiThemeProvider theme={props.theme}>
-            <Button
-              id={props.food.id}
-              variant="contained"
-              color="secondary"
-              onClick={e => {
-                props.claimItem(e, props.food.is_claimed);
-                props.receivedOpenSnackbar();
-              }}
-              className={
-                props.food.is_claimed ? "claimed-button" : "unclaimed-button"
-              }
-            >
-              {props.food.is_claimed ? "UNCLAIM" : "CLAIM"}
-            </Button>
-          </MuiThemeProvider>
-        </span>
+    <div className="search-item-card">
+      <div className="search-item-details">
+        <h3 className="search-item-name">{food.name}</h3>
+        <p className="search-item-weight">{food.quantity} Kilograms</p>
+        <p className="search-item-time">{formattedDate}</p>
       </div>
+      <button
+        className={`claim-button ${food.is_claimed ? "claimed" : "unclaimed"}`}
+        onClick={(e) => {
+          claimItem(e, food.is_claimed);
+          receivedOpenSnackbar();
+        }}
+        id={food.id}
+      >
+        {food.is_claimed ? "UNCLAIM" : "CLAIM"}
+      </button>
     </div>
   );
 };

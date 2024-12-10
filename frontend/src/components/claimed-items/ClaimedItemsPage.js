@@ -4,51 +4,40 @@ import "../profiles/clientProfiles/clientProfileCSS/ClientClaimedItems.css";
 import { notify } from "react-notify-toast";
 import { format } from "date-fns";
 
-
 // Formatting functions
 const formatDate = (isoString) => {
-  if (!isoString) return "N/A"; // Handle null or undefined dates
+  if (!isoString) return "N/A";
   try {
-    return format(new Date(isoString), "MMMM dd, yyyy"); // Example: "November 22, 2024"
+    return format(new Date(isoString), "MMMM dd, yyyy");
   } catch (error) {
-    console.error("Error formatting date:", isoString, error);
     return "Invalid Date";
   }
 };
 
 const formatTime = (isoString) => {
-  if (!isoString) return "N/A"; // Handle null or undefined times
+  if (!isoString) return "N/A";
   try {
-    return format(new Date(isoString), "hh:mm a"); // Example: "08:30 PM"
+    return format(new Date(isoString), "hh:mm a");
   } catch (error) {
-    console.error("Error formatting time:", isoString, error);
     return "Invalid Time";
   }
 };
 
-
 class ClaimedItemsPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      claimedFoodItems: [],
-      allVendors: [],
-      slidingItem: null,
-      isMouseDown: false,
-      slideProgress: {},
-      openDropdowns: {}, // Track open dropdowns for each item
-    };
-  }
+  state = {
+    claimedFoodItems: [],
+    vendors: {}, // Map of vendorId -> vendor details
+    slideProgress: {},
+    openDropdowns: {},
+    slidingItem: null,
+    isMouseDown: false,
+  };
 
   componentDidMount() {
     this.getAllClaimedFoodItems();
-    this.getAllVendors();
+    this.getAllVendors(); // Fetch vendor details
   }
 
-
-
-
-  
   getAllClaimedFoodItems = () => {
     axios
       .get("/api/fooditems/client/")
@@ -62,55 +51,14 @@ class ClaimedItemsPage extends Component {
     axios
       .get("/api/users/vendors/")
       .then((res) => {
-        this.setState({ allVendors: res.data.vendors });
+        // Map vendors by ID for easy lookup
+        const vendors = res.data.vendors.reduce((acc, vendor) => {
+          acc[vendor.id] = vendor;
+          return acc;
+        }, {});
+        this.setState({ vendors });
       })
       .catch((err) => console.error(err));
-  };
-
-  toggleDropdown = (itemId) => {
-    this.setState((prevState) => ({
-      openDropdowns: {
-        ...prevState.openDropdowns,
-        [itemId]: !prevState.openDropdowns[itemId],
-      },
-    }));
-  };
-
-  handleConfirmPickup = (itemId) => {
-    if (!itemId) {
-      console.error("Invalid Item ID:", itemId);
-      return;
-    }
-  
-    axios
-      .patch(`/api/fooditems/confirmpickup/${itemId}`)
-      .then(() => {
-        notify.show("Pickup confirmed successfully!", "success", 3000);
-  
-        // Remove the item from claimed items list
-        this.setState((prevState) => ({
-          claimedFoodItems: prevState.claimedFoodItems.filter(
-            (item) => item.id !== itemId
-          ),
-        }));
-  
-        // Fetch new notifications to update the notification panel
-        this.fetchNotifications();
-      })
-      .catch((err) => {
-        notify.show("Failed to confirm pickup. Please try again.", "error", 3000);
-        console.error("Error confirming pickup:", err);
-      });
-  };
-  
-  // Function to fetch updated notifications
-  fetchNotifications = () => {
-    axios
-      .get(`/api/notifications/${this.props.currentUser.id}`)
-      .then((res) => {
-        this.setState({ notifications: res.data.notifications });
-      })
-      .catch((err) => console.error("Error fetching notifications:", err));
   };
 
   handleMouseDown = (itemId) => {
@@ -146,52 +94,66 @@ class ClaimedItemsPage extends Component {
     this.setState({ slidingItem: null, isMouseDown: false });
   };
 
-  organizeFoodItemsByVendor = () => {
-    const { claimedFoodItems } = this.state;
-    return claimedFoodItems.reduce((acc, item) => {
-      if (!acc[item.vendor_name]) {
-        acc[item.vendor_name] = [];
-      }
-      acc[item.vendor_name].push(item);
-      return acc;
-    }, {});
+  handleConfirmPickup = (itemId) => {
+    axios
+      .patch(`/api/fooditems/confirmpickup/${itemId}`)
+      .then(() => {
+        notify.show("Pickup confirmed successfully!", "success", 3000);
+        this.setState((prevState) => ({
+          claimedFoodItems: prevState.claimedFoodItems.filter(
+            (item) => item.id !== itemId
+          ),
+        }));
+      })
+      .catch(() => notify.show("Failed to confirm pickup.", "error", 3000));
   };
 
-  renderVendorSections = () => {
-    const itemsByVendor = this.organizeFoodItemsByVendor();
-    const { slideProgress, openDropdowns } = this.state;
+  toggleDropdown = (itemId) => {
+    this.setState((prevState) => ({
+      openDropdowns: {
+        ...prevState.openDropdowns,
+        [itemId]: !prevState.openDropdowns[itemId],
+      },
+    }));
+  };
 
-    return Object.keys(itemsByVendor).map((vendorName, index) => {
-      const vendorItems = itemsByVendor[vendorName];
+  render() {
+    const { claimedFoodItems, vendors, slideProgress, openDropdowns } = this.state;
 
-      return (
-        <div key={index} className="claimedListContainer">
-          <div id="vendor-items-header-client">
-            <h4 id="item-name">Food Item</h4>
-            <h4 id="weight">Weight</h4>
-            <h4 id="feeds">Feeds</h4>
-            <h4 id="pick-up">Pick-Up Time</h4>
-            <h4 id="actions">Actions</h4>
-          </div>
-          {vendorItems.map((item, idx) => {
-            const isDropdownOpen = openDropdowns[item.id];
+    return (
+      <div className="claimed-items-page">
+        <h1 className="page-title">Claimed Food Items</h1>
+        <div className="claimed-items-grid">
+          {claimedFoodItems.map((item) => {
+            const vendor = vendors[item.vendor_id]; // Lookup vendor details
 
             return (
-              <div key={idx} className="display-vendor-items">
-                <div id="item-name-container">
-                  <p>{item.name}</p>
+              <div key={item.id} className="claimed-item-card">
+                {/* Vendor Section */}
+                {vendor && (
+                  <div className="vendor-section">
+                    <img
+                      src={vendor.profile_picture}
+                      alt={vendor.name}
+                      className="vendor-profile-pic"
+                    />
+                    <h4 className="vendor-name">{vendor.name}</h4>
+                  </div>
+                )}
+
+                {/* Food Details */}
+                <div className="card-header">
+                  <h4 className="food-name">{item.name}</h4>
+                  <p className="pickup-time">
+                    {formatDate(item.set_time)} at {formatTime(item.set_time)}
+                  </p>
                 </div>
-                <div id="item-weight-container">
-                  <p>{item.quantity * 3} Kilograms</p>
-                </div>
-                <div id="item-feeds-container">
-                  <p>{item.quantity} people</p>
-                </div>
-                <div id="item-pickup-container">
-                  <p className="pickup-date">{formatDate(item.set_time)}</p>
-                  <p className="pickup-time">{formatTime(item.set_time)}</p>
-                </div>
-                <div id="item-actions-container">
+                <div className="card-body">
+                  <div className="info-section">
+                    <p>
+                      <strong>Weight:</strong> {item.quantity} Kilograms
+                    </p>
+                  </div>
                   <div
                     className="slider-container"
                     onMouseMove={(e) => this.handleMouseMove(e, item.id)}
@@ -212,11 +174,11 @@ class ClaimedItemsPage extends Component {
                     className="details-button"
                     onClick={() => this.toggleDropdown(item.id)}
                   >
-                    {isDropdownOpen ? "Hide Details" : "View Details"}
+                    {openDropdowns[item.id] ? "Hide Details" : "View Details"}
                   </button>
                 </div>
-                {isDropdownOpen && (
-                  <div className="vendor-pickup-code">
+                {openDropdowns[item.id] && (
+                  <div className="card-footer">
                     <p>
                       <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
                     </p>
@@ -229,15 +191,6 @@ class ClaimedItemsPage extends Component {
             );
           })}
         </div>
-      );
-    });
-  };
-
-  render() {
-    return (
-      <div>
-        <h1 id="claimed-items-list-client">Claimed Food Items</h1>
-        {this.renderVendorSections()}
       </div>
     );
   }

@@ -136,7 +136,15 @@ getFoodItemsByVendorName = (req, res, next) => {
 };
 
 getFoodItemsByVendorId = (req, res, next) => {
-  const vendorId = req.params.id; // Use vendor ID instead of vendor name
+  const vendorId = parseInt(req.params.id, 10);
+  if (isNaN(vendorId)) {
+    return res.status(400).json({
+      status: "error",
+      message: "Invalid vendor ID",
+      food_items: [],
+    });
+  }
+
   db.any(
     `SELECT 
       food_items.id AS food_id, 
@@ -158,15 +166,17 @@ getFoodItemsByVendorId = (req, res, next) => {
     .then((food_items) => {
       res.status(200).json({
         status: "success",
-        food_items: food_items,
-        message: "received food items from vendor",
+        food_items: food_items || [], // Always return an array
+        message: "Received food items for vendor ID",
       });
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Error fetching food items by vendor ID:", err);
       next(err);
     });
 };
+
+
 
 const createNewFoodItem = async (req, res, next) => {
   const generatePickupCode = () => Math.floor(10000 + Math.random() * 90000).toString();
@@ -414,51 +424,7 @@ const findMatchingDonations = async (category_id, quantity) => {
 };
 
 
-const matchDonationsToRequest = async (requestedItem) => {
-  try {
-    const { category_id, quantity } = requestedItem;
 
-    // Find donations that match the request's category and have enough quantity
-    const matchingDonations = await db.any(
-      `SELECT * FROM food_items 
-       WHERE category_id = $1 
-       AND quantity >= $2 
-       AND type = 'donation' 
-       AND is_matched = FALSE`,
-      [category_id, quantity]
-    );
-
-    for (const donation of matchingDonations) {
-      // Create notifications for both the client and the vendor
-      await db.none(
-        `INSERT INTO notifications (user_id, message, is_read) 
-         VALUES ($1, $2, FALSE)`,
-        [
-          requestedItem.client_id,
-          `🔔 A matching donation for your request (${requestedItem.quantity} units) is available: ${donation.comment || "No comment"}`
-        ]
-      );
-
-      await db.none(
-        `INSERT INTO notifications (user_id, message, is_read) 
-         VALUES ($1, $2, FALSE)`,
-        [
-          donation.vendor_id,
-          `🔔 A client has requested an item matching your donation (${donation.quantity} units).`
-        ]
-      );
-
-      // Mark the donation as matched to avoid duplicate matches
-      await db.none(
-        `UPDATE food_items SET is_matched = TRUE WHERE id = $1`,
-        [donation.id]
-      );
-    }
-  } catch (err) {
-    console.error("Error matching donations to request:", err);
-    throw err; // Propagate the error to the caller
-  }
-};
 
 
 const createRequestedItem = async (req, res, next) => {

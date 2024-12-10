@@ -1,65 +1,68 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./feedCSS/AllFeedItemsDisplayVendorName.css";
 
 class AllFeedItemsDisplayVendorName extends Component {
-  displayVendorPhoto = (newArr) => {
-    if (this.props.profilePicture && this.props.profilePicture[newArr[0]]) {
-      return (
-        <img
-          className="feed-profile-pic"
-          src={this.props.profilePicture[newArr[0]]}
-          alt="Vendor Profile"
-        />
-      );
+  constructor(props) {
+    super(props);
+    this.state = {
+      profilePic: props.vendorProfilePic || "default.png", // Fallback to prop or default
+    };
+  }
+
+  componentDidMount() {
+    if (!this.props.vendorProfilePic) {
+      this.fetchVendorProfilePicture();
     }
-    return null;
-  };
+  }
 
-  getAllAddress = (foodDataObj, vendorName) => {
-    let newArr = [];
-    if (foodDataObj[vendorName].length > 1) {
-      foodDataObj[vendorName].forEach((name) => {
-        newArr.push(foodDataObj[vendorName][0].address_field);
-        newArr.slice(0, 0);
-      });
-    } else {
-      foodDataObj[vendorName].forEach((name) => {
-        newArr.push(name.address_field);
-      });
+  componentDidUpdate(prevProps) {
+    if (prevProps.vendorId !== this.props.vendorId) {
+      this.fetchVendorProfilePicture();
     }
+  }
 
-    const address = newArr[0];
-
-    return (
-      <>
-        <div className="vendor-address-field">
-          <Link
-            to={`/map?address=${encodeURIComponent(address)}`}
-            className="address-link"
-          >
-            <p className="address-text">{address}</p>
-          </Link>
-        </div>
-        <div className="vendor-account-profile-pic">
-          {this.displayVendorPhoto(newArr)}
-        </div>
-      </>
-    );
+  fetchVendorProfilePicture = async () => {
+    const { vendorId } = this.props;
+  
+    try {
+      const response = await axios.get(`/api/users/${vendorId}`);
+      const profilePic = response.data.data[0]?.profile_picture || "default.png";
+      this.setState({ profilePic });
+    } catch (error) {
+      console.error(`Error fetching profile picture for vendor ${vendorId}:`, error);
+    }
   };
 
   render() {
+    const { vendorName, vendorId, vendorAddress } = this.props;
+    const { profilePic } = this.state;
+
     return (
-      <div className="display-vendor-name-feed">
-        <span className="vendor-span-container">
-          <Link
-            to={`/clientview/${this.props.vendorName}`}
-            className="display-item-name"
-          >
-            {this.props.vendorName}
+      <div className="vendor-card">
+        {/* Profile Picture Section */}
+        <div
+          className="vendor-profile-pic-top"
+          style={{
+            backgroundImage: `url(${profilePic})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        ></div>
+
+        {/* Vendor Details */}
+        <div className="vendor-details">
+          <Link to={`/clientview/${vendorId}`} className="vendor-name-link">
+            {vendorName}
           </Link>
-          {this.getAllAddress(this.props.foodDataObj, this.props.vendorName)}
-        </span>
+          <Link
+            to={`/map?address=${encodeURIComponent(vendorAddress || "Unknown")}`}
+            className="vendor-address-link"
+          >
+            {vendorAddress || "No Address"}
+          </Link>
+        </div>
       </div>
     );
   }

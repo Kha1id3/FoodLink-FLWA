@@ -7,22 +7,22 @@ import { SearchBarResults } from "./SearchBarResults.js";
 import "./feedCSS/Feed.css";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import { Button } from "@material-ui/core";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    primary: { 500: "#5C4E4E" },
+    primary: { 500: "#33443c" },
     secondary: {
-      main: "#5C4E4E",
+      main: "#f3fadc",
     },
   },
   typography: {
     useNextVariants: true,
   },
-})
+});
 
 export default class Feed extends Component {
   state = {
@@ -31,6 +31,7 @@ export default class Feed extends Component {
     searchText: "",
     allVendors: [],
     fadeTrigger: [],
+    filteredFoodItems: [],
     selectedCategory: null,
     allCategories: [],
     requestForm: {
@@ -45,6 +46,9 @@ export default class Feed extends Component {
   };
 
   componentDidMount() {
+
+    document.body.id = "donations-page";
+
     this.getAllFoodItems();
     this.getAllVendors();
     this.getCategories();
@@ -56,44 +60,85 @@ export default class Feed extends Component {
   
   // Clear the interval when the component unmounts
   componentWillUnmount() {
+
+    document.body.id = "";
+
     clearInterval(this.interval);
   }
 
-  getAllFoodItems = () => {
-    axios
-      .get("/api/foodItems")
-      .then((foodItems) => {
-        const currentTime = new Date().toISOString(); // Get the current time in ISO format
-        const validItems = foodItems.data.food_items.filter((item) => {
-          return new Date(item.set_time) > new Date(currentTime); // Compare pickup time with current time
-        });
-        this.setState({
-          allFoodItems: validItems, // Set only valid (non-expired) items to state
-        });
-      })
-      .catch((err) => {
-        console.error(err);
+ getAllFoodItems = () => {
+  axios
+    .get("/api/foodItems")
+    .then((response) => {
+      const foodItems = response.data.food_items || [];
+      const currentTime = new Date().toISOString();
+
+      const validItems = foodItems.filter(
+        (item) =>
+          new Date(item.set_time) > new Date(currentTime) &&
+          !item.is_claimed &&
+          !item.is_confirmed
+      );
+
+      const groupedItems = validItems.reduce((acc, item) => {
+        const vendorId = item.vendor_id;
+
+        if (!acc[vendorId]) {
+          acc[vendorId] = {
+            vendorName: item.vendor_name,
+            vendorAddress: item.address_field,
+            vendorProfilePic: item.profile_picture, // Ensure profile_picture is included
+            items: [],
+          };
+        }
+        acc[vendorId].items.push(item);
+        return acc;
+      }, {});
+
+      this.setState({
+        allFoodItems: groupedItems,
+        filteredFoodItems: Object.values(groupedItems).flatMap((vendor) => vendor.items),
       });
-  };
+    })
+    .catch((err) => {
+      console.error("Error fetching food items:", err);
+    });
+};
+  
+  
 
   getAllVendors = () => {
-    axios.get("/api/users/vendors/").then(foodItems => {
-      this.setState({
-        allVendors: foodItems.data.vendors
-      });
-    });
+    axios
+      .get("/api/users/vendors/")
+      .then((response) => {
+        const vendors = response.data.vendors || [];
+        console.log("Fetched Vendors:", vendors); // Debugging log
+        const vendorProfiles = vendors.reduce((acc, vendor) => {
+          acc[vendor.id] = vendor.profile_picture; 
+          return acc;
+        }, {});
+        console.log("Processed Vendor Profiles:", vendorProfiles); // Debugging log
+  
+        this.setState({
+          allVendors: vendorProfiles, // Map vendor_id to profile picture
+        });
+      })
+      .catch((err) => console.error("Error fetching vendors:", err));
   };
+  
 
   claimItem = (e, isClaimed, food_id) => {
-    let targetId;
+    let targetId = food_id; // Use the `food_id` directly
+  
     if (!!e.currentTarget.id) {
-      targetId = e.currentTarget.id;
+      targetId = e.currentTarget.id; // Ensure fallback to button ID if necessary
     }
+  
     if (isClaimed === false) {
-      const currentTime = new Date().toISOString(); // Get user's current time
+      const currentTime = new Date().toISOString(); // Get current time
   
       this.setState({
-        fadeTrigger: [...this.state.fadeTrigger, food_id]
+        fadeTrigger: [...this.state.fadeTrigger, food_id], // Fade-out animation
       });
   
       setTimeout(async () => {
@@ -101,9 +146,9 @@ export default class Feed extends Component {
           await axios.patch(`/api/fooditems/claimstatus/${targetId}`, {
             client_id: this.props.currentUser.id,
             is_claimed: true,
-            current_time: currentTime // Send user's current time
+            current_time: currentTime,
           });
-          this.getAllFoodItems();
+          this.getAllFoodItems(); // Refresh food items
         } catch (error) {
           if (error.response && error.response.status === 400) {
             alert(error.response.data.message); // Show error message
@@ -111,7 +156,7 @@ export default class Feed extends Component {
             console.error("Error claiming item:", error);
           }
           this.setState({
-            fadeTrigger: this.state.fadeTrigger.filter((id) => id !== food_id)
+            fadeTrigger: this.state.fadeTrigger.filter((id) => id !== food_id),
           });
         }
       }, 1100);
@@ -119,7 +164,7 @@ export default class Feed extends Component {
       axios
         .patch(`/api/fooditems/claimstatus/${targetId}`, {
           client_id: null,
-          is_claimed: false
+          is_claimed: false,
         })
         .then(() => {
           this.getAllFoodItems();
@@ -139,25 +184,50 @@ export default class Feed extends Component {
       });
   };
 
-  handleSubmit = async e => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    // let searchResult = this.state.allFoodItems.filter(item => {
-    //   let vendor = item.vendor_name.toLowerCase();
-    //   let food = item.name.toLowerCase();
-    //   let text = this.state.textInput.toLowerCase();
-    //   let claimed = item.is_claimed;
-    //
-    //   return (vendor.includes(text) && claimed !== true) || food.includes(text);
-    // });
-    // const searchResults = this.search(
-    //   this.state.allFoodItems,
-    //   this.state.textInput.toLowerCase()
-    // );
-    await this.setState({
-      searchText: this.state.textInput.toLowerCase(),
-      textInput: ""
+    const { textInput } = this.state;
+  
+    const allItems = Object.values(this.state.allFoodItems).flatMap((vendor) =>
+      vendor.items
+    );
+  
+    const searchResults = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(textInput);
+      const matchesFood = item.name.toLowerCase().includes(textInput);
+      return (
+        (matchesVendor || matchesFood) &&
+        !item.is_claimed &&
+        !item.is_confirmed
+      );
+    });
+  
+    this.setState({
+      userSearchResults: searchResults,
     });
   };
+
+
+  handleSearch = (e) => {
+    const searchText = e.target.value.toLowerCase();
+
+    const allItems = Object.values(this.state.allFoodItems).flatMap(
+      (vendor) => vendor.items
+    );
+
+    const filteredItems = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(searchText);
+      const matchesFood = item.name.toLowerCase().includes(searchText);
+      return matchesVendor || matchesFood;
+    });
+
+    this.setState({
+      textInput: searchText,
+      filteredFoodItems: filteredItems,
+    });
+  };
+
+
   search = (allFoodItems, searchText) => {
     //if search text is blank, return empty arr for length
     if (this.state.searchText === "") return [];
@@ -175,16 +245,26 @@ export default class Feed extends Component {
     return searchResult;
   };
 
-  handleChange = e => {
-    let searchResult = this.state.allFoodItems.filter(item => {
+  handleChange = (e) => {
+    const searchText = e.target.value.toLowerCase();
+  
+    const allItems = Object.values(this.state.allFoodItems).flatMap((vendor) =>
+      vendor.items
+    );
+  
+    const searchResult = allItems.filter((item) => {
+      const matchesVendor = item.vendor_name.toLowerCase().includes(searchText);
+      const matchesFood = item.name.toLowerCase().includes(searchText);
       return (
-        item.vendor_name.toLowerCase() === this.state.textInput.toLowerCase() ||
-        item.name.toLowerCase() === this.state.textInput.toLowerCase()
+        (matchesVendor || matchesFood) &&
+        !item.is_claimed &&
+        !item.is_confirmed
       );
     });
+  
     this.setState({
-      textInput: e.target.value,
-      userSearchResults: searchResult
+      textInput: searchText,
+      userSearchResults: searchResult,
     });
   };
 
@@ -264,59 +344,91 @@ renderRequestForm = () => {
         <div className="request-form-container">
           <h3>Request a Donation</h3>
           {requestError && <p className="error">{requestError}</p>}
-          <div className="category-buttons-container">
-            {allCategories.map((category) => (
-              <div
-                key={category.id}
-                className={`category-button ${
-                  requestForm.category === category.id ? "selected" : ""
-                }`}
-                onClick={() => this.handleCategorySelect(category.id)}
-              >
-                <span>{category.name}</span>
-              </div>
-            ))}
-          </div>
+
           <form onSubmit={this.handleRequestSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Item Name"
-              value={requestForm.name}
-              onChange={this.handleRequestChange}
-            />
-            <input
-              type="number"
-              name="quantity"
-              placeholder="Quantity (Kg)"
-              value={requestForm.quantity}
-              onChange={this.handleRequestChange}
-            />
-            <input
-              type="datetime-local"
-              name="neededBy"
-              placeholder="Pickup Time"
-              value={requestForm.neededBy}
-              className="custom-date-picker"
-              onChange={this.handleRequestChange}
-            />
-            <textarea
-              name="comment"
-              placeholder="Additional Comments"
-              value={requestForm.comment}
-              onChange={this.handleRequestChange}
-              rows="3"
-            ></textarea>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.toggleRequestForm}
-            >
-              Cancel
-            </Button>
+            {/* Item Name */}
+            <div className="form-group">
+              <label htmlFor="name">Item Name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Enter Item Name"
+                value={requestForm.name}
+                onChange={this.handleRequestChange}
+              />
+            </div>
+
+            {/* Categories (Horizontal Scroll or Grid) */}
+            <div className="form-group">
+              <label>Category</label>
+              <div className="category-scroll-container">
+                {allCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    className={`category-button ${
+                      requestForm.category === category.id ? "selected" : ""
+                    }`}
+                    onClick={() => this.handleCategorySelect(category.id)}
+                  >
+                    <span>{category.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quantity and Date-Time Picker */}
+            <div className="form-row">
+              <div className="form-group half">
+                <label htmlFor="quantity">Quantity (Kg)</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  name="quantity"
+                  placeholder="Enter Quantity"
+                  value={requestForm.quantity}
+                  onChange={this.handleRequestChange}
+                />
+              </div>
+              <div className="form-group half">
+                <label htmlFor="neededBy">Pickup Date & Time</label>
+                <input
+                  id="neededBy"
+                  type="datetime-local"
+                  name="neededBy"
+                  value={requestForm.neededBy}
+                  className="custom-date-picker"
+                  onChange={this.handleRequestChange}
+                />
+              </div>
+            </div>
+
+            {/* Comment Section */}
+            <div className="form-group">
+              <label htmlFor="comment">Additional Comments</label>
+              <textarea
+                id="comment"
+                name="comment"
+                placeholder="Add any comments here..."
+                value={requestForm.comment}
+                onChange={this.handleRequestChange}
+                rows="3"
+              ></textarea>
+            </div>
+
+            {/* Submit and Cancel Buttons */}
+            <div className="form-actions">
+              <button type="submit" className="submit-button">
+                Submit
+              </button>
+              <button
+                type="button"
+                className="cancel-button"
+                onClick={this.toggleRequestForm}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -324,18 +436,16 @@ renderRequestForm = () => {
   );
 };
 
+
   render() {
-    const filteredFoodItems = this.search(
-      this.state.allFoodItems,
-      this.state.searchText
-    );
+ const { textInput, filteredFoodItems, allFoodItems, allVendors } = this.state;
 
     const { showRequestForm } = this.state;
     return (
       <div className="feedWrapper">
         <MainSnackbarContainer />
         <div id="feed-header">
-          <div id="feed">Donation List</div>
+          <div id="feed"></div>
           <button onClick={this.toggleRequestForm} className="request-button">
             Request Donation
           </button>
@@ -343,22 +453,15 @@ renderRequestForm = () => {
         {showRequestForm && this.renderRequestForm()}
 
         <SearchBar
-          allFoodItems={this.state.allFoodItems}
-          userSearchResults={this.state.userSearchResults}
-          handleSubmit={this.handleSubmit}
-          textInput={this.state.textInput}
-          handleChange={this.handleChange}
-          receivedOpenSnackbar={this.props.receivedOpenSnackbar}
+          handleSubmit={(e) => e.preventDefault()}
+          handleChange={this.handleSearch}
+          textInput={textInput}
         />
-        {filteredFoodItems.length > 0 ? (
+        {textInput ? (
           <SearchBarResults
-            claimItem={this.claimItem}
             userSearchResults={filteredFoodItems}
-            currentUser={this.props.currentUser.type}
-            getAllFoodItems={this.getAllFoodItems}
-            foodItems={this.state.getAllFoodItems}
+            claimItem={this.claimItem}
             receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-            allVendors={this.state.allVendors}
           />
         ) : (
           <AllFeedItems
@@ -366,7 +469,7 @@ renderRequestForm = () => {
             allFoodItems={this.state.allFoodItems}
             userSearchResults={this.state.userSearchResults}
             receivedOpenSnackbar={this.props.receivedOpenSnackbar}
-            allVendors={this.state.allVendors}
+            allVendors={this.state.allVendors} // Pass vendor profiles
             fadeTrigger={this.state.fadeTrigger}
           />
         )}
