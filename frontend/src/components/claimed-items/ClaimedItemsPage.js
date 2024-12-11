@@ -41,29 +41,35 @@ class ClaimedItemsPage extends Component {
       .get("/api/fooditems/client/") // Fetch claimed food items
       .then((res) => {
         const claimedFoodItems = res.data.food_items || [];
+        console.log("Claimed Food Items:", claimedFoodItems); // Debugging log
   
         // Fetch vendor details
         axios
           .get("/api/users/vendors/") // Fetch vendors
           .then((vendorRes) => {
-            const vendors = vendorRes.data.vendors.reduce((acc, vendor) => {
+            const vendors = vendorRes.data.vendors;
+            console.log("Vendors Data:", vendors); // Debugging log
+  
+            const vendorMap = vendors.reduce((acc, vendor) => {
               acc[vendor.id] = {
-                address: vendor.address_field || "Address not available",
-                profilePicture: vendor.profile_picture || "default.png",
                 name: vendor.name || "Unknown Vendor",
+                address: vendor.address_field || "Address not available",
+                profilePicture: vendor.profile_picture || "/images/default.jpg",
               };
               return acc;
             }, {});
+            console.log("Vendor Map:", vendorMap); // Debugging log
   
-            // Enhance each claimed item with vendor details
+            // Enhance claimed items with vendor details
             const itemsWithVendorDetails = claimedFoodItems.map((item) => ({
               ...item,
-              vendorDetails: vendors[item.vendor_id] || {
-                address: "Address not available",
-                profilePicture: "default.png",
+              vendorDetails: vendorMap[item.vendor_id] || {
                 name: "Unknown Vendor",
+                address: "Address not available",
+                profilePicture: "/images/default.jpg",
               },
             }));
+            console.log("Enhanced Items:", itemsWithVendorDetails); // Debugging log
   
             this.setState({ claimedFoodItems: itemsWithVendorDetails });
           })

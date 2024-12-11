@@ -33,7 +33,7 @@ export const LoggedInNavBar = (props) => {
     const fetchProfilePic = async () => {
       try {
         const response = await axios.get(`/api/users/${props.currentUser.id}`);
-        setProfilePic(response.data.data[0].profile_picture || "default.png");
+        setProfilePic(response.data.data[0].profile_picture || "/images/default.jpg");
       } catch (error) {
         console.error("Error fetching profile picture:", error);
       }

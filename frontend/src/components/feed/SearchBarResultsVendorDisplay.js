@@ -23,13 +23,13 @@ class SearchBarResultsVendorDisplay extends Component {
       const response = await axios.get(`/api/users/${vendorId}`);
       const vendorData = response.data.data[0];
       this.setState({
-        profilePic: vendorData?.profile_picture || "default.png",
+        profilePic: vendorData?.profile_picture || "/images/default.jpg",
         vendorAddress: vendorData?.address_field || "No Address",
       });
     } catch (error) {
       console.error(`Error fetching details for vendor ${vendorId}:`, error);
       this.setState({
-        profilePic: "default.png",
+        profilePic: "/images/default.jpg",
         vendorAddress: "No Address",
       });
     }
