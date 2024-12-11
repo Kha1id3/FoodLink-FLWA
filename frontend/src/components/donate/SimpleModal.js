@@ -23,13 +23,14 @@ class SimpleModal extends React.Component {
             style={{
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, -50%)"
+              transform: "translate(-50%, -50%)",
             }}
             className={this.props.classes.paper}
           >
             <AddItemForm
               handleChange={this.props.handleChange}
               submitItem={this.props.submitItem}
+              cancelAction={this.props.cancelAction} // Pass the cancelAction prop
               receivedOpenSnackbar={this.props.receivedOpenSnackbar}
               categories={this.props.categories} // Pass categories here
             />
@@ -41,3 +42,4 @@ class SimpleModal extends React.Component {
 }
 
 export default withStyles(styles)(SimpleModal);
+

@@ -5,7 +5,7 @@ import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import CountUp from "react-countup";
 import MainSnackbarContainer from "../../containers/MainSnackbarContainer.js";
 import SimpleModal from "./SimpleModal.js";
-import "./vendorProfilesCSS/VendorProfile.css";
+import "./donateCSS/DonatePage.css";
 import { format } from "date-fns";
 
 const theme = createTheme({
@@ -128,7 +128,7 @@ class DonatePage extends Component {
   getFeedingCount = () => {
     axios.get("/api/fooditems/feedingcount").then((count) => {
       this.setState({
-        fedCount: +count.data.fedCount[0]?.sum * 3 || 0,
+        fedCount: +count.data.fedCount[0]?.sum || 0,
       });
     });
   };
@@ -162,6 +162,14 @@ class DonatePage extends Component {
       [e.target.name]: e.target.value,
     });
   };
+
+  handleCancel = () => {
+    this.setState({
+      toAddItem: false,
+    });
+  };
+  
+
 
   submitItem = (e) => {
     e.preventDefault();
@@ -325,6 +333,7 @@ class DonatePage extends Component {
                 handleOpen={this.handleOpen}
                 open={this.state.open}
                 handleChange={this.handleChange}
+                cancelAction={this.handleCancel} // Pass the cancel function
                 submitItem={this.submitItem}
                 receivedOpenSnackbar={this.props.receivedOpenSnackbar}
                 categories={this.state.categories} // Pass categories to SimpleModal

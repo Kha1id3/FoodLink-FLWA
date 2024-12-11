@@ -60,7 +60,7 @@
 }
 
 .add-item-text {
-  color: #D1D0D0;
+  color: #ffffff;
   font-size: 24px;
   font-weight: 700;
   font-family: "Montserrat", sans-serif;
@@ -410,6 +410,7 @@
   font-size: 16px;
   color: #5c4e4e;
   margin-top: 5px;
+  font-weight: bold;
 }
 
 /* Status */

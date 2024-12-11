@@ -2,14 +2,14 @@ const { db } = require("../index.js");
 
 getFedCount = (req, res, next) => {
   db.any(
-    "SELECT SUM(quantity) FROM food_items WHERE vendor_id=$1 AND is_claimed = TRUE",
+    "SELECT SUM(quantity) FROM food_items WHERE vendor_id = $1 AND (is_claimed = TRUE OR is_confirmed = TRUE)",
     [+req.session.currentUser.id]
   )
     .then(fedCount => {
       res.status(200).json({
         status: "success",
         fedCount: fedCount,
-        message: "received total fed count for current vendor"
+        message: "Received total fed count for the current vendor",
       });
     })
     .catch(err => {
