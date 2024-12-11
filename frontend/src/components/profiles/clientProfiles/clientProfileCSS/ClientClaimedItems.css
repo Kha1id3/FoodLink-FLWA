@@ -233,3 +233,15 @@
   color: #5c4e4e;
   margin-top: 8px;
 }
+
+
+.vendor-address-field {
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.address-text {
+  font-style: italic;
+}
