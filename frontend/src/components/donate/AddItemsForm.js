@@ -39,6 +39,8 @@ const AddItemForm = (props) => {
     }}
     className="add-item-form"
   >
+
+    <h4>Item Name</h4>
     {/* Item Name */}
     <input
       type="text"
@@ -50,7 +52,7 @@ const AddItemForm = (props) => {
 
     {/* Category Selection */}
     <div className="category-section">
-      <h4>Category</h4>
+      <h4>Select a Category</h4>
       <div className="category-buttons">
         {props.categories.map((category) => (
           <button

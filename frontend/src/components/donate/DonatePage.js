@@ -10,9 +10,9 @@ import { format } from "date-fns";
 
 const theme = createTheme({
   palette: {
-    primary: { 500: "#5C4E4E" },
+    primary: { 500: "#33443c" },
     secondary: {
-      main: "#5C4E4E",
+      main: "#f3fadc",
     },
   },
   typography: {
@@ -145,7 +145,7 @@ class DonatePage extends Component {
             this.handleOpen();
           }}
         >
-          <div className="add-item-text"> Add Item</div>
+          <div className="add-item-text"> Add Donation</div>
         </Button>
       </MuiThemeProvider>
     );

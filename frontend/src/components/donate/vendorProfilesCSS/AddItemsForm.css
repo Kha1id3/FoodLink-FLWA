@@ -63,13 +63,6 @@ textarea#input-comment::placeholder {
   border-radius: 5px;
   margin-bottom: 20px;
 }
-.category-buttons-container {
-  display: flex;
-  flex-wrap: wrap; /* Allows buttons to wrap to the next line if needed */
-  justify-content: center; /* Center the buttons */
-  gap: 10px; /* Spacing between buttons */
-  margin-bottom: 20px; /* Space between buttons and form fields */
-}
 
 .category-button {
   display: inline-flex;
@@ -220,18 +213,20 @@ textarea#input-comment::placeholder {
 
 .category-buttons {
   display: flex;
-  flex-direction: column; /* Stacked vertically */
-  max-height: 150px; /* Limit height for scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  gap: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
+  flex-direction: row; /* Arrange buttons horizontally */
+  gap: 10px; /* Space between buttons */
+  max-width: 100%; /* Ensure it fits the form */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent buttons from wrapping */
+  padding: 10px; /* Add padding for a clean look */
+  border: 1px solid #ddd; /* Add border for clarity */
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Light background for contrast */
 }
 
+
 .category-button {
-  width: 100%; /* Stretch button to fit container */
+  flex: 0 0 auto; /* Prevent buttons from shrinking or growing */
   padding: 10px 15px;
   background-color: #33443c;
   color: white;
@@ -242,8 +237,8 @@ textarea#input-comment::placeholder {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 120px; /* Ensure consistent button size */
 }
-
 .category-button.selected {
   background-color: #76db76;
   border-color: #33443c;
@@ -251,6 +246,20 @@ textarea#input-comment::placeholder {
 
 .category-button:hover {
   background-color: #5c8a63;
+}
+
+/* Add smooth scroll behavior for a better user experience */
+.category-buttons::-webkit-scrollbar {
+  height: 8px;
+}
+
+.category-buttons::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.category-buttons::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
 /* Form Buttons */
