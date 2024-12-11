@@ -367,6 +367,53 @@
 }
 
 
+.no-donations-container {
+  text-align: center;
+  padding: 50px 20px;
+  margin-top: 50px;
+}
+
+/* Illustration */
+.no-donations-image {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+/* Title */
+.no-donations-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #33443c;
+  margin-bottom: 10px;
+}
+
+/* Description */
+.no-donations-description {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Refresh Button */
+.refresh-button {
+  background-color: #33443c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.refresh-button:hover {
+  background-color: #4caf50;
+}
+
+
+
+
+
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -384,3 +431,4 @@
     transform: scale(1);
   }
 }
+

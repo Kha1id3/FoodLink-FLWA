@@ -152,12 +152,30 @@ class VendorClaimedItemsPage extends Component {
   };
 
   render() {
-    const { selectedItem } = this.state;
+    const { claimedFoodItems, selectedItem } = this.state;
 
     return (
       <div className="claimed-items-page">
         <h1 className="page-title">Claimed Food Items</h1>
-        <div className="claimed-items-grid">{this.renderClaimedItems()}</div>
+
+{claimedFoodItems.length === 0 ? (
+  <div className="no-items-container">
+    <img
+      src="/images/empty-box.png" // Placeholder for an illustration
+      alt="No items"
+      className="no-items-image"
+    />
+    <h2 className="no-items-title">No Claimed Items Yet</h2>
+    <p className="no-items-description">
+      It looks like no one has claimed any food yet. Check back soon or explore the donations page!
+    </p>
+    <button className="refresh-button" onClick={this.getClaimedFoodItemsByVendor}>
+      Refresh List
+    </button>
+  </div>
+) : (
+  <div className="claimed-items-grid">{this.renderClaimedItems()}</div>
+)}
 
         {/* Modal Popup */}
         {selectedItem && (

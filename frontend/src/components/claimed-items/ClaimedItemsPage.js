@@ -152,7 +152,24 @@ class ClaimedItemsPage extends Component {
 
     return (
       <div className="claimed-items-page">
-        <h1 className="page-title">Claimed Food Items</h1>
+      <h1 className="page-title">Claimed Food Items</h1>
+
+      {claimedFoodItems.length === 0 ? (
+        <div className="no-items-container">
+          <img
+            src="/images/empty-box.png" // Placeholder for an illustration
+            alt="No items"
+            className="no-items-image"
+          />
+          <h2 className="no-items-title">No Claimed Items Yet</h2>
+          <p className="no-items-description">
+            It seems there are no claimed items. Claim your first donation today!
+          </p>
+          <button className="refresh-button" onClick={this.getAllClaimedFoodItems}>
+            Refresh List
+          </button>
+        </div>
+      ) : (
         <div className="claimed-items-grid">
           {claimedFoodItems.map((item) => (
             <div key={item.id} className="claimed-item-card">
@@ -203,7 +220,8 @@ class ClaimedItemsPage extends Component {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+      )}
 
         {/* Modal Popup for Pickup Code and Comments */}
         {selectedItem && (

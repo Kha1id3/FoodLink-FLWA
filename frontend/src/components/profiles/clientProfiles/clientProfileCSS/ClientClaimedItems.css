@@ -146,7 +146,7 @@
 
 .claimed-items-page {
   padding: 20px;
-  background-color: #f6f6f6;
+
 }
 
 
@@ -326,4 +326,46 @@
 
 .close-button:hover {
   background-color: #97be77;
+}
+
+/* Empty State Container */
+.no-items-container {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* Illustration */
+.no-items-image {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+/* Title */
+.no-items-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-bottom: 10px;
+}
+
+/* Description */
+.no-items-description {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Refresh Button */
+.refresh-button {
+  background-color: #33443c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.refresh-button:hover {
+  background-color: #388e3c;
 }
