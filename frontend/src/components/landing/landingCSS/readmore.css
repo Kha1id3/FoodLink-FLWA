@@ -1,0 +1,61 @@
+#about-us-page {
+  display: flex; /* Enable Flexbox */
+  flex-direction: column; /* Stack content vertically */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  padding: 2rem;
+  min-height: calc(100vh - 60px); /* Adjust for navbar height (assuming 60px) */
+  background-color: #ffffff00; /* Transparent background */
+}
+
+#mission-statement,
+#get-involved {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgb(0, 0, 0);
+  border-radius: 8px;
+  width: 80%; /* Limit content width */
+  max-width: 800px; /* Optional: Set max width for readability */
+}
+
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 36px;
+  margin-bottom: 1rem;
+  color: #333333;
+  text-align: center; /* Center text */
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #555555;
+  text-align: center; /* Center text */
+}
+
+.involvement-options {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Align items in the middle */
+  gap: 2rem;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
+
+.option {
+  flex: 1 1 30%; /* Flexibly resize with a base size of 30% */
+  padding: 1rem;
+  background-color: #f3fadc;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 250px; /* Optional: Limit width */
+}
+
+.option h3 {
+  font-size: 24px;
+  margin-bottom: 0.5rem;
+}
+
+.option p {
+  font-size: 16px;
+}

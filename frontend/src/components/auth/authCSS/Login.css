@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d1d0d0;
+  background-color: rgba(255, 255, 255, 0); /* Light transparent background */
   padding: 2rem;
   min-height: 100vh;
   justify-content: center;
@@ -12,7 +12,7 @@
 /* Header Styling */
 #login-header {
   font-family: "Montserrat", sans-serif;
-  color: #000000;
+  color: #272e48; /* Dark gray for consistency */
   font-size: 2.65em;
   text-align: center;
   margin-bottom: 1rem;
@@ -24,40 +24,46 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background-color: #988686;
+  background-color: #f3fadc; /* Semi-transparent white */
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgb(0, 0, 0); /* Subtle shadow */
   width: 100%;
   max-width: 480px;
 }
 
 /* Input Field Styling */
-#login-email, #login-password {
+#login-email,
+#login-password {
   display: flex;
   align-items: center;
-  background-color: #d1d0d0; /* Matching background color */
+  background-color:#c2c7b28a; /* Light gray for inputs */
   margin-bottom: 1em;
   padding: 0.75em;
   border-radius: 5px;
   width: 100%;
+  box-shadow: 0 2px 4px rgb(0, 0, 0); /* Subtle input shadow */
+  transition: background-color 0.3s ease;
 }
 
-#login-email:hover, #login-password:hover {
-  background-color: #c4b3b3;
+#login-email:hover,
+#login-password:hover {
+  background-color: rgba(230, 230, 230, 0); /* Slightly darker hover */
 }
 
 .icons {
   width: 25px;
   height: 25px;
   margin-right: 10px;
+  color: #272e48; /* Matches navbar text */
 }
 
-#email-input, #password-input {
+#email-input,
+#password-input {
   width: 100%;
   background-color: transparent;
   border: none;
   outline: none;
-  color: #535455;
+  color: #272e48; /* Matches navbar text */
 }
 
 /* Login Button */
@@ -67,7 +73,7 @@
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
   color: #fff;
-  background-color: #988686;
+  background-color: #ff6347; /* Accent color matching landing page buttons */
   border-radius: 5px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -85,30 +91,29 @@
 
 .notMemberDiv p {
   font-family: "Montserrat", sans-serif;
-  color: #494949;
+  color: #272e48; /* Consistent dark gray */
 }
 
 #signup-link {
-  color: #7c5d44;
+  color: #ff6347; /* Accent color */
   text-decoration: none;
   font-weight: bold;
 }
 
 #signup-link:hover {
   text-decoration: underline;
-  color: #988686;
+  color: #ff8563; /* Slightly lighter on hover */
 }
-
 
 /* Error Message Styling */
 .error-message {
-  color: #362429; /* Bootstrap danger red for warnings */
+  color: #d9534f; /* Bootstrap danger red */
   font-size: 1.1rem;
   font-weight: bold; /* Bold the text */
   margin-bottom: 1rem;
   text-align: center;
-  background-color: #c5c5c5; /* Softer background color */
-  border: 1px solid #000000; /* Border matching the background */
+  background-color: rgba(255, 230, 230, 0); /* Light red background for warnings */
+  border: 1px solid #d9534f; /* Matching border */
   padding: 0.75rem 1.25rem; /* Add padding for spacing */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */

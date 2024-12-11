@@ -4,12 +4,12 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background-color: #d1d0d0;
-  margin-top: 50px; /* Creates space below the navbar */
+  background-color: rgba(255, 255, 255, 0); /* Semi-transparent white */
+  margin-top: 50px; /* Space below the navbar */
 }
 
 #meet-our-team {
-  color: #000000;
+  color: #272e48; /* Dark gray to match navbar text */
   font-family: "Montserrat", sans-serif;
   font-size: 46px;
   font-weight: bold;
@@ -24,45 +24,52 @@
   flex-wrap: wrap;
 }
 
+/* Team Member Cards */
 .team-member {
   width: 30%;
   text-align: center;
   padding: 1rem;
   margin: 1rem;
-  background-color: #988686;
+  background-color: #f3fadc; /* Light background with transparency */
   border-radius: 8px;
   transition: transform 0.3s, box-shadow 0.3s;
-  color: #ffffff;
+  color: #272e48; /* Dark gray text to match the design */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for consistency */
 }
 
 .team-member:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slightly stronger hover effect */
 }
 
+/* Team Member Photos */
 .team-member-photo {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  border: 4px solid #5C4E4E; /* Darker border color */
+  border: 4px solid rgba(255, 255, 255, 0.9); /* Light border to match landing page */
   margin-bottom: 1rem;
 }
 
+/* Team Member Names */
 .team-member-name {
-  color: #ffffff;
+  color: #272e48; /* Consistent with navbar and card text */
   font-size: 24px;
   margin: 0.5rem 0;
 }
 
+/* GitHub Icon */
 .github-icon {
   width: 30px;
   height: 30px;
   margin-top: 1rem;
-  filter: invert(1); /* For white icons */
+  filter: none; /* Remove inversion for better visibility */
   transition: transform 0.3s, filter 0.3s;
+  color: #272e48; /* Match navbar text color */
+  fill: currentColor; /* Ensures SVG color uses text color */
 }
 
 .github-icon:hover {
   transform: scale(1.2);
-  filter: invert(0.7); /* Slightly lighter on hover */
+  color: #ff634700; /* Bright hover effect consistent with the landing page */
 }

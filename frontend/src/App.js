@@ -7,6 +7,7 @@ import SignUpContainer from "./containers/SignUpContainer.js";
 import "./App.css";
 import NavBar from "./components/navBar/NavBar.js";
 import Landing from "./components/landing/Landing.js";
+import ReadMore from "./components/landing/ReadMore.js";
 import AboutUs from "./components/navBar/navComponents/aboutUs/AboutUs.js";
 import Resources from "./components/navBar/navComponents/resources/Resources.js";
 import Map from "./components/navBar/navComponents/map/Map.js";
@@ -54,6 +55,7 @@ class App extends Component {
             {/* Public Routes */}
             <Route exact path="/" component={Landing} />
             <Route exact path="/welcome" component={Landing} />
+            <Route path="/read-more" component={ReadMore} />
             <Route exact path="/aboutus" component={AboutUs} />
             <Route exact path="/resources" component={Resources} />
             <Route exact path="/map" component={Map} />
