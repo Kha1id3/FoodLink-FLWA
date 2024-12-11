@@ -30,6 +30,7 @@ class ClaimedItemsPage extends Component {
     openDropdowns: {},
     slidingItem: null,
     isMouseDown: false,
+    selectedItem: null, // Track selected item for the modal
   };
 
   componentDidMount() {
@@ -137,17 +138,16 @@ class ClaimedItemsPage extends Component {
       .catch(() => notify.show("Failed to confirm pickup.", "error", 3000));
   };
 
-  toggleDropdown = (itemId) => {
-    this.setState((prevState) => ({
-      openDropdowns: {
-        ...prevState.openDropdowns,
-        [itemId]: !prevState.openDropdowns[itemId],
-      },
-    }));
+  openDetailsModal = (item) => {
+    this.setState({ selectedItem: item });
+  };
+
+  closeDetailsModal = () => {
+    this.setState({ selectedItem: null });
   };
 
   render() {
-    const { claimedFoodItems, slideProgress, openDropdowns } = this.state;
+    const { claimedFoodItems, slideProgress, selectedItem } = this.state;
 
 
     return (
@@ -196,24 +196,32 @@ class ClaimedItemsPage extends Component {
                 </div>
                 <button
                   className="details-button"
-                  onClick={() => this.toggleDropdown(item.id)}
+                  onClick={() => this.openDetailsModal(item)}
                 >
-                  {openDropdowns[item.id] ? "Hide Details" : "View Details"}
+                  View Details
                 </button>
               </div>
-              {openDropdowns[item.id] && (
-                <div className="card-footer">
-                  <p>
-                    <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Comment:</strong> {item.comment || "No comments provided"}
-                  </p>
-                </div>
-              )}
             </div>
           ))}
         </div>
+
+        {/* Modal Popup for Pickup Code and Comments */}
+        {selectedItem && (
+  <div className="modal-overlay" onClick={this.closeDetailsModal}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h2>Pickup Details</h2>
+      <p className="pickup-code">
+        <strong>Pickup Code:</strong> {selectedItem.pickup_code || "N/A"}
+      </p>
+      <p className="comment">
+        <strong>Comment:</strong> {selectedItem.comment || "No comments provided"}
+      </p>
+      <button className="close-button" onClick={this.closeDetailsModal}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
       </div>
     );
   }

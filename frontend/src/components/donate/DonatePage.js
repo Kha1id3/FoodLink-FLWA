@@ -59,8 +59,19 @@ class DonatePage extends Component {
       open: false, // for modal
       openDropdowns: {},
       categories: [], // Add state for categories
+      selectedItem: null, // For popup
+      openPopup: false, // Popup state
     };
   }
+
+  openDetailsModal = (item) => {
+    this.setState({ selectedItem: item });
+  };
+  
+  closeDetailsModal = () => {
+    this.setState({ selectedItem: null });
+  };
+
 
   toggleDropdown = (itemId) => {
     this.setState((prevState) => ({
@@ -207,79 +218,77 @@ class DonatePage extends Component {
   };
 
   displayFoodItems = () => {
-    console.log("Food Items:", this.state.foodItems); // Debugging
-    return this.state.foodItems.map((item) => {
-      let status;
+    return (
+      <div className="food-items-grid">
+        {this.state.foodItems.map((item) => {
+          const statusClasses = {
+            "Claim Pending": "status-claim-pending",
+            "Pickup Pending": "status-pickup-pending",
+            "Pickup Confirmed": "status-pickup-confirmed",
+          };
+  
+          let status;
+          if (!item.is_claimed && !item.is_confirmed) {
+            status = "Claim Pending";
+          } else if (item.is_claimed && !item.is_confirmed) {
+            status = "Pickup Pending";
+          } else {
+            status = "Pickup Confirmed";
+          }
+  
+          const isDropdownOpen = this.state.openDropdowns[item.food_id];
+  
+          return (
+            <div key={item.food_id} className="donation-card">
+              {/* Item Info */}
+              <div className="donation-card-header">
+                <div className="donation-card-title">
+                  {item.name}
+                  {!item.is_claimed && !item.is_confirmed && (
+                    <button
+                      className="delete-item-button"
+                      id={item.food_id}
+                      onClick={this.deleteItem}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                <p className="donation-card-quantity">
+                  Quantity: {item.quantity} Kg
+                </p>
+              </div>
+  
+              {/* Status */}
+              <div className={`donation-card-status ${statusClasses[status]}`}>
+                {status}
+              </div>
+  
+              {/* Pickup Time */}
+              <div className="donation-card-time">
+                <p>
+                  <strong>Date:</strong> {formatDate(item.set_time)}
+                </p>
+                <p>
+                  <strong>Time:</strong> {formatTime(item.set_time)}
+                </p>
+              </div>
+  
+              {/* Details */}
+              <button
+  className="details-button"
+  onClick={() => this.openDetailsModal(item)}
+>
+  View Details
+</button>
 
-      if (!item.is_claimed && !item.is_confirmed) {
-        status = "Claim Pending";
-      } else if (item.is_claimed && !item.is_confirmed) {
-        status = "Pickup Pending";
-      } else if (!item.is_claimed && item.is_confirmed) {
-        status = "Pickup Confirmed";
-      }
-
-      const isDropdownOpen = this.state.openDropdowns[item.food_id];
-
-      return (
-        <div
-          key={item.food_id}
-          className="vendor-profile-container-vendor-version"
-        >
-          <div className="claimed-vendor-items-two">
-            <div className="vendor-page-item-name">
-              {!item.is_claimed && !item.is_confirmed && (
-                <button
-                  className="delete-item-small-button"
-                  id={item.food_id}
-                  onClick={this.deleteItem}
-                >
-                  X
-                </button>
-              )}
-              {item.name}
             </div>
-            <p className="vendor-page-item-Kilograms">
-              {item.quantity * 3} Kilograms
-            </p>
-            <p className="vendor-page-item-quantity">{item.quantity} people</p>
-            <p className="vendor-page-pickup-time">
-              <span className="pickup-date">{formatDate(item.set_time)}</span>
-              <br />
-              <span className="pickup-time">{formatTime(item.set_time)}</span>
-            </p>
-            <p
-              className={`vendor-page-item-status ${
-                status === "Claim Pending"
-                  ? "status-claim-pending"
-                  : status === "Pickup Pending"
-                  ? "status-pickup-pending"
-                  : "status-pickup-confirmed"
-              }`}
-            >
-              {status}
-            </p>
-            <button
-              className="details-button"
-              onClick={() => this.toggleDropdown(item.food_id)}
-            >
-              {isDropdownOpen ? "Hide Details" : "View Details"}
-            </button>
-          </div>
-          {isDropdownOpen && (
-            <div className="vendor-pickup-code">
-              <p>
-                <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
-              </p>
-              <p>
-                <strong>Comment:</strong> {item.comment || "No comments provided"}
-              </p>
-            </div>
-          )}
-        </div>
-      );
-    });
+          );
+        })}
+      </div>
+    );
   };
+  
 
   renderCategoryDropdown = () => (
     <select
@@ -298,6 +307,7 @@ class DonatePage extends Component {
   );
 
   render() {
+
     return (
       <div id="vendor-container">
         <MainSnackbarContainer />
@@ -324,6 +334,22 @@ class DonatePage extends Component {
             )}
           </div>
         </div>
+        {this.state.selectedItem && (
+      <div className="modal-overlay" onClick={this.closeDetailsModal}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <h2>Pickup Details</h2>
+          <p className="pickup-code">
+            <strong>Pickup Code:</strong> {this.state.selectedItem.pickup_code || "N/A"}
+          </p>
+          <p className="comment">
+            <strong>Comment:</strong> {this.state.selectedItem.comment || "No comments provided"}
+          </p>
+          <button className="close-button" onClick={this.closeDetailsModal}>
+            Close
+          </button>
+        </div>
+      </div>
+    )}
         <div className="foodItemsContainer">
           <h3 className="food-items-header">Added Donations</h3>
           {this.displayFoodItems()}
