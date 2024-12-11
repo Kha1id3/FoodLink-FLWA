@@ -1,299 +1,211 @@
+/* General Navbar Styling */
 #nav {
-  overflow: hidden;
+  background-color: #f9f9f9;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1;
-  background-color: #D1D0D0;
-  height: 95px;
-  display: flex;
-  justify-content: space-between; /* Spaces the logo, links, and profile icon */
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-}
-
-#nav-title {
-  margin-left: 20px; /* Positions the logo on the far left */
+  z-index: 100;
+  font-family: "Montserrat", sans-serif;
+  overflow: hidden;
 }
 
 #logo {
-  width: 70px; /* Adjust size as needed */
+  width: 70px;
+  height: auto;
+  cursor: pointer;
 }
 
 #nav-links {
   display: flex;
-  gap: 30px; /* Space between each link */
+  gap: 15px;
   align-items: center;
-  margin: 0 auto; /* Centers the links */
-  flex: 1; /* Allows the links to stretch and occupy space in the middle */
-  justify-content: center; /* Aligns the links in the center */
+  flex-grow: 1;
+  justify-content: flex-end;
+  max-width: calc(100% - 140px);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .nav-link {
+  font-size: 18px;
+  font-weight: 600;
   color: #272e48;
-  font-size: 20px;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 900;
   text-decoration: none;
-  position: relative;
   transition: color 0.3s ease;
-  padding: 0 15px;
+  padding: 10px 0;
 }
 
 .nav-link:hover {
-  color: #988686;
+  color: #33443c;
 }
 
 #logout-button {
-  background: none;
+  background-color: #33443c;
+  color: white;
   border: none;
-  color: #272e48;
-  font-size: 20px;
-  font-weight: 900;
+  padding: 8px 14px;
+  border-radius: 5px;
   cursor: pointer;
-  padding: 0 15px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 #logout-button:hover {
-  color: #988686;
-}
-
-.nav-link--active {
-  color: #988686;
-  position: relative;
-  transition: color 0.3s ease-in-out; /* Smooth color transition */
-}
-
-.nav-link--active:hover {
-  color: #272e48;
-}
-
-.nav-link--active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 100%;
-  height: 2px;
-  background-color: #988686;
-  transform: scaleX(0); /* Starts with underline hidden */
-  transform-origin: left;
-  transition: transform 0.3s ease; /* Smooth underline animation */
-}
-
-.nav-link--active:hover::after {
-  transform: scaleX(1); /* Expands the underline on hover */
+  background-color: #4a5a53;
 }
 
 #profile-link {
-  position: absolute; /* Positions the profile link independently */
-  right: 20px; /* Pushes it to the far right of the navbar */
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #profile-icon {
   width: 50px;
   height: 50px;
-  border-radius: 50%; /* Makes the profile picture circular */
+  border-radius: 70%;
   object-fit: cover;
-  border: 2px solid #272e48;
-  transition: border-color 0.3s ease;
   cursor: pointer;
 }
 
-#profile-icon:hover {
-  border-color: #988686;
-}
-
-
+/* Notification Bell */
 .notification-bell-container {
   position: relative;
-  left: 440px;
-
+  cursor: pointer;
 }
 
 .notification-bell {
   width: 30px;
   height: 30px;
-  cursor: pointer;
-  
 }
 
-/* Notification Panel Styles */
 .notification-panel {
-  position: fixed;
-  top: 80px; /* Match navbar height */
-  right: 10px;
-  width: 320px;
-  background: #ffffff; /* White background for contrast */
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  transform: translateY(-150%);
-  transition: transform 0.3s ease-in-out;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 300px;
   max-height: 400px;
-  overflow-y: auto; /* Allow scrolling for long lists */
+  overflow-y: auto;
+  z-index: 9999;
+  font-family: "Montserrat", sans-serif;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(-10px);
 }
-
 
 .notification-panel-visible {
-  transform: translateY(0%);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .notification-panel-hidden {
-  transform: translateY(-300%);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
 }
 
 
 
-.notification-items {
-  padding: 5px;
+/* Parent Navbar */
+#nav {
+  overflow: visible; /* Ensure dropdown isn't clipped */
 }
 
+/* Header Styling */
+.notification-header {
+  font-weight: bold;
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0; /* Separator */
+  background: #f9f9f9; /* Light background for header */
+  text-align: left; /* Align text to the left */
+  font-size: 14px; /* Smaller font size */
+  color: #555; /* Neutral color */
+}
+
+/* Notification Item Styling */
 .notification-item {
-  display: flex;
-  justify-content: space-between; /* Align timestamp to the right */
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 5px solid #f1f1f1;
-  background-color: #f9f9f9; /* Light background for contrast */
-  color: #272e48;
-  font-size: 14px;
-  font-family: "Montserrat", sans-serif;
-  border-left: 4px solid #75e975; /* Default green for unread */
-  transition: background-color 0.3s ease, border-left-color 0.3s ease;
-}
-
-.notification-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 10px; /* Space between content and bottom section */
+  display: flex; /* Align icon and text side by side */
+  align-items: center; /* Vertically center content */
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  background: white; /* Default background */
+  border-left: 4px solid transparent; /* Indicator on the left */
 }
 
 .notification-item:hover {
-  background-color: #c9dceb; /* Light blue background on hover */
-  border-left-color: #d18e41; /* Blue accent on hover */
+  background: #eef4fc; /* Light blue hover effect */
+  border-left: 4px solid #4a90e2; /* Indicator on hover */
 }
 
-.notification-item:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+.notification-item.unread {
+  font-weight: bold; /* Highlight unread notifications */
+  background: #f9f9f9; /* Slightly shaded background */
+  border-left: 4px solid #ff9800; /* Highlight for unread */
 }
-
-.notification-message strong {
-  font-weight: bold; /* Make the item name bold */
-}
-
-.notification-claimed {
-  color: #28a745; /* Green for the word 'claimed' */
-  font-weight: bold;
-}
-
-.notification-action {
-  color: #5792ce; /* Blue for 'Check it out!' */
-  cursor: pointer;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-
-.notification-action:hover {
-  text-decoration: underline; /* Add underline on hover for action */
-}
-
-.notification-content {
-  flex-grow: 1;
-}
-.no-notifications {
-  text-align: center;
-  color: #888;
-  padding: 20px;
-  font-style: italic;
-  font-size: 14px;
-}
-.notification-content {
-  flex-grow: 1;
-}
-
-/* Optional: Add subtle animation when notifications appear */
-.notification-panel .notification-item {
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 
 .notification-item.read {
-  border-left-color: #f0a72b; /* Orange for read notifications */
+  font-weight: normal; /* Normal weight for read items */
+  background: white; /* Default background */
 }
-.notification-item:hover {
-  background-color: #c9dceb; /* Light blue background on hover */
+
+.notification-item-icon {
+  margin-right: 10px; /* Space between icon and text */
+  font-size: 18px; /* Adjust icon size */
+}
+
+.notification-content {
+  flex: 1; /* Take up remaining space */
+  font-size: 14px; /* Font size for text */
+  color: #333; /* Neutral dark color */
+  overflow: hidden; /* Prevent overflow */
+  white-space: nowrap; /* Keep text in one line */
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
 }
 
 .notification-timestamp {
-  font-size: 12px;
-  color: #888;
-  text-align: right;
+  font-size: 12px; /* Smaller timestamp text */
+  color: #888; /* Gray color for timestamp */
+  margin-top: 3px; /* Space below the content */
+  text-align: right; /* Align to the right */
 }
 
-.notification-timestamp div {
-  line-height: 1.2; /* Compact spacing for date and time */
-}
-
-.notification-link:hover {
-  text-decoration: underline;
-}
-
-.notification-link {
+/* No Notifications */
+.no-notifications {
+  padding: 20px;
+  text-align: center;
+  color: #777;
   font-size: 14px;
-  font-weight: bold;
-  color: #007bff;
-  cursor: pointer;
-  text-align: left;
 }
 
-.notification-content strong {
-  display: inline-block;
-  word-wrap: break-word; /* Ensures long words break into new lines */
-  max-width: 100%; /* Prevents overflow */
+/* Scrollbar Styling */
+.notification-panel::-webkit-scrollbar {
+  width: 8px;
 }
 
-
-.notification-bell-container img {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+.notification-panel::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 8px;
 }
 
-.notification-bell-container img:hover {
-  transform: scale(1.1);
+.notification-panel::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
 }
 
-.notification-item.match {
-  border-left: 5px solid #4caf50; /* Green border for matched items */
-  background-color: #f9fdf9; /* Light green background */
-}
-
-.notification-item .match-details {
-  font-size: 12px;
-  color: #555;
-  margin-top: 5px;
-}
-
-.navbar > * {
-  margin-left: 10px;
-  margin-right: 10px;
+/* Responsive Styling for Smaller Screens */
+@media (max-width: 768px) {
+  .notification-panel {
+    width: 90%; /* Full-width on smaller screens */
+    right: 5%; /* Center it with padding */
+  }
 }

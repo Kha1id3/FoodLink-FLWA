@@ -2,7 +2,7 @@
 .resources-wrapper {
   display: grid;
   place-items: center center;
-  background-color: #ffff;
+  background-color: rgba(255, 255, 255, 0); /* Semi-transparent background */
   padding: 2rem;
 }
 
@@ -12,24 +12,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d1d0d0;
+  background-color:  rgba(255, 255, 255, 0); /* Light transparent background */
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0); /* Subtle shadow for consistency */
 }
 
 #hungry-header {
-  color: #000000;
+  color: #272e48; /* Matches the navbar text color */
   font-family: "Montserrat", sans-serif;
   font-size: 42px;
   padding: 0.5rem 0;
   margin-bottom: 1.5rem;
   text-align: center;
   width: 100%;
-  background-color: #d1d0d0;
+  background-color: rgba(255, 255, 255, 0); /* Transparent background */
   border-radius: 4px;
 }
 
+/* Grid for Resource Items */
 .resources-all-text {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -37,34 +38,38 @@
   width: 100%;
 }
 
+/* Individual Resource Items */
 .resource-item {
-  background-color: #988686;
+  background-color: #f3fadc;; /* Semi-transparent white */
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
   transition: transform 0.3s, box-shadow 0.3s;
-  color: #ffffff;
+  color: #272e48; /* Matches navbar text */
   text-decoration: none;
 }
 
 .resource-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05); /* Subtle hover zoom */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slightly enhanced shadow */
 }
 
+/* Resource Images */
 .resource-item img {
   width: auto;
   max-height: 150px;
   margin-bottom: 1rem;
   border-radius: 8px;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0); /* Light background for images */
   padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle image shadow */
 }
 
+/* Resource Item Text */
 .resource-item p {
   font-size: 1rem;
   margin: 0.5rem 0 0;
-  color: #000000;
+  color: #272e48; /* Match navbar and section text color */
   font-weight: bold;
 }
