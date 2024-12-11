@@ -7,7 +7,7 @@
 }
 
 .vendor-card {
-  background-color: rgb(126, 95, 95);
+  background-color: rgb(255, 255, 255);
   border: 1px solid #ddd;
   border-radius: 12px; /* Softer corners for a modern look */
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
