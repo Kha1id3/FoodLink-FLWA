@@ -7,7 +7,7 @@ class AllFeedItemsDisplayVendorName extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePic: props.vendorProfilePic || "/images/default.jpg", // Fallback to prop or default
+      profilePic: props.vendorProfilePic || "/images/loading.png", // Fallback to prop or default
     };
   }
 
@@ -28,7 +28,7 @@ class AllFeedItemsDisplayVendorName extends Component {
   
     try {
       const response = await axios.get(`/api/users/${vendorId}`);
-      const profilePic = response.data.data[0]?.profile_picture || "/images/default.jpg";
+      const profilePic = response.data.data[0]?.profile_picture || "/images/loading.png";
       this.setState({ profilePic });
     } catch (error) {
       console.error(`Error fetching profile picture for vendor ${vendorId}:`, error);

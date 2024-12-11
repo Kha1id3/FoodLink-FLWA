@@ -38,45 +38,56 @@ class ClaimedItemsPage extends Component {
 
   getAllClaimedFoodItems = () => {
     axios
-      .get("/api/fooditems/client/") // Fetch claimed food items
+      .get("/api/fooditems/client/")
       .then((res) => {
         const claimedFoodItems = res.data.food_items || [];
-        console.log("Claimed Food Items:", claimedFoodItems); // Debugging log
+        console.log("Claimed Food Items API Response:", claimedFoodItems);
   
-        // Fetch vendor details
         axios
-          .get("/api/users/vendors/") // Fetch vendors
+          .get("/api/users/vendors/")
           .then((vendorRes) => {
-            const vendors = vendorRes.data.vendors;
-            console.log("Vendors Data:", vendors); // Debugging log
+            const vendors = vendorRes.data.vendors || [];
+            console.log("Vendors API Response:", vendors);
   
+            // Map vendors by ID
             const vendorMap = vendors.reduce((acc, vendor) => {
-              acc[vendor.id] = {
-                name: vendor.name || "Unknown Vendor",
+              acc[vendor.vendor_id] = {
                 address: vendor.address_field || "Address not available",
-                profilePicture: vendor.profile_picture || "/images/default.jpg",
+                profilePicture: vendor.profile_picture || "loading.png",
+                name: vendor.vendor_name || "Unknown Vendor",
               };
               return acc;
             }, {});
-            console.log("Vendor Map:", vendorMap); // Debugging log
   
-            // Enhance claimed items with vendor details
-            const itemsWithVendorDetails = claimedFoodItems.map((item) => ({
-              ...item,
-              vendorDetails: vendorMap[item.vendor_id] || {
-                name: "Unknown Vendor",
+            console.log("Mapped Vendors Object:", vendorMap);
+  
+            // Map claimed food items to their vendors
+            const itemsWithVendorDetails = claimedFoodItems.map((item) => {
+              const vendorDetails = vendorMap[item.vendor_id] || {
                 address: "Address not available",
-                profilePicture: "/images/default.jpg",
-              },
-            }));
-            console.log("Enhanced Items:", itemsWithVendorDetails); // Debugging log
+                profilePicture: "default.png",
+                name: "Unknown Vendor",
+              };
+              console.log(`Mapping Food Item (${item.name}):`, vendorDetails);
+  
+              return {
+                ...item,
+                vendorDetails,
+              };
+            });
   
             this.setState({ claimedFoodItems: itemsWithVendorDetails });
+            console.log("Final Mapped Claimed Items:", itemsWithVendorDetails);
           })
           .catch((err) => console.error("Error fetching vendors:", err));
       })
-      .catch((err) => console.error("Error fetching claimed items:", err));
+      .catch((err) => console.error("Error fetching claimed food items:", err));
   };
+  
+  
+  
+  
+  
   
 
   handleMouseDown = (itemId) => {
@@ -138,6 +149,7 @@ class ClaimedItemsPage extends Component {
   render() {
     const { claimedFoodItems, slideProgress, openDropdowns } = this.state;
 
+
     return (
       <div className="claimed-items-page">
         <h1 className="page-title">Claimed Food Items</h1>
@@ -147,9 +159,11 @@ class ClaimedItemsPage extends Component {
               {/* Vendor Info */}
               <AllFeedItemsDisplayVendorName
                 vendorId={item.vendor_id}
-                vendorName={item.vendor_name}
-                vendorAddress={item.address_field}
+                vendorName={item.vendorDetails.name}
+                vendorAddress={item.vendorDetails.address}
+                vendorProfilePic={item.vendorDetails.profilePicture}
               />
+
 
               {/* Food Details */}
               <div className="card-header">
