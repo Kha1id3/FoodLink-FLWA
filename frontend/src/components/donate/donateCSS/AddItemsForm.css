@@ -1,0 +1,302 @@
+#donation-form-header {
+  background-color: #5C4E4E;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#add-items-form {
+  background-color: #f9f9f9;
+  margin: 0 auto;
+  width: 98%; /* Increase width for better fit */
+  max-width: 1000px; /* Limit maximum width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  justify-content: center; /* Center the buttons */
+  text-align: center; /* Ensure text alignment within buttons */
+}
+
+#input-name,
+#input-quantity,
+#input-comment {
+  width: 100%;
+  max-width: 500px; /* Ensure uniform size */
+  height: 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  font-family: "Montserrat", sans-serif;
+}
+
+textarea#input-comment {
+  resize: none;
+  line-height: 1.5;
+  width: 100%; /* Adjust width */
+}
+
+textarea#input-comment::placeholder {
+  font-style: italic;
+}
+
+.custom-date-picker {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.category-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  background-color: #33443c;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px; /* Slightly larger font for readability */
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 150px; /* Set a minimum width for longer category names */
+  text-align: center; /* Ensure text alignment within buttons */
+}
+
+.category-button.selected {
+  border: 2px solid #33443c;
+  background-color: #76db76; /* Highlight selected button */
+}
+
+.category-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+#add-food-item-button {
+  width: 100%;
+  max-width: 300px;
+  height: 50px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  background-color: #5C4E4E;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+
+  margin-bottom: 10px;
+}
+
+#add-food-item-button:hover {
+  background-color: #3E3737;
+  transform: scale(1.05);
+}
+
+#add-food-item-button:active {
+  background-color: #2E2828;
+  transform: scale(0.95);
+}
+
+
+
+/* Modal Container */
+.add-item-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+}
+
+/* Form Container */
+.add-item-form-container {
+  background: linear-gradient(145deg, #ffffff, #f3fadc);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+}
+
+/* Form Header */
+
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px; /* Space between fields */
+  margin-bottom: 20px;
+}
+
+.form-row .form-group {
+  flex: 1; /* Equal width for both inputs */
+}
+
+.form-row .form-group input {
+  width: 90%;
+}
+
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #33443c;
+  margin-bottom: 5px;
+}
+
+.form-input,
+.form-textarea {
+  width: 90%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Categories Section */
+.category-section h4 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #33443c;
+  margin-bottom: 10px;
+}
+
+.category-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.category-buttons {
+  display: flex;
+  flex-direction: row; /* Arrange buttons horizontally */
+  gap: 10px; /* Space between buttons */
+  max-width: 100%; /* Ensure it fits the form */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent buttons from wrapping */
+  padding: 10px; /* Add padding for a clean look */
+  border: 1px solid #ddd; /* Add border for clarity */
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Light background for contrast */
+}
+
+
+.category-button {
+  flex: 0 0 auto; /* Prevent buttons from shrinking or growing */
+  padding: 10px 15px;
+  background-color: #33443c;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px; /* Ensure consistent button size */
+}
+.category-button.selected {
+  background-color: #76db76;
+  border-color: #33443c;
+}
+
+.category-button:hover {
+  background-color: #5c8a63;
+}
+
+/* Add smooth scroll behavior for a better user experience */
+.category-buttons::-webkit-scrollbar {
+  height: 8px;
+}
+
+.category-buttons::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.category-buttons::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Form Buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.form-buttons button {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.form-submit-btn {
+  background-color: #76db76;
+  color: white;
+  border: none;
+}
+
+.form-submit-btn:hover {
+  background-color: #5c9d5c;
+}
+
+.form-cancel-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.form-cancel-btn:hover {
+  background-color: #c0392b;
+}
+
+
+

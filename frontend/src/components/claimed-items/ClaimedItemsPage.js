@@ -30,6 +30,7 @@ class ClaimedItemsPage extends Component {
     openDropdowns: {},
     slidingItem: null,
     isMouseDown: false,
+    selectedItem: null, // Track selected item for the modal
   };
 
   componentDidMount() {
@@ -38,39 +39,56 @@ class ClaimedItemsPage extends Component {
 
   getAllClaimedFoodItems = () => {
     axios
-      .get("/api/fooditems/client/") // Fetch claimed food items
+      .get("/api/fooditems/client/")
       .then((res) => {
         const claimedFoodItems = res.data.food_items || [];
+        console.log("Claimed Food Items API Response:", claimedFoodItems);
   
-        // Fetch vendor details
         axios
-          .get("/api/users/vendors/") // Fetch vendors
+          .get("/api/users/vendors/")
           .then((vendorRes) => {
-            const vendors = vendorRes.data.vendors.reduce((acc, vendor) => {
-              acc[vendor.id] = {
+            const vendors = vendorRes.data.vendors || [];
+            console.log("Vendors API Response:", vendors);
+  
+            // Map vendors by ID
+            const vendorMap = vendors.reduce((acc, vendor) => {
+              acc[vendor.vendor_id] = {
                 address: vendor.address_field || "Address not available",
-                profilePicture: vendor.profile_picture || "default.png",
-                name: vendor.name || "Unknown Vendor",
+                profilePicture: vendor.profile_picture || "loading.png",
+                name: vendor.vendor_name || "Unknown Vendor",
               };
               return acc;
             }, {});
   
-            // Enhance each claimed item with vendor details
-            const itemsWithVendorDetails = claimedFoodItems.map((item) => ({
-              ...item,
-              vendorDetails: vendors[item.vendor_id] || {
+            console.log("Mapped Vendors Object:", vendorMap);
+  
+            // Map claimed food items to their vendors
+            const itemsWithVendorDetails = claimedFoodItems.map((item) => {
+              const vendorDetails = vendorMap[item.vendor_id] || {
                 address: "Address not available",
                 profilePicture: "default.png",
                 name: "Unknown Vendor",
-              },
-            }));
+              };
+              console.log(`Mapping Food Item (${item.name}):`, vendorDetails);
+  
+              return {
+                ...item,
+                vendorDetails,
+              };
+            });
   
             this.setState({ claimedFoodItems: itemsWithVendorDetails });
+            console.log("Final Mapped Claimed Items:", itemsWithVendorDetails);
           })
           .catch((err) => console.error("Error fetching vendors:", err));
       })
-      .catch((err) => console.error("Error fetching claimed items:", err));
+      .catch((err) => console.error("Error fetching claimed food items:", err));
   };
+  
+  
+  
+  
+  
   
 
   handleMouseDown = (itemId) => {
@@ -120,30 +138,49 @@ class ClaimedItemsPage extends Component {
       .catch(() => notify.show("Failed to confirm pickup.", "error", 3000));
   };
 
-  toggleDropdown = (itemId) => {
-    this.setState((prevState) => ({
-      openDropdowns: {
-        ...prevState.openDropdowns,
-        [itemId]: !prevState.openDropdowns[itemId],
-      },
-    }));
+  openDetailsModal = (item) => {
+    this.setState({ selectedItem: item });
+  };
+
+  closeDetailsModal = () => {
+    this.setState({ selectedItem: null });
   };
 
   render() {
-    const { claimedFoodItems, slideProgress, openDropdowns } = this.state;
+    const { claimedFoodItems, slideProgress, selectedItem } = this.state;
+
 
     return (
       <div className="claimed-items-page">
-        <h1 className="page-title">Claimed Food Items</h1>
+      <h1 className="page-title">Claimed Food Items</h1>
+
+      {claimedFoodItems.length === 0 ? (
+        <div className="no-items-container">
+          <img
+            src="/images/empty-box.png" // Placeholder for an illustration
+            alt="No items"
+            className="no-items-image"
+          />
+          <h2 className="no-items-title">No Claimed Items Yet</h2>
+          <p className="no-items-description">
+            It seems there are no claimed items. Claim your first donation today!
+          </p>
+          <button className="refresh-button" onClick={this.getAllClaimedFoodItems}>
+            Refresh List
+          </button>
+        </div>
+      ) : (
         <div className="claimed-items-grid">
           {claimedFoodItems.map((item) => (
             <div key={item.id} className="claimed-item-card">
               {/* Vendor Info */}
               <AllFeedItemsDisplayVendorName
                 vendorId={item.vendor_id}
-                vendorName={item.vendor_name}
-                vendorAddress={item.address_field}
+                vendorName={item.vendorDetails.name}
+                vendorAddress={item.vendorDetails.address}
+                vendorProfilePic={item.vendorDetails.profilePicture}
               />
+
 
               {/* Food Details */}
               <div className="card-header">
@@ -176,24 +213,33 @@ class ClaimedItemsPage extends Component {
                 </div>
                 <button
                   className="details-button"
-                  onClick={() => this.toggleDropdown(item.id)}
+                  onClick={() => this.openDetailsModal(item)}
                 >
-                  {openDropdowns[item.id] ? "Hide Details" : "View Details"}
+                  View Details
                 </button>
               </div>
-              {openDropdowns[item.id] && (
-                <div className="card-footer">
-                  <p>
-                    <strong>Pickup Code:</strong> {item.pickup_code || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Comment:</strong> {item.comment || "No comments provided"}
-                  </p>
-                </div>
-              )}
             </div>
           ))}
-        </div>
+          </div>
+      )}
+
+        {/* Modal Popup for Pickup Code and Comments */}
+        {selectedItem && (
+  <div className="modal-overlay" onClick={this.closeDetailsModal}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h2>Pickup Details</h2>
+      <p className="pickup-code">
+        <strong>Pickup Code:</strong> {selectedItem.pickup_code || "N/A"}
+      </p>
+      <p className="comment">
+        <strong>Comment:</strong> {selectedItem.comment || "No comments provided"}
+      </p>
+      <button className="close-button" onClick={this.closeDetailsModal}>
+        Close
+      </button>
+    </div>
+  </div>
+)}
       </div>
     );
   }

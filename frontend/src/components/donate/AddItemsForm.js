@@ -1,21 +1,5 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "./vendorProfilesCSS/AddItemsForm.css";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
-
-const theme = createTheme({
-  palette: {
-    primary: { 500: "#D35348" },
-    secondary: {
-      main: "#D35348",
-    },
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
+import "./donateCSS/AddItemsForm.css";
 
 const AddItemForm = (props) => {
   const [pickupDateTime, setPickupDateTime] = useState(null);
@@ -28,17 +12,9 @@ const AddItemForm = (props) => {
     props.handleChange({
       target: {
         name: "set_time",
-        value: selectedDateTime, // Pass the selected date-time in ISO format
+        value: selectedDateTime,
       },
     });
-  };
-
-  const filterPassedTimes = (time) => {
-    const selectedDate = pickupDateTime || new Date();
-    const selectedHour = time.getHours();
-
-    // Allow only times between 6:00 AM and 11:00 PM
-    return selectedHour >= 6 && selectedHour <= 23;
   };
 
   const handleCategorySelection = (categoryId) => {
@@ -51,88 +27,98 @@ const AddItemForm = (props) => {
     });
   };
 
-
   return (
-    <div className="donationFormWrapper">
-      <h1 id="donation-form-header">Donation Form</h1>
-      <div className="donationFormContainer">
-        <form
-          onSubmit={(e) => {
-            props.submitItem(e);
-            props.receivedOpenSnackbar();
-          }}
-          id="add-items-form"
-        >
-          {/* Category Selection */}
-          <div className="category-selection-container">
-            <h4>Select a Category</h4>
-            <div className="category-grid">
-              {props.categories.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  className={`category-button ${
-                    selectedCategory === category.id ? "selected" : ""
-                  }`}
-                  onClick={() => handleCategorySelection(category.id)}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          <br />
-          {/* Input Fields */}
-          <input
-            type="text"
-            onChange={props.handleChange}
-            name="name"
-            placeholder="What dish are you donating?"
-            id="input-name"
-          />
-          <br />
-          <input
-            type="text"
-            onChange={props.handleChange}
-            name="quantity"
-            placeholder="Quantity (kg)"
-            id="input-quantity"
-          />
-          <br />
-          <textarea
-            onChange={props.handleChange}
-            name="comment"
-            placeholder="Enter pickup instructions or additional comments"
-            id="input-comment"
-            rows="4"
-          ></textarea>
-          <br />
-          <div className="datePickerContainer">
-            <label htmlFor="pickupDateTime">Select Pickup Date and Time</label>
-            <input
-              type="datetime-local"
-              id="pickupDateTime"
-              name="pickupDateTime"
-              value={pickupDateTime}
-              onChange={handleDateChange}
-              className="custom-date-picker"
-              min={new Date().toISOString().slice(0, 16)} // Prevent past dates
-              required
-            />
-          </div>
+<div className="add-item-form-container">
+  <div className="form-header">
+    <h2>Add a Donation</h2>
+  </div>
+  <form
+    onSubmit={(e) => {
+      props.submitItem(e);
+      props.receivedOpenSnackbar();
+    }}
+    className="add-item-form"
+  >
 
-          <MuiThemeProvider theme={theme}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              id="add-food-item-button"
-            >
-              <div id="add-item">Submit</div>
-            </Button>
-          </MuiThemeProvider>
-        </form>
+    <h4>Item Name</h4>
+    {/* Item Name */}
+    <input
+      type="text"
+      onChange={props.handleChange}
+      name="name"
+      placeholder="Enter Item Name"
+      className="form-input"
+    />
+
+    {/* Category Selection */}
+    <div className="category-section">
+      <h4>Select a Category</h4>
+      <div className="category-buttons">
+        {props.categories.map((category) => (
+          <button
+            key={category.id}
+            type="button"
+            className={`category-button ${
+              selectedCategory === category.id ? "selected" : ""
+            }`}
+            onClick={() => handleCategorySelection(category.id)}
+          >
+            {category.name}
+          </button>
+        ))}
       </div>
+    </div>
+
+    {/* Quantity and Pickup Date */}
+    <div className="form-row">
+      <div className="form-group">
+        <label htmlFor="quantity">Enter Quantity (Kg)</label>
+        <input
+          id="quantity"
+          type="number"
+          onChange={props.handleChange}
+          name="quantity"
+          placeholder="Enter Quantity"
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="pickupDateTime">Pickup Date & Time</label>
+        <input
+          id="pickupDateTime"
+          type="datetime-local"
+          value={pickupDateTime || ""}
+          onChange={handleDateChange}
+          min={new Date().toISOString().slice(0, 16)}
+          required
+          className="form-input"
+        />
+      </div>
+    </div>
+
+    {/* Additional Comments */}
+    <textarea
+      onChange={props.handleChange}
+      name="comment"
+      placeholder="Add any comments here..."
+      className="form-textarea"
+    ></textarea>
+
+
+        {/* Buttons */}
+        <div className="form-buttons">
+          <button type="submit" className="form-submit-btn">
+            Submit
+          </button>
+          <button
+            type="button"
+            className="form-cancel-btn"
+            onClick={props.cancelAction}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

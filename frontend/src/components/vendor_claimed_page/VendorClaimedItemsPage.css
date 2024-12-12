@@ -55,3 +55,102 @@
 .slider-container .slider:active {
   cursor: grabbing;
 }
+
+
+.claimed-items-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+  font-family: "Montserrat", sans-serif;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #5c4e4e;
+}
+
+/* Cards for each claimed item */
+.claimed-item-card {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.claimed-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.card-header {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.food-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.pickup-time {
+  font-size: 14px;
+  color: #888;
+}
+
+.card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-section {
+  flex: 1;
+}
+
+.actions-section {
+  flex: 1;
+  text-align: right;
+}
+
+.details-button,
+.confirm-button {
+  padding: 8px 12px;
+  margin-left: 10px;
+  font-size: 14px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.details-button {
+  background-color: #33443c;
+}
+
+.details-button:hover {
+  background-color: #76db76;
+}
+
+.confirm-button {
+  background-color: #4caf50;
+}
+
+.confirm-button:hover {
+  background-color: #45a049;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  margin-top: 10px;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #f1f1f1;
+  border-radius: 0 0 10px 10px;
+}

@@ -146,7 +146,7 @@
 
 .claimed-items-page {
   padding: 20px;
-  background-color: #f6f6f6;
+
 }
 
 
@@ -188,10 +188,7 @@
   color: #272e48;
 }
 
-.pickup-time {
-  font-size: 14px;
-  color: #555;
-}
+
 
 .card-body {
   display: flex;
@@ -244,4 +241,131 @@
 
 .address-text {
   font-style: italic;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #272e48;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.modal-content p {
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.close-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #33443c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #97be77;
+}
+
+.modal-content .pickup-code {
+  color: #0056b3; /* Dark blue */
+  font-size: 22px; /* Larger size for prominence */
+  font-weight: bold; /* Emphasized text */
+  background-color: #eaf5ff; /* Light blue background */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.modal-content .comment {
+  color: #2d8f31; /* Dark green */
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #e9f8e6; /* Light green background */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.close-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #33443c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #97be77;
+}
+
+/* Empty State Container */
+.no-items-container {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+/* Illustration */
+.no-items-image {
+  max-width: 200px;
+  margin-bottom: 20px;
+}
+
+/* Title */
+.no-items-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-bottom: 10px;
+}
+
+/* Description */
+.no-items-description {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Refresh Button */
+.refresh-button {
+  background-color: #33443c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.refresh-button:hover {
+  background-color: #388e3c;
 }

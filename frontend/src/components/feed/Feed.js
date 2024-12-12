@@ -438,9 +438,10 @@ renderRequestForm = () => {
 
 
   render() {
- const { textInput, filteredFoodItems, allFoodItems, allVendors } = this.state;
+ const { textInput, filteredFoodItems, allFoodItems, allVendors,showRequestForm } = this.state;
+ const noDonations = Object.keys(allFoodItems).length === 0;
 
-    const { showRequestForm } = this.state;
+   
     return (
       <div className="feedWrapper">
         <MainSnackbarContainer />
@@ -457,7 +458,22 @@ renderRequestForm = () => {
           handleChange={this.handleSearch}
           textInput={textInput}
         />
-        {textInput ? (
+        {noDonations ? (
+        <div className="no-donations-container">
+          <img
+            src="/images/no_donations.png" // Placeholder for a creative image
+            alt="No Donations"
+            className="no-donations-image"
+          />
+          <h2 className="no-donations-title">No Donations Available</h2>
+          <p className="no-donations-description">
+            It looks like there are no donations available to claim at the moment.
+          </p>
+          <button className="refresh-button" onClick={this.getAllFoodItems}>
+            Refresh Feed
+          </button>
+        </div>
+      ) : textInput ? (
           <SearchBarResults
             userSearchResults={filteredFoodItems}
             claimItem={this.claimItem}
