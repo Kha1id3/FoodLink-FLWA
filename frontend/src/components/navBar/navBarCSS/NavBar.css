@@ -43,34 +43,37 @@
   color: #33443c;
 }
 
+#profile-link {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center-align the profile picture and button */
+  gap: 10px; /* Add spacing between the profile pic and the button */
+}
+
 #logout-button {
-  background-color: #33443c;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  width: 100px; /* Adjust button width */
+  text-align: center; /* Center-align text in the button */
+  background-color: #33443c; /* Consistent with theme */
+  color: white; /* White text for contrast */
+  border: none; /* Remove default border */
+  padding: 6px 12px; /* Add spacing inside the button */
+  border-radius: 3px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 12px; /* Legible font size */
+  font-weight: bold; /* Make text bold */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 #logout-button:hover {
-  background-color: #4a5a53;
-}
-
-#profile-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background-color: #4a5a53; /* Slightly lighter on hover */
 }
 
 #profile-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 70%;
-  object-fit: cover;
-  cursor: pointer;
+  width: 40px; /* Size of the profile picture */
+  height: 40px;
+  border-radius: 50%; /* Make the picture circular */
+  object-fit: cover; /* Maintain aspect ratio */
+  cursor: pointer; /* Pointer cursor on hover */
 }
 
 .notification-bell-container {
