@@ -1,0 +1,288 @@
+/* General Navbar Styling */
+#nav {
+  background-color: #f9f9f9;
+  height: 80px;
+  display: flex;
+  justify-content: space-between; /* Spread content */
+  align-items: center;
+  padding: 0 20px; /* Add padding for spacing */
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  font-family: "Montserrat", sans-serif;
+  overflow: hidden;
+}
+
+#logo {
+  width: 70px;
+  height: auto;
+  cursor: pointer;
+}
+
+#nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-end;
+  max-width: calc(100% - 140px);
+  overflow: hidden;
+}
+
+
+
+#nav-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Occupies the remaining space */
+}
+
+#nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center; /* Center the links */
+  flex-grow: 1;
+  margin-left: 40px;
+}
+
+
+  #nav-right {
+    display: flex;
+    gap: 20px; /* Space between bell and profile pic */
+    align-items: center;
+    margin-right: 20px; /* Adjusts position to move it slightly left */
+  }
+
+
+
+.nav-link {
+  font-size: 18px;
+  font-weight: 600;
+  color: #272e48;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 10px 0;
+}
+
+.nav-link:hover {
+  color: #33443c;
+}
+
+#profile-link {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center-align the profile picture and button */
+  gap: 10px; /* Add spacing between the profile pic and the button */
+}
+
+#logout-button {
+  width: 100px; /* Adjust button width */
+  text-align: center; /* Center-align text in the button */
+  background-color: #33443c; /* Consistent with theme */
+  color: white; /* White text for contrast */
+  border: none; /* Remove default border */
+  padding: 6px 12px; /* Add spacing inside the button */
+  border-radius: 3px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 12px; /* Legible font size */
+  font-weight: bold; /* Make text bold */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+#logout-button:hover {
+  background-color: #4a5a53; /* Slightly lighter on hover */
+}
+
+#profile-icon {
+  width: 40px; /* Size of the profile picture */
+  height: 40px;
+  border-radius: 50%; /* Make the picture circular */
+  object-fit: cover; /* Maintain aspect ratio */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.notification-bell-container {
+  position: relative;
+
+
+}
+
+.notification-bell {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  
+}
+
+/* Notification Panel Styles */
+.notification-panel {
+  position: fixed;
+  top: 80px; /* Match navbar height */
+  right: 10px;
+  width: 320px;
+  background: #ffffff; /* White background for contrast */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateY(-150%);
+  transition: transform 0.3s ease-in-out;
+  max-height: 400px;
+  overflow-y: auto; /* Allow scrolling for long lists */
+}
+
+
+.notification-panel-visible {
+  transform: translateY(0%);
+}
+
+.notification-panel-hidden {
+  transform: translateY(-300%);
+}
+
+
+
+.notification-items {
+  padding: 5px;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between; /* Align timestamp to the right */
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 5px solid #f1f1f1;
+  background-color: #f9f9f9; /* Light background for contrast */
+  color: #272e48;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  border-left: 4px solid #75e975; /* Default green for unread */
+  transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+.notification-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10px; /* Space between content and bottom section */
+}
+
+.notification-item:hover {
+  background-color: #c9dceb; /* Light blue background on hover */
+  border-left-color: #d18e41; /* Blue accent on hover */
+}
+
+.notification-item:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.notification-message strong {
+  font-weight: bold; /* Make the item name bold */
+}
+
+.notification-claimed {
+  color: #28a745; /* Green for the word 'claimed' */
+  font-weight: bold;
+}
+
+.notification-action {
+  color: #5792ce; /* Blue for 'Check it out!' */
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+
+.notification-action:hover {
+  text-decoration: underline; /* Add underline on hover for action */
+}
+
+
+.no-notifications {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+  font-style: italic;
+  font-size: 14px;
+}
+
+
+/* Optional: Add subtle animation when notifications appear */
+.notification-panel .notification-item {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.notification-item.read {
+  border-left-color: #f0a72b; /* Orange for read notifications */
+}
+.notification-item:hover {
+  background-color: #c9dceb; /* Light blue background on hover */
+}
+
+.notification-timestamp {
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
+
+.notification-timestamp div {
+  line-height: 1.2; /* Compact spacing for date and time */
+}
+
+.notification-link:hover {
+  text-decoration: underline;
+}
+
+.notification-link {
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.notification-content strong {
+  display: inline-block;
+  word-wrap: break-word; /* Ensures long words break into new lines */
+  max-width: 100%; /* Prevents overflow */
+}
+
+
+.notification-bell-container img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.notification-bell-container img:hover {
+  transform: scale(1.1);
+}
+
+.notification-item.match {
+  border-left: 5px solid #4caf50; /* Green border for matched items */
+  background-color: #f9fdf9; /* Light green background */
+}
+
+.notification-item .match-details {
+  font-size: 12px;
+  color: #555;
+  margin-top: 5px;
+}

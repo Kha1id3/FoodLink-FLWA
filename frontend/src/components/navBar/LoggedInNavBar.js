@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import "./navBarCSS/NavBar.css";
+import "./navBarCSS/LoggedinNavbar.css";
 import axios from "axios";
 
 export const LoggedInNavBar = (props) => {
@@ -89,97 +89,102 @@ export const LoggedInNavBar = (props) => {
     : require("./dish cold.png"); // Cold dish for all notifications read
 
   return (
-    <nav id="nav">
-      <span id="nav-title">
-        <NavLink to="/welcome" className="nav-link">
-          <img
-            src={require("../landing/images/FoodLink Logo.png")}
-            alt="logo for foodlink"
-            id="logo"
-          />
+<nav id="nav">
+  <span id="nav-title">
+    <NavLink to="/welcome" className="nav-link">
+      <img
+        src={require("../landing/images/FoodLink Logo.png")}
+        alt="logo for foodlink"
+        id="logo"
+      />
+    </NavLink>
+  </span>
+  <div id="nav-main">
+    {/* Center-aligned Links */}
+    <div id="nav-links">
+      <NavLink to="/map" className="nav-link">
+        Map
+      </NavLink>
+      {type === "vendor" ? (
+        <NavLink to="/donate" className="nav-link">
+          Donate
         </NavLink>
-      </span>
-      <div id="nav-links">
-        <NavLink to="/map" className="nav-link">
-          Map
+      ) : (
+        <NavLink to="/feed" className="nav-link">
+          Donations
         </NavLink>
-        {type === "vendor" ? (
-          <NavLink to="/donate" className="nav-link">
-            Donate
-          </NavLink>
-        ) : (
-          <NavLink to="/feed" className="nav-link">
-            Donations
-          </NavLink>
-        )}
-        <NavLink
-          to={type === "vendor" ? "/vendor_claimed_page" : "/claimed-items"}
-          className="nav-link"
-        >
-          Claimed Food
-        </NavLink>
-
-        {/* Notifications */}
-        <div className="notification-bell-container" ref={dropdownRef}>
-          <img
-            src={notificationIcon}
-            alt="notifications"
-            className="notification-bell"
-            onClick={toggleDropdown}
-          />
-          {showDropdown && (
-            <div className="notification-panel notification-panel-visible">
-              <div className="notification-items">
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`notification-item ${
-                        notification.is_read ? "read" : "unread"
-                      }`}
-                    >
-                      <div className="notification-content">{notification.message}</div>
-                      <div className="notification-timestamp">
-                        {new Date(notification.created_at).toLocaleDateString()}
-                        <br />
-                        {new Date(notification.created_at).toLocaleTimeString()}
-                      </div>
+      )}
+      <NavLink
+        to={type === "vendor" ? "/vendor_claimed_page" : "/claimed-items"}
+        className="nav-link"
+      >
+        Claimed Food
+      </NavLink>
+    </div>
+    {/* Right-aligned Notifications and Profile */}
+    <div id="nav-right">
+      {/* Notifications */}
+      <div className="notification-bell-container" ref={dropdownRef}>
+        <img
+          src={notificationIcon}
+          alt="notifications"
+          className="notification-bell"
+          onClick={toggleDropdown}
+        />
+        {showDropdown && (
+          <div className="notification-panel notification-panel-visible">
+            <div className="notification-items">
+              {notifications.length > 0 ? (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={`notification-item ${
+                      notification.is_read ? "read" : "unread"
+                    }`}
+                  >
+                    <div className="notification-content">{notification.message}</div>
+                    <div className="notification-timestamp">
+                      {new Date(notification.created_at).toLocaleDateString()}
+                      <br />
+                      {new Date(notification.created_at).toLocaleTimeString()}
                     </div>
-                  ))
-                ) : (
-                  <div className="no-notifications">No notifications</div>
-                )}
-              </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-notifications">No notifications</div>
+              )}
             </div>
-          )}
-        </div>
-
-        {/* Profile Section */}
-        <div id="profile-link" onClick={handleProfileClick}>
-          <img
-            src={profilePic}
-            alt="profile icon"
-            id="profile-icon"
-            onClick={handleProfilePicClick} // Redirect to profile page
-            onError={(e) => (e.target.src = "/images/default.jpg")}
-          />
-          {showLogout && (
-            <button
-              id="logout-button"
-              onClick={async () => {
-                try {
-                  await props.logoutUser();
-                  history.push("/welcome");
-                } catch (error) {
-                  console.error("Error during logout:", error);
-                }
-              }}
-            >
-              Logout
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </nav>
+      {/* Profile Section */}
+      <div id="profile-link" onClick={handleProfileClick}>
+        <img
+          src={profilePic}
+          alt="profile icon"
+          id="profile-icon"
+          onClick={handleProfilePicClick}
+          onError={(e) => (e.target.src = "/images/default.jpg")}
+        />
+        {showLogout && (
+          <button
+            id="logout-button"
+            onClick={async () => {
+              try {
+                await props.logoutUser();
+                history.push("/welcome");
+              } catch (error) {
+                console.error("Error during logout:", error);
+              }
+            }}
+          >
+            Logout
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+</nav>
+
   );
 };
