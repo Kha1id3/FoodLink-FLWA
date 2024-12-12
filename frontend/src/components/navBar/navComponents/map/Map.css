@@ -15,7 +15,6 @@ html, body {
 /* Style the search box to position below the navbar */
 .places-container {
   position: absolute;
-  top: 40px; /* Adjusted to position just below the navbar */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10; /* Ensure it is on top of the map */
@@ -69,7 +68,7 @@ html, body {
 @media (max-width: 768px) {
   .places-container {
     width: calc(100% - 20px);
-    top: 80px;
+
   }
 }
 
