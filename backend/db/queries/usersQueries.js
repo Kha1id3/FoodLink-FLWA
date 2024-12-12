@@ -56,8 +56,9 @@ getAllClients = (req, res, next) => {
 
 createUser = (req, res, next) => {
   const hash = authHelpers.createHash(req.body.password_digest);
+
   db.one(
-    "INSERT INTO users(name,email,password_digest,type,address_field,body,telephone_number,ein,client_certificate,profile_picture) VALUES(${name},${email},${password_digest},${type},${address_field},${body},${telephone_number},${ein},${client_certificate},${profile_picture})RETURNING name",
+    "INSERT INTO users(name, email, password_digest, type, address_field, body, telephone_number, ein, client_certificate, profile_picture) VALUES(${name}, ${email}, ${password_digest}, ${type}, ${address_field}, ${body}, ${telephone_number}, ${ein}, ${client_certificate}, ${profile_picture}) RETURNING name",
     {
       name: req.body.name,
       email: req.body.email,
@@ -74,14 +75,24 @@ createUser = (req, res, next) => {
     .then(() => {
       res.status(200).json({
         status: "success",
-        message: "you have added a user"
+        message: "You have added a user"
       });
     })
     .catch(err => {
-      console.log(err);
-      return next(err);
+      console.error("Error in createUser:", err.message, err.code);
+
+      // Handle unique email constraint violation
+      if (err.code === "23505") { // PostgreSQL unique_violation error code
+        res.status(400).json({
+          status: "error",
+          message: "Email already exists. Please use a different email."
+        });
+      } else {
+        return next(err);
+      }
     });
 };
+
 
 updateUser = (req, res, next) => {
   // const hash = authHelpers.createHash(req.body.password_digest);

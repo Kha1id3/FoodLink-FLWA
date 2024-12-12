@@ -78,7 +78,7 @@ class SignUp extends Component {
 
   registerUser = async e => {
     e.preventDefault();
-
+  
     const {
       email,
       password_digest,
@@ -91,78 +91,94 @@ class SignUp extends Component {
       ein,
       profile_pic
     } = this.state;
-
-    if (Number(this.state.type) === 1) {
-      await axios.post("/api/users/new", {
-        email,
-        password_digest,
-        type,
-        name,
-        address_field,
-        body,
-        telephone_number,
-        ein,
-        profile_pic
+  
+    try {
+      // Sign up API request
+      if (Number(this.state.type) === 1) {
+        await axios.post("/api/users/new", {
+          email,
+          password_digest,
+          type,
+          name,
+          address_field,
+          body,
+          telephone_number,
+          ein,
+          profile_pic
+        });
+      } else {
+        await axios.post("/api/users/new", {
+          email,
+          password_digest,
+          type,
+          name,
+          address_field,
+          body,
+          telephone_number,
+          client_certificate,
+          profile_pic
+        });
+      }
+  
+      // Automatically log in after sign-up
+      Auth.authenticateUser(email);
+  
+      if (Number(this.state.type) === 1) {
+        await axios.post("/api/sessions/login", {
+          email,
+          password_digest,
+          type,
+          name,
+          address_field,
+          body,
+          telephone_number,
+          ein,
+          profile_pic
+        });
+      } else {
+        await axios.post("/api/sessions/login", {
+          email,
+          password_digest,
+          type,
+          name,
+          address_field,
+          body,
+          telephone_number,
+          client_certificate,
+          profile_pic
+        });
+      }
+  
+      await this.props.checkAuthenticateStatus();
+  
+      // Clear error message and reset state after success
+      this.setState({
+        email: "",
+        password_digest: "",
+        type: "",
+        name: "",
+        address_field: "",
+        body: "",
+        telephone_number: "",
+        client_certificate: "",
+        ein: "",
+        profile_pic: "",
+        isSubmitted: true,
+        formVisible: false,
+        errorMessage: "", // Clear previous error message
       });
-    } else {
-      await axios.post("/api/users/new", {
-        email,
-        password_digest,
-        type,
-        name,
-        address_field,
-        body,
-        telephone_number,
-        client_certificate,
-        profile_pic
-      });
+    } catch (err) {
+      // Set error message on failure
+      if (err.response && err.response.status === 400) {
+        this.setState({ errorMessage: err.response.data.message });
+      } else {
+        this.setState({ errorMessage: "Credentials are already in use." });
+      }
+      
     }
-
-    Auth.authenticateUser(email);
-
-    if (Number(this.state.type) === 1) {
-      await axios.post("/api/sessions/login", {
-        email,
-        password_digest,
-        type,
-        name,
-        address_field,
-        body,
-        telephone_number,
-        ein,
-        profile_pic
-      });
-    } else {
-      await axios.post("/api/sessions/login", {
-        email,
-        password_digest,
-        type,
-        name,
-        address_field,
-        body,
-        telephone_number,
-        client_certificate,
-        profile_pic
-      });
-    }
-
-    await this.props.checkAuthenticateStatus();
-
-    this.setState({
-      email: "",
-      password_digest: "",
-      type: "",
-      name: "",
-      address_field: "",
-      body: "",
-      telephone_number: "",
-      client_certificate: "",
-      ein: "",
-      profile_pic: "",
-      isSubmitted: true,
-      formVisible: false
-    });
   };
+  
+  
 
   signUpForm = () => {
     if (this.state.type === "1") {
@@ -177,6 +193,12 @@ class SignUp extends Component {
             className="signup-form"
             id="vendor-signup-form">
             <h1 className="signup-form-header">Food Vendor</h1>
+            {this.state.errorMessage && (
+  <div style={{ color: "red", textAlign: "center", marginBottom: "10px" }}>
+    {this.state.errorMessage}
+  </div>
+)}
+
             <div className="icon-input-field">
               <img
                 src={require("./icons/name.png")}
@@ -360,6 +382,12 @@ class SignUp extends Component {
             className="signup-form"
             id="client-signup-form">
             <h1 className="signup-form-header">Non-Profit Org</h1>
+            {this.state.errorMessage && (
+  <div style={{ color: "red", textAlign: "center", marginBottom: "10px" }}>
+    {this.state.errorMessage}
+  </div>
+)}
+
             <div className="icon-input-field">
               <img
                 src={require("./icons/name.png")}
