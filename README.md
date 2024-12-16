@@ -36,9 +36,11 @@ Welcome to the **FoodLink Web Application** repository! FoodLink is an innovativ
 
 - **Feed Page**: Showcase available donations in a clean and accessible interface and equest food items with specific details.
   
- ![opera_ZAOuWEzZzO](https://github.com/user-attachments/assets/88a4b540-22b0-4ed3-b4e0-2cc9129d8d64)
+ ![opera_Pjgdfeo7tw](https://github.com/user-attachments/assets/cb70f741-edc4-4b10-873d-1ca103a44276)
 
- ![image](https://github.com/user-attachments/assets/4c29df1d-a996-463d-834e-aaa0b8b7b377)
+
+ ![image](https://github.com/user-attachments/assets/8e676f4c-73ed-4020-bb3f-c1a969e6f440)
+
 
 - **Donate Page**: Vendors can add new donations using an intuitive form.
   
