@@ -98,9 +98,10 @@ Welcome to the **FoodLink Web Application** repository! FoodLink is an innovativ
      npm install
      
 3. Setup the Database:
+   
     Import the ***seed.sql*** file into PostgreSQL to set up the required tables and data.
   
-4. Environment Variables:
+5. Environment Variables:
 
     Create a .env file with the following:
     ```bash
@@ -108,7 +109,7 @@ Welcome to the **FoodLink Web Application** repository! FoodLink is an innovativ
     SECRET_KEY=your_secret_key
     REACT_APP_GOOGLE_MAPS_API_KEY=your_googlemaps_api_key
   
-5. Run the Application:
+6. Run the Application:
    ```bash
    npm start
 ---
