@@ -1,0 +1,23 @@
+.matched-item {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .matched-item.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  
+  .claim-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .claim-button:hover {
+    background-color: #45a049;
+  }
+  

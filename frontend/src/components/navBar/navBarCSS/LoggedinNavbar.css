@@ -53,7 +53,7 @@
     display: flex;
     gap: 20px; /* Space between bell and profile pic */
     align-items: center;
-    margin-right: 20px; /* Adjusts position to move it slightly left */
+    margin-right: 20px; 
   }
 
 
@@ -79,7 +79,7 @@
 }
 
 #logout-button {
-  width: 100px; /* Adjust button width */
+  width: 100px; 
   text-align: center; /* Center-align text in the button */
   background-color: #33443c; /* Consistent with theme */
   color: white; /* White text for contrast */
@@ -212,7 +212,7 @@
 }
 
 
-/* Optional: Add subtle animation when notifications appear */
+
 .notification-panel .notification-item {
   animation: fadeIn 0.5s ease;
 }

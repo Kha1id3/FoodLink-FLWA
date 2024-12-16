@@ -15,7 +15,7 @@
 }
 
 .food-card {
-  flex: 1 1 calc(45% - 10px); /* Adjust item size to fit nicely */
+  flex: 1 1 calc(45% - 10px); 
   box-sizing: border-box;
   padding: 15px;
   border: 1px solid lightgray;

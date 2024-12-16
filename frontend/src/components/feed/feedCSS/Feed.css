@@ -45,7 +45,7 @@
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
-  position: absolute; /* Adjust for layout alignment */
+  position: absolute; 
   left: 50%; /* Center horizontally */
   transform: translateX(-50%);
   z-index: 1;
@@ -106,12 +106,12 @@
 .category-scroll-container {
   display: flex;
   gap: 15px;
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto; 
   padding: 10px 0;
 }
 
 .category-button {
-  flex: 0 0 auto; /* Maintain fixed size */
+  flex: 0 0 auto; 
   min-width: 100px;
   height: 40px;
   background-color: #f3fadc;

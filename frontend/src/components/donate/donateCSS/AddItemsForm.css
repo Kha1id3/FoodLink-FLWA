@@ -47,7 +47,7 @@
 textarea#input-comment {
   resize: none;
   line-height: 1.5;
-  width: 100%; /* Adjust width */
+  width: 100%; 
 }
 
 textarea#input-comment::placeholder {

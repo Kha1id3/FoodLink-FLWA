@@ -4,7 +4,7 @@
   justify-content: center; /* Center content vertically */
   align-items: center; /* Center content horizontally */
   padding: 2rem;
-  min-height: calc(100vh - 60px); /* Adjust for navbar height (assuming 60px) */
+  min-height: calc(100vh - 60px); 
   background-color: #ffffff00; /* Transparent background */
 }
 
@@ -16,7 +16,7 @@
   box-shadow: 0 4px 8px rgb(0, 0, 0);
   border-radius: 8px;
   width: 80%; /* Limit content width */
-  max-width: 800px; /* Optional: Set max width for readability */
+  max-width: 800px; 
 }
 
 h2 {
@@ -48,7 +48,7 @@ p2 {
   background-color: #f3fadc;
   border-radius: 8px;
   text-align: center;
-  max-width: 250px; /* Optional: Limit width */
+  max-width: 250px; 
 }
 
 .option h3 {

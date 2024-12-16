@@ -1,6 +1,6 @@
 #vendor-items-header-client {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 2fr; /* Adjust header columns to match item layout */
+  grid-template-columns: 2fr 1fr 1fr 1fr 2fr; 
   text-align: center;
   width: 98.6%;
   margin: 0 auto;

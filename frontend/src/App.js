@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch } from "react-router-dom";
-import Notifications from "react-notify-toast"; // Import Notifications
+import Notifications from "react-notify-toast"; 
 import LoginContainer from "./containers/LoginContainer.js";
 import SignUpContainer from "./containers/SignUpContainer.js";
 import "./App.css";
@@ -21,11 +21,12 @@ import ClaimedItemsPage from "./components/claimed-items/ClaimedItemsPage.js";
 import VendorClaimedItemsContainer from "./containers/VendorClaimedItemsContainer";
 import DonatePageContainer from "./containers/DonatePageContainer.js";
 import MatchedItemsPage from "./components/matched-items/MatchedItemsPage.js";
+import MatchedItemsContainer from "./containers/MatchedItemsContainer";
 
 class App extends Component {
   componentDidMount() {
     if (this.props.checkAuthenticateStatus) {
-      this.props.checkAuthenticateStatus(); // Make sure checkAuthenticateStatus is passed in props
+      this.props.checkAuthenticateStatus(); 
     }
   }
 
@@ -69,7 +70,11 @@ class App extends Component {
               path="/client/:client"
               component={ClientProfileContainer}
             />
-            <PrivateRoute exact path="/matched-items" component={MatchedItemsPage} />
+            <PrivateRoute
+              exact
+              path="/matched-items"
+              component={MatchedItemsContainer}
+            />;
             <PrivateRoute
               exact
               path="/vendor/:vendor"
@@ -94,7 +99,7 @@ class App extends Component {
               path="/api/notifications/:id/read"
               render={({ match }) => {
                 const { id } = match.params;
-                // Call the API to mark notification as read
+               
                 axios
                   .patch(`/api/notifications/${id}/read`)
                   .then((res) => {
@@ -103,7 +108,7 @@ class App extends Component {
                   .catch((err) => {
                     console.error(`Error marking notification ${id} as read:`, err);
                   });
-                return null; // No UI needed for this route
+                return null; 
               }}
             />
           </Switch>

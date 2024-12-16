@@ -52,7 +52,7 @@ export default class Feed extends Component {
     this.getAllFoodItems();
     this.getAllVendors();
     this.getCategories();
-    // Optional: Set an interval to refresh the food items periodically
+    
     this.interval = setInterval(() => {
       this.getAllFoodItems();
     }, 60000); // Refresh every minute
@@ -128,7 +128,7 @@ export default class Feed extends Component {
   
 
   claimItem = (e, isClaimed, food_id) => {
-    let targetId = food_id; // Use the `food_id` directly
+    let targetId = food_id; 
   
     if (!!e.currentTarget.id) {
       targetId = e.currentTarget.id; // Ensure fallback to button ID if necessary
@@ -304,7 +304,7 @@ export default class Feed extends Component {
     try {
       const response = await axios.post("/api/fooditems/create-request", {
         name,
-        category_id: category, // Make sure this is set correctly
+        category_id: category, 
         quantity,
         set_time: neededBy,
         comment,
@@ -461,7 +461,7 @@ renderRequestForm = () => {
         {noDonations ? (
         <div className="no-donations-container">
           <img
-            src="/images/no_donations.png" // Placeholder for a creative image
+            src="/images/no_donations.png" 
             alt="No Donations"
             className="no-donations-image"
           />

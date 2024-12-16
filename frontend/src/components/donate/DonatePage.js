@@ -94,7 +94,7 @@ class DonatePage extends Component {
 
   fetchCategories = () => {
     axios
-      .get("/api/categories") // Adjust the route if necessary
+      .get("/api/categories") 
       .then((res) => {
         this.setState({ categories: res.data.categories });
       })
@@ -104,7 +104,7 @@ class DonatePage extends Component {
 
 
   fetchFoodItems = () => {
-    const vendorId = this.props.currentUser.id; // Use vendor ID
+    const vendorId = this.props.currentUser.id; 
     axios
       .get(`/api/fooditems/vendor/id/${vendorId}`) // Updated route
       .then((res) => {

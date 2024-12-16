@@ -14,6 +14,7 @@ let business_hoursRouter = require("./routes/business_hours.js");
 let favoriteRouter = require("./routes/favorites.js");
 let userRouter = require("./routes/user.js");
 let sessionRouter = require("./routes/sessions.js");
+const matchedItemsRouter = require("./routes/matchedItems");
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/categories", categoriesRouter);
 app.use('/images', express.static(path.join(__dirname, '../public/images')));
+app.use("/api", matchedItemsRouter);
 
 app.use(
   session({

@@ -24,7 +24,7 @@
   width: 200px;
   height: 200px;
   margin-top: 10%;
-  border-radius: 8px; /* Optional: rounded corners */
+  border-radius: 8px; 
 }
 
 .vendor-info-display {
@@ -379,11 +379,11 @@
   font-size: 18px;
   cursor: pointer;
   transition: color 0.2s;
-  width: 25px; /* Fixed width */
-  height: 25px; /* Fixed height */
+  width: 25px; 
+  height: 25px; 
   text-align: center;
-  line-height: 4px; /* Centers the '✕' */
-  visibility: visible; /* Always reserve space */
+  line-height: 4px; 
+  visibility: visible; 
 }
 
 

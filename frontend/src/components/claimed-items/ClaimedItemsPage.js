@@ -157,7 +157,7 @@ class ClaimedItemsPage extends Component {
       {claimedFoodItems.length === 0 ? (
         <div className="no-items-container">
           <img
-            src="/images/empty-box.png" // Placeholder for an illustration
+            src="/images/empty-box.png" 
             alt="No items"
             className="no-items-image"
           />

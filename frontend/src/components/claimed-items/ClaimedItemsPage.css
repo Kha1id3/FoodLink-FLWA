@@ -2,11 +2,11 @@
 #claimed-items-list-client {
     background-color: #f6eae0;
     border: 2px solid black;
-    width: 80%; /* Adjust width to leave space on the sides */
-    max-width: 1200px; /* Optional: Set a max-width to avoid excessive width on larger screens */
+    width: 80%; 
+    max-width: 1200px; 
     margin: 0 auto; /* Centers the container */
     margin-top: 100px;
-    padding: 20px; /* Optional: Add padding to give some inner spacing */
+    padding: 20px; 
     text-align: center;
     font-family: "Montserrat", sans-serif;
     font-size: 46px;

@@ -10,9 +10,9 @@ const {
   createNewFoodItem,
   updateFoodItem,
   deleteFoodItem,
-  confirmPickup,                // New function in queries
+  confirmPickup,                
   getConfirmedFoodItemsByVendor,
-  createRequestedItem // New function in queries
+  createRequestedItem 
 } = require("../db/queries/foodItemsQueries.js");
 
 // Existing Routes
@@ -33,7 +33,7 @@ router.patch("/confirmpickup/:id", confirmPickup);
 router.get("/vendor/confirmed/:vendorId", getConfirmedFoodItemsByVendor);
 router.post("/create-request", async (req, res, next) => {
   console.log("Current user (from session):", req.session?.currentUser);
-  await createRequestedItem(req, res, next); // Use the correct function name
+  await createRequestedItem(req, res, next); 
 });
 
 

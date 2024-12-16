@@ -6,8 +6,8 @@ import axios from "axios";
 export const LoggedInNavBar = (props) => {
   const [profilePic, setProfilePic] = useState("/images/default.jpg");
   const [notifications, setNotifications] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false); // Notifications dropdown visibility
-  const [showLogout, setShowLogout] = useState(false); // Logout button visibility
+  const [showDropdown, setShowDropdown] = useState(false); 
+  const [showLogout, setShowLogout] = useState(false); 
   const [hasUnread, setHasUnread] = useState(false);
   const history = useHistory();
   const dropdownRef = useRef(null);
@@ -120,6 +120,10 @@ export const LoggedInNavBar = (props) => {
       >
         Claimed Food
       </NavLink>
+      <NavLink to="/matched-items" className="nav-link">
+        Matched Items
+      </NavLink>
+
     </div>
     {/* Right-aligned Notifications and Profile */}
     <div id="nav-right">
