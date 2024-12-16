@@ -31,7 +31,7 @@ function useQuery() {
 export default function Places() {
   const libraries = useMemo(() => ["places"], []);
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBkN1LKjBkqmtz-8Pz-kCkG_lBM6Hm7y_0", 
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, 
     libraries,
   });
 
