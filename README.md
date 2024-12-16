@@ -1,4 +1,6 @@
-# 🍎 **FoodLink Web Application**
+# ![FoodLink Logo (2)](https://github.com/user-attachments/assets/8c259704-7261-4b57-8d1c-4675d16a2b55) **FoodLink Web Application**
+
+
 
 Welcome to the **FoodLink Web Application** repository! FoodLink is an innovative platform that connects food vendors with clients to promote food donations, reduce waste, and address food insecurity. Our user-friendly interface and  notification system make the donation process seamless and impactful for all users.
 
