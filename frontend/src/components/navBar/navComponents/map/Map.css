@@ -26,7 +26,6 @@ html, body {
   width: calc(100% - 60px);
   max-width: 600px;
   transition: all 0.3s ease-in-out; /* Smooth animation */
-  margin-top: 120px;
 }
 
 .combobox-input {
