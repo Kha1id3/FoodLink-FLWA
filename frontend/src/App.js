@@ -25,7 +25,7 @@ import MatchedItemsPage from "./components/matched-items/MatchedItemsPage.js";
 class App extends Component {
   componentDidMount() {
     if (this.props.checkAuthenticateStatus) {
-      this.props.checkAuthenticateStatus(); // Make sure checkAuthenticateStatus is passed in props
+      this.props.checkAuthenticateStatus(); 
     }
   }
 
@@ -103,7 +103,7 @@ class App extends Component {
                   .catch((err) => {
                     console.error(`Error marking notification ${id} as read:`, err);
                   });
-                return null; // No UI needed for this route
+                return null; 
               }}
             />
           </Switch>
